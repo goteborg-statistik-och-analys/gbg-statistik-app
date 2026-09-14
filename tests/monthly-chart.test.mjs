@@ -1,0 +1,30 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {chartPeriods,seriesChart} from '../series-chart.js';
+import {readFile} from 'node:fs/promises';
+import {populatedMonths} from '../monthly-availability.js';
+test('Actual source zeros after July 2026 are excluded without hiding subgroup zeros',async()=>{
+  const {payload}=JSON.parse(await readFile(new URL('../data/monthly-2026-check.json',import.meta.url),'utf8'));
+  const available=populatedMonths(payload);
+  assert.deepEqual([...available],Array.from({length:7},(_,i)=>`2026-0${i+1}`));
+  const series=[{name:'Grupp 1',detail:'Urval',rows:Array.from({length:12},(_,i)=>({year:2026+i/12,period:`2026-${String(i+1).padStart(2,'0')}`,value:0}))}];
+  const filtered=chartPeriods(series,available);
+  assert.equal(filtered[0].rows.length,7);assert.equal(filtered[0].rows.at(-1).value,0);
+  const svg=seriesChart({series:filtered,area:'Göteborg',table:{level:'Kommun'},measure:'Folkmängd',date:'idag'});
+  assert.ok(svg.includes('2026-07'));assert.ok(!svg.includes('2026-08'));assert.ok(!svg.includes('2026-12'));
+  assert.ok(!svg.includes('1. Grupp 1'));assert.ok(!svg.includes('Urval'));
+  const comparison=seriesChart({series:[...filtered,{...filtered[0],name:'Grupp 2'}],area:'Göteborg',table:{level:'Kommun'},measure:'Folkmängd',date:'idag'});
+  assert.ok(comparison.includes('1. Grupp 1'));assert.ok(comparison.includes('2. Grupp 2'));
+});
+test('Monthly charts exclude empty months, retain zero and months available in another series',()=>{
+  const rows=values=>values.map((value,i)=>({year:2026+i/12,period:`2026-0${i+1}`,value}));
+  const original=[{name:'A',detail:'A',rows:rows([12,null,0,null])},{name:'B',detail:'B',rows:rows([10,11,null,null])}];
+  const filtered=chartPeriods(original);
+  assert.deepEqual(filtered[0].rows.map(r=>r.period),['2026-01','2026-02','2026-03']);
+  assert.equal(filtered[0].rows[1].value,null);
+  assert.equal(original[0].rows.length,4);
+  const svg=seriesChart({series:filtered,area:'Göteborg',table:{level:'Kommun'},measure:'Folkmängd',date:'idag'});
+  assert.ok(!svg.includes('2026-04'));assert.ok(svg.includes('2026-03'));
+  assert.equal(chartPeriods([{rows:rows([null,null])}])[0].rows.length,0);
+  const annual=[{rows:[{year:2026,value:null}]}];assert.equal(chartPeriods(annual),annual);
+});
