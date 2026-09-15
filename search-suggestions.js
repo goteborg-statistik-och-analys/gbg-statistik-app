@@ -1,6 +1,6 @@
 export function initSearchSuggestions(input, suggestion) {
   const examples = [
-    'Till exempel: folkmängden i Majorna 2010–2025',
+    'Folkmängden i Majorna 2010–2025',
     'Vad finns det för tabeller om utbildning?',
     'Vad finns det för statistik om inkomst?',
     'Folkmängden i Göteborg 2010–2025'
