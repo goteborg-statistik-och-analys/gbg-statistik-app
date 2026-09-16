@@ -1,7 +1,12 @@
 import {escapeXML as esc,periodOf} from './core.js';
+import {resultHeading} from './result-heading.js';
 const colors=['#008391','#674b99','#d24723','#3f5564','#008767','#d53878','#ffcd37'];
 const dashes=['','9 4','3 4','12 4 3 4','2 3','8 3 2 3','14 5'];
 const fmt=value=>new Intl.NumberFormat('sv-SE').format(value);
+export function chartDescriptions(series){
+  if(!series.length)return '';
+  return `<details class="chart-descriptions"><summary>Visa urval per serie</summary><ul>${series.map((s,i)=>`<li><svg width="32" height="12" viewBox="0 0 32 12" aria-hidden="true"><line x1="0" x2="32" y1="6" y2="6" stroke="${colors[i]}" stroke-width="3" stroke-dasharray="${dashes[i]}"/></svg><span><strong>${i+1}. ${esc(s.name)}</strong> · ${esc(s.detail)}</span></li>`).join('')}</ul></details>`;
+}
 export function chartPeriods(series,populated){
   if(!series.some(s=>s.rows.some(r=>r.period)))return series;
   const available=new Set(series.flatMap(s=>s.rows.filter(r=>r.value!==null&&(!populated||populated.has(r.period))).map(r=>r.year)));
@@ -12,16 +17,20 @@ function wrap(text,length=105){
   for(const word of text.split(/\s+/)){if((lines.at(-1)+' '+word).length>length&&lines.at(-1))lines.push('');lines[lines.length-1]+=(lines.at(-1)?' ':'')+word;}
   return lines;
 }
-export function seriesChart({series,area,table,measure,date,unit='Antal personer'}){
+export function seriesChart({series,area,table,measure,date,groups,unit='Antal personer',includeHeading=true,includeDescriptions=true}){
   if(series.length>7)throw new Error('Diagrammet kan visa högst sju linjer.');
-  const width=1000,left=88,right=250,top=115,plotHeight=300,bottom=top+plotHeight;
+  const caption=resultHeading({table,measure,groups});
+  const titleLines=includeHeading?wrap(caption.title,62):[],selectionLines=includeHeading&&caption.selection?wrap(caption.selection,105):[];
+  const headerShift=includeHeading?(titleLines.length-1)*27+selectionLines.length*20:0;
+  const width=1000,left=88,right=250,top=(includeHeading?115:65)+headerShift,plotHeight=300,bottom=top+plotHeight;
   const rows=series[0].rows,start=rows[0].year,end=rows.at(-1).year;
   const values=series.flatMap(s=>s.rows.filter(r=>r.value!==null).map(r=>r.value));
   const max=Math.max(...values,1),min=Math.min(...values,0),magnitude=10**Math.floor(Math.log10(Math.max(max,-min))),limit=Math.ceil(max/magnitude*2)/2*magnitude,lower=Math.floor(min/magnitude*2)/2*magnitude;
   const x=year=>left+(year-start)/(end-start||1)*(width-left-right),y=value=>top+(limit-value)/(limit-lower)*plotHeight;
-  const descriptions=series.length>1?series.flatMap((s,i)=>wrap(`${i+1}. ${s.name}: ${s.detail}`).map(text=>({text,index:i}))):[];
+  const descriptions=includeDescriptions&&series.length>1?series.flatMap((s,i)=>wrap(`${i+1}. ${s.name}: ${s.detail}`).map(text=>({text,index:i}))):[];
   const height=bottom+100+descriptions.length*18;
-  let svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="chart-title chart-desc"><title id="chart-title">${esc(measure)} i ${esc(area)}</title><desc id="chart-desc">${series.length} grupper, ${periodOf(rows[0])}–${periodOf(rows.at(-1))}. ${esc(unit)}. Linjeavbrott betyder saknad uppgift. Exakta värden och urval finns i tabellen.</desc><rect width="${width}" height="${height}" fill="#ffffff"/><g font-family="Open Sans, Arial, sans-serif" fill="#1f1f1f"><text x="${left}" y="30" font-size="23" font-weight="800">${esc(measure)} i ${esc(area)}</text><text x="${left}" y="56" font-size="14">${esc(table.level)} · ${periodOf(rows[0])}–${periodOf(rows.at(-1))}</text><text x="${left}" y="88" font-size="13">${esc(unit)}</text>`;
+  const header=titleLines.map((line,i)=>`<text x="${left}" y="${30+i*27}" font-size="22" font-weight="800">${esc(line)}</text>`).join('')+selectionLines.map((line,i)=>`<text x="${left}" y="${54+(titleLines.length-1)*27+i*20}" font-size="14" font-weight="700">${esc(line)}</text>`).join('');
+  let svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" data-plot-top="${top}" data-plot-bottom="${bottom}" role="img" aria-label="${esc([caption.title,caption.selection,area].filter(Boolean).join(' · '))}" aria-describedby="chart-desc"><desc id="chart-desc">${series.length} grupper, ${periodOf(rows[0])}–${periodOf(rows.at(-1))}. ${esc(unit)}. Linjeavbrott betyder saknad uppgift. Exakta värden och urval finns i tabellen.</desc><rect width="${width}" height="${height}" fill="#ffffff"/><g font-family="Open Sans, Arial, sans-serif" fill="#1f1f1f">${header}<text x="${left}" y="${includeHeading?56+headerShift:24}" font-size="14">${esc(table.level)} · ${periodOf(rows[0])}–${periodOf(rows.at(-1))}</text><text x="${left}" y="${includeHeading?88+headerShift:46}" font-size="13">${esc(unit)}</text>`;
   for(let i=0;i<=4;i++){const value=lower+(limit-lower)*i/4;svg+=`<line x1="${left}" y1="${y(value)}" x2="${width-right}" y2="${y(value)}" stroke="#d1d9dc"/><text x="${left-12}" y="${y(value)+5}" text-anchor="end" font-size="13">${esc(fmt(value))}</text>`;}
   const indices=[...new Set([0,Math.round((rows.length-1)/4),Math.round((rows.length-1)/2),Math.round(3*(rows.length-1)/4),rows.length-1])];
   for(const i of indices)svg+=`<text x="${x(rows[i].year)}" y="${bottom+28}" text-anchor="middle" font-size="13">${periodOf(rows[i])}</text>`;
@@ -49,7 +58,7 @@ export function seriesChart({series,area,table,measure,date,unit='Antal personer
 
 export function attachSeriesInteraction(container,series,unit='Antal personer'){
   const svg=container.querySelector('svg');if(!svg)return;
-  const rows=series[0].rows,left=88,right=750,top=115,bottom=415;
+  const rows=series[0].rows,left=88,right=750,top=Number(svg.dataset.plotTop||115),bottom=Number(svg.dataset.plotBottom||415);
   const ns='http://www.w3.org/2000/svg';
   const make=(tag,attributes)=>{const node=document.createElementNS(ns,tag);for(const [key,value] of Object.entries(attributes))node.setAttribute(key,value);return node;};
   const overlay=make('g',{'aria-hidden':'true','pointer-events':'none'});

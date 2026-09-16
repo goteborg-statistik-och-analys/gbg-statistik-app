@@ -6,16 +6,20 @@ import {tableMeasure} from './table-measures.js';
 import {searchSelection} from './search-selection.js';
 import {initSearchSuggestions} from './search-suggestions.js';
 import {resultCSV,resultExcel} from './exports.js';
-import {seriesChart,attachSeriesInteraction,chartPeriods} from './series-chart.js';
+import {seriesChart,attachSeriesInteraction,chartPeriods,chartDescriptions} from './series-chart.js';
 import {initGroupControls} from './group-controls.js';
 import {planGroups} from './group-selection.js';
 import {initTableSuggestions} from './table-suggestions.js';
 import {groupTables,tableSummary,levelLabels} from './catalog-groups.js';
 import {browseTables,catalogThemes,filterTables} from './catalog-filters.js';
+import {mapSeries,mountAreaMap} from './area-map.js';
+import {resultHeadingText,visualHeading,resultAreaLabel} from './result-heading.js';
+import {initHelpDialog} from './help-dialog.js';
 const $=id=>document.getElementById(id), fmt=n=>n===null?'Uppgift saknas':new Intl.NumberFormat('sv-SE').format(n);
 const syncSearchSuggestion=initSearchSuggestions($('search'),$('search-suggestion'));
 let catalog=[], selected=null, result=null, selectionVersion=0, dataVersion=0;
 let searchResults=[], requestedYears, shown=3, groupControls, searchContext=null;
+let disposeAreaMap=()=>{};
 const tableSuggestions=initTableSuggestions($('search'),()=>catalog,table=>{
   searchContext=findTables($('search').value,catalog);
   const area=matchedArea(table),years=searchContext.years;
@@ -110,11 +114,14 @@ async function choose(table,area,range){
   $('fetch-button').disabled=false;$('fetch-button').textContent='Visa statistiken →';
   $('selection-section').hidden=false;scroll('selection-section');
 }
+function resetCatalogFilters(){
+  $('level-filter').value='';$('theme-filter').value='';$('ready-filter').checked=false;
+}
 function resetSearch(){
   ++selectionVersion;++dataVersion;selected=null;result=null;
   requestedYears=undefined;shown=3;searchContext=null;
   $('selection-section').hidden=true;$('result').hidden=true;
-  $('level-filter').value='';$('theme-filter').value='';$('ready-filter').checked=false;
+  resetCatalogFilters();
   $('catalog-title').textContent='Börja med en tabell';
   $('search-summary').textContent='';$('search-summary').hidden=true;
   $('catalog-section').classList.remove('is-active');
@@ -124,6 +131,7 @@ function resetSearch(){
 }
 function search(text){
   tableSuggestions.close();
+  resetCatalogFilters();
   if(!text.trim()){resetSearch();return;}
   syncSearchSuggestion();
   $('catalog-section').classList.add('is-active');
@@ -142,9 +150,11 @@ function search(text){
   scroll('catalog-section');
 }
 function render(){
+  disposeAreaMap();
+  const snapshot=result;
   const {series,rows,area,table,date,measure,unit,notes}=result;
   const start=rows[0],end=rows.at(-1),single=rows.length===1;
-  $('result-title').textContent=measure+' i '+area;
+  $('result-title').textContent=measure+' i '+resultAreaLabel(result);
   $('result-subtitle').textContent=table.level+' · '+periodOf(start)+'–'+periodOf(end)+' · '+series.length+' '+(series.length===1?'grupp':'grupper');
   $('metrics').innerHTML=(series.length>7?[]:series).map(s=>{
     const first=s.rows[0],last=s.rows.at(-1),difference=first.value!==null&&last.value!==null?last.value-first.value:null;
@@ -169,7 +179,7 @@ function render(){
     chooserTitle.textContent='Linjer i diagrammet: '+selection.size+' av högst 7';
     checks.forEach((check,i)=>{check.disabled=!selection.has(i)&&selection.size>=7;});
     result.svg=visible.some(s=>s.rows.length)&&!single?seriesChart({...result,series:visible}):'';
-    $('chart').innerHTML=result.svg||(visible.length?'<p>Det saknas data för de valda serierna.</p>':'<p>Välj upp till sju serier för diagrammet. Alla serier finns i tabellen och exporterna.</p>');
+    $('chart').innerHTML=result.svg?visualHeading(result)+seriesChart({...result,series:visible,includeHeading:false,includeDescriptions:false})+chartDescriptions(visible):(visible.length?'<p>Det saknas data för de valda serierna.</p>':'<p>Välj upp till sju serier för diagrammet. Alla serier finns i tabellen och exporterna.</p>');
     for(const id of ['svg','png'])$(id).disabled=!result.svg;
     if(result.svg)attachSeriesInteraction($('chart'),visible,unit);
   };
@@ -186,16 +196,19 @@ function render(){
     $('table-body').innerHTML=grid.rows.slice(start,start+pageSize).map(row=>'<tr>'+row.map((value,i)=>i===row.length-1?'<td class="number">'+esc(fmt(value))+'</td>':i===0?'<th scope="row">'+esc(value)+'</th>':'<td>'+esc(value)+'</td>').join('')+'</tr>').join('');};
   previous.addEventListener('click',()=>{page--;showPage();});next.addEventListener('click',()=>{page++;showPage();});pager.append(previous,pageLabel,next);
   $('table-heading').parentElement.querySelector('.table-pagination')?.remove();$('table-body').closest('.table-scroll').after(pager);pager.hidden=grid.rows.length<=pageSize;showPage();
-  $('result-note').textContent=single?'Ett år är valt. Resultatet visas som nyckeltal och tabell.':'Varje grupp visas separat. Saknade delvärden ger Uppgift saknas för gruppen och året, inte noll.';
+  $('result-note').textContent=single?(mapSeries(result)?'Ett år är valt. Resultatet kan visas som karta, nyckeltal och tabell.':'Ett år är valt. Resultatet visas som nyckeltal och tabell.'):'Varje grupp visas separat. Saknade delvärden ger Uppgift saknas för gruppen och året, inte noll.';
   $('source').innerHTML='Källa: Göteborgs Stads statistikdatabas. Hämtad '+esc(date)+'. <a href="'+esc(table.url)+'" target="_blank" rel="noopener">Tabellens metadata (API)</a> · <a href="'+esc(table.webUrl)+'" target="_blank" rel="noopener">Öppna källtabellen</a>';
   $('metadata-notes').textContent=notes;$('metadata-notes').parentElement.open=Boolean(notes);
-  $('chart-heading').textContent=measure+' över tid';$('table-heading').textContent=measure+' per år';$('value-heading').textContent=unit;
+  $('chart-heading').textContent=resultHeadingText(result);$('table-heading').textContent=measure+' per år';$('value-heading').textContent=unit;
   $('aggregation-note').textContent='Filter med summerad redovisning räknas ihop. Separat redovisade kategorier får egna rader och serier. Egna grupper kan överlappa och summeras inte med varandra. Totalt avser källtabellens population. Uppgift saknas som kategori ingår när Totalt är valt; det skiljer sig från ett saknat numeriskt värde.';
+  disposeAreaMap=mountAreaMap({result,panel:$('chart-panel'),toolbar:$('chart-panel').querySelector('.section-heading'),chart:$('chart'),chooser,heading:$('chart-heading'),drawChart:draw,setExport:svg=>{if(result!==snapshot)return;result.svg=svg;for(const id of ['svg','png'])$(id).disabled=!svg;}});
   $('result').hidden=false;scroll('result');
 }
 function download(content,type,name){const url=URL.createObjectURL(new Blob([content],{type}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 const filename=extension=>`statistik-${result.area.toLowerCase().replace(/[^a-zåäö0-9]+/g,'-')}-${periodOf(result.rows[0])}-${periodOf(result.rows.at(-1))}.${extension}`;
+initHelpDialog($('app-help'),$('help-close'));
 $('search-form').addEventListener('submit',e=>{e.preventDefault();search($('search').value);});
+$('search').addEventListener('focus',()=>{resetCatalogFilters();shown=3;cards();});
 $('search').addEventListener('input',()=>{if(!$('search').value.trim())resetSearch();});
 document.querySelectorAll('[data-example]').forEach(b=>b.addEventListener('click',()=>{$('search').value=b.dataset.example;search(b.dataset.example);}));
 $('selection-form').addEventListener('input',()=>{++dataVersion;$('result').hidden=true;$('fetch-button').disabled=false;$('fetch-button').textContent='Visa statistiken →';status('');});
@@ -232,7 +245,7 @@ $('selection-form').addEventListener('submit',async e=>{
     }
     alignPeriods(series);
     if(table.measure?.forecast)allNotes.add('Prognos: beräknad framtida folkmängd, inte observerad statistik.');
-    result={series,populatedMonths:availableMonths,rows:series[0].rows,area,table,measure,unit,detail:series.length>7?series.length+' serier. Se urval på varje rad.':series.map(s=>s.name+': '+s.detail).join(' | '),notes:[...allNotes].join(' '),date:new Date().toLocaleDateString('sv-SE')};status('');render();
+    result={series,groups,populatedMonths:availableMonths,rows:series[0].rows,area,table,measure,unit,detail:series.length>7?series.length+' serier. Se urval på varje rad.':series.map(s=>s.name+': '+s.detail).join(' | '),notes:[...allNotes].join(' '),date:new Date().toLocaleDateString('sv-SE')};status('');render();
   }catch(error){console.error(error);if(version===dataVersion)status(networkMessage(error));}
   finally{if(version===dataVersion){$('fetch-button').disabled=false;$('fetch-button').textContent='Visa statistiken →';}}
 });

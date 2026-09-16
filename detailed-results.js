@@ -28,7 +28,7 @@ export function detailedSeries(payload,query,group,table){
     const local={...query,query:query.query.map(v=>combo[v.code]!==undefined?{...v,selection:{...v.selection,values:[combo[v.code]]}}:v)};
     const area=areaOf(table.metadata),areaText=area&&combo[area.code]!==undefined?labelOf(labels[area.code]):group.area;
     const detail=(area?`Område: ${areaText} · `:'')+selectionDetail(table.metadata,selections);
-    return {name:(group.customName?group.customName+' · ':'')+Object.values(labels).join(' · '),area:areaText,detail,dimensions:labels,rows:aggregate({...payload,data:buckets.get(JSON.stringify(separate.map(code=>combo[code])))||[]},local,table.measure)};
+    return {name:(group.customName?group.customName+' · ':'')+Object.values(labels).join(' · '),area:areaText,detail,dimensions:labels,dimensionValues:combo,rows:aggregate({...payload,data:buckets.get(JSON.stringify(separate.map(code=>combo[code])))||[]},local,table.measure)};
   });
 }
 export function resultGrid(result){

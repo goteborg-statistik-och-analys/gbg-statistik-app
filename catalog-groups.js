@@ -2,7 +2,7 @@
 export function groupTables(tables){
   const groups=[],byKey=new Map();
   for(const table of tables){
-    const variables=(table.variables||'').split(' | ').filter(v=>!v.startsWith('Område:')).sort();
+    const variables=(table.variables||'').split(' | ').filter(v=>!v.startsWith('Område:')).map(v=>v.toLocaleLowerCase('sv')).sort();
     const key=JSON.stringify([table.subject,table.title,variables]);
     const candidates=byKey.get(key)||[];
     let group=candidates.find(candidate=>!candidate.tables.some(t=>t.level===table.level));
