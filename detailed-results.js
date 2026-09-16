@@ -16,7 +16,7 @@ export function splitQuery(query,separate,maxCells=100000){
 export function detailedSeries(payload,query,group,table){
   if(!Array.isArray(payload.columns)||!Array.isArray(payload.data))throw new Error('Statistikdatabasen svarade med ett oväntat format.');
   const separate=group.separate||[];
-  if(!separate.length)return [{name:group.name,area:group.area,detail:group.detail,dimensions:{},rows:aggregate(payload,query,table.measure)}];
+  if(!separate.length)return [{name:group.name,isDefaultName:!group.customName&&/^Grupp \d+$/.test(group.name),area:group.area,detail:group.detail,dimensions:{},rows:aggregate(payload,query,table.measure)}];
   const dimensions=payload.columns.filter(c=>c.type!=='c');
   const buckets=new Map();
   for(const row of payload.data){const key=JSON.stringify(separate.map(code=>row.key[dimensions.findIndex(d=>d.code===code)]));if(!buckets.has(key))buckets.set(key,[]);buckets.get(key).push(row);}

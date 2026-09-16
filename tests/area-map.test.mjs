@@ -13,6 +13,32 @@ const table={kind:'count',level:'Stadsområde',measure:{additive:true},metadata:
 const groups=planGroups(table,'01',2024,2025,[{name:'',separate:['Område'],selections:{Område:['01','02','03','04','99'],Kön:['Man','Kvinna']}}]);
 const payload={columns:[{code:'Område',type:'d'},{code:'Kön',type:'d'},{code:'År',type:'t'},{code:'Antal',type:'c'}],data:['01','02','03','04','99'].flatMap((a,i)=>['Man','Kvinna'].flatMap(sex=>['2024','2025'].map(year=>({key:[a,sex,year],values:[String(i===4?999999:(i+1)*100+(year==='2025'?50:0))]}))))};
 const result={table,groups,series:detailedSeries(payload,groups[0].query,groups[0],table),measure:'Folkmängd',unit:'Antal personer',date:'2026-09-16'};
+const middleGeometry=JSON.parse(await readFile(new URL('../data/mellanomraden-map.json',import.meta.url),'utf8'));
+test('All 36 middle areas match catalog codes and render without the sidebar value list',async()=>{
+  const catalog=JSON.parse(await readFile(new URL('../data/catalog.json',import.meta.url),'utf8'));
+  const source=catalog.find(t=>t.level==='Mellanområde');
+  const codes=source.metadata.variables.find(v=>v.code==='Område').values.map(areaCode).filter(c=>c!=='99');
+  assert.equal(middleGeometry.features.length,36);
+  assert.deepEqual(middleGeometry.features.map(f=>areaCode(f.code)).sort(),codes.sort());
+  assert.ok(middleGeometry.features.every(f=>f.path.startsWith('M')&&f.path.endsWith('Z')&&!f.path.includes('NaN')));
+  assert.ok(middleGeometry.features.some(f=>f.name==='Östra Angered'));
+  const middle={...result,table:{...table,level:'Mellanområde'},series:middleGeometry.features.map((f,i)=>({dimensionValues:{Område:f.code+' '+f.name},rows:[{year:2024,value:i},{year:2025,value:i+100}]}))};
+  middle.series.push({dimensionValues:{Område:'99 Ospecificerat Göteborg'},rows:[{year:2025,value:999999}]});
+  const series=mapSeries(middle);
+  assert.equal(series.size,36);assert.deepEqual(mapScale(series,2025),{min:100,max:135});
+  for(const includeNotes of [true,false]){
+    const svg=mapSVG(middle,middleGeometry,series,2025,mapScale(series),{includeNotes,scaleYear:2025});
+    assert.match(svg,/Mellanområden · 2025/);assert.match(svg,/Färgskala/);assert.match(svg,/Skala låst till 2025/);
+    assert.doesNotMatch(svg,/Värden per stadsområde|Värden per mellanområde/);
+    assert.equal((svg.match(/data-map-label=/g)||[]).length,36);
+    assert.equal((svg.match(/>Östra Angered<\/text>/g)||[]).length,0);
+  }
+  assert.equal(mapSeries({...middle,series:[{dimensionValues:{Område:'01 Nordost'},rows:[]}]}),null);
+  const partial=new Map([['10',{rows:[{year:2025,value:null}]}]]);
+  const values=mapValues(middleGeometry,partial,2025);
+  assert.equal(values.find(v=>v.code==='10').state,'missing');
+  assert.equal(values.filter(v=>v.state==='outside').length,35);
+});
 test('Map heading identifies the table and selected categories without implying the total population',()=>{
   const housing={...result,table:{...table,title:'Folkmängd efter bostadens upplåtelseform 2015-2025',metadata:{variables:[...table.metadata.variables,{code:'Upplåtelseform',values:['A','B','C'],valueTexts:['Äganderätt','Bostadsrätt','Hyresrätt']}] }},groups:[{...groups[0],selections:{...groups[0].selections,Upplåtelseform:['A']}}]};
   assert.deepEqual(mapHeading(housing),{title:'Folkmängd efter bostadens upplåtelseform',selection:'Upplåtelseform: Äganderätt'});
@@ -108,8 +134,17 @@ test('Map tooltip shows area, year, value and unit, supports focus and Escape, a
 test('Continuous colors cover negative and positive values over the full period',()=>{
   const series=new Map([['1',{rows:[{year:2024,value:-100},{year:2025,value:100}]}]]);
   const scale=mapScale(series);
-  assert.equal(scale.min,-100);assert.equal(mapColor(-100,scale),'#c0e4f2');assert.equal(mapColor(100,scale),'#3f5564');assert.notEqual(mapColor(-50,scale),mapColor(0,scale));assert.notEqual(mapColor(0,scale),mapColor(50,scale));
+  assert.equal(scale.min,-100);assert.equal(mapColor(-100,scale),'#e8f1f6');assert.equal(mapColor(100,scale),'#173b50');assert.notEqual(mapColor(-50,scale),mapColor(0,scale));assert.notEqual(mapColor(0,scale),mapColor(50,scale));
   assert.equal(scale.max,100);
+  assert.equal(mapColor(0,scale),'#8096a3');
+  const luminance=hex=>{
+    const channels=hex.match(/[a-f\d]{2}/gi).map(c=>parseInt(c,16)/255).map(c=>c<=.04045?c/12.92:((c+.055)/1.055)**2.4);
+    return channels[0]*.2126+channels[1]*.7152+channels[2]*.0722;
+  };
+  const shades=Array.from({length:21},(_,i)=>mapColor(-100+i*10,scale));
+  assert.ok(shades.slice(1).every((color,i)=>luminance(color)<luminance(shades[i])));
+  const svg=mapSVG(result,geometry,series,2025,scale);
+  for(const [offset,color] of [[0,'#e8f1f6'],[1,'#173b50']])assert.ok(svg.includes(`<stop offset="${offset}" stop-color="${color}"/>`));
 });
 test('Latest-year scale ignores earlier extremes, preserves values and clamps colors outside its range',()=>{
   const series=new Map([['1',{rows:[{year:2000,value:10},{year:2025,value:100}]}],['2',{rows:[{year:2000,value:1000},{year:2025,value:200}]}],['3',{rows:[{year:2025,value:null}]}]]);
@@ -120,7 +155,7 @@ test('Latest-year scale ignores earlier extremes, preserves values and clamps co
   assert.match(svg,/Skala låst till 2025/);assert.match(svg,/Värden utanför skalan får ändfärger/);assert.match(svg,/Nordost: 10 Antal personer/);
   assert.doesNotMatch(svg,/foreignObject|map-scale-lock/);
   assert.equal(mapScale(series,2026),null);
-  const constant={min:100,max:100};assert.equal(mapColor(0,constant),'#c0e4f2');assert.equal(mapColor(200,constant),'#3f5564');assert.notEqual(mapColor(100,constant),mapColor(200,constant));
+  const constant={min:100,max:100};assert.equal(mapColor(0,constant),'#e8f1f6');assert.equal(mapColor(200,constant),'#173b50');assert.notEqual(mapColor(100,constant),mapColor(200,constant));
   const constantSVG=mapSVG(result,geometry,series,2000,constant,{scaleYear:2025});assert.match(constantSVG,/&lt; 100/);assert.match(constantSVG,/&gt; 100/);assert.doesNotMatch(constantSVG,/NaN/);
 });
 

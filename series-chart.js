@@ -44,7 +44,8 @@ export function seriesChart({series,area,table,measure,date,groups,unit='Antal p
     let previousYear;
     for(const row of s.rows){if(row.value===null){drawing=false;continue;}if(row.period&&previousYear!==undefined&&row.year-previousYear>1/12+1e-8)drawing=false;path+=`${drawing?'L':'M'} ${x(row.year)} ${y(row.value)} `;drawing=true;previousYear=row.year;}
     svg+=`<path data-series="${i}" d="${path}" fill="none" stroke="${color}" stroke-width="3" stroke-dasharray="${dash}"/>`;
-    for(const row of s.rows.filter(r=>r.value!==null))svg+=`<circle data-series="${i}" data-year="${row.year}" cx="${x(row.year)}" cy="${y(row.value)}" r="4" fill="${color}" tabindex="0" role="img" aria-label="${esc(s.name)}, ${periodOf(row)}: ${esc(fmt(row.value))} ${esc(unit.toLowerCase().replace(/^antal /,''))}"><title>${esc(s.name)}, ${periodOf(row)}: ${esc(fmt(row.value))} ${esc(unit.toLowerCase().replace(/^antal /,''))}</title></circle>`;
+    const lastYear=endings.find(e=>e.i===i)?.last.year;
+    for(const row of s.rows.filter(r=>r.value!==null))svg+=`<circle data-series="${i}" data-year="${row.year}" cx="${x(row.year)}" cy="${y(row.value)}" r="4" opacity="${row.year===lastYear?1:0}" data-endpoint="${row.year===lastYear}" fill="${color}" tabindex="0" role="img" aria-label="${esc(s.name)}, ${periodOf(row)}: ${esc(fmt(row.value))} ${esc(unit.toLowerCase().replace(/^antal /,''))}"><title>${esc(s.name)}, ${periodOf(row)}: ${esc(fmt(row.value))} ${esc(unit.toLowerCase().replace(/^antal /,''))}</title></circle>`;
     const ending=endings.find(e=>e.i===i);
     if(ending&&series.length>1){
       svg+=`<path d="M ${x(ending.last.year)} ${y(ending.last.value)} L ${width-right+15} ${ending.labelY}" fill="none" stroke="${color}" stroke-dasharray="${dash}"/><text x="${width-right+22}" y="${ending.labelY+4}" font-size="12" font-weight="700" fill="${color}">`;
@@ -77,14 +78,14 @@ export function attachSeriesInteraction(container,series,unit='Antal personer'){
   let active=-1;
   function clear(){
     active=-1;overlay.style.display='none';
-    points.forEach(point=>{point.setAttribute('r',4);point.style.opacity='';});lines.forEach(line=>{line.style.opacity='';});
+    points.forEach(point=>{point.setAttribute('r',4);point.removeAttribute('stroke');point.removeAttribute('stroke-width');point.style.opacity='';});lines.forEach(line=>{line.style.opacity='';});
     announcement.textContent='';
   }
   function show(index){
     active=index;const year=rows[index].year;
     const x=left+(year-rows[0].year)/(rows.at(-1).year-rows[0].year||1)*(right-left);
     yearLabel.textContent=periodOf(rows[index]);
-    labels.forEach((label,i)=>{const value=series[i].rows.find(row=>row.year===year)?.value;label.textContent=series[i].name+': '+(value==null?'Uppgift saknas':fmt(value)+' '+unit.toLowerCase().replace(/^antal /,''));});
+    labels.forEach((label,i)=>{const value=series[i].rows.find(row=>row.year===year)?.value;label.textContent=(series.length===1&&series[i].isDefaultName?'':series[i].name+': ')+(value==null?'Uppgift saknas':fmt(value)+' '+unit.toLowerCase().replace(/^antal /,''));});
     overlay.style.display='';
     const width=Math.max(100,...labels.map(label=>label.getComputedTextLength()+60)),height=36+series.length*25;
     const bx=Math.max(8,Math.min(992-width,x+width+16<992?x+16:x-width-16)),by=top+8;
@@ -92,8 +93,8 @@ export function attachSeriesInteraction(container,series,unit='Antal personer'){
     yearLabel.setAttribute('x',bx+12);yearLabel.setAttribute('y',by+20);
     labels.forEach((label,i)=>{const cy=by+43+i*25;label.setAttribute('x',bx+43);label.setAttribute('y',cy);swatches[i].setAttribute('x1',bx+12);swatches[i].setAttribute('x2',bx+34);swatches[i].setAttribute('y1',cy-4);swatches[i].setAttribute('y2',cy-4);});
     guide.setAttribute('x1',x);guide.setAttribute('x2',x);
-    points.forEach(point=>{const selected=Number(point.dataset.year)===year;point.setAttribute('r',selected?7:4);point.style.opacity=selected?'1':'.25';});
-    lines.forEach(line=>{line.style.opacity='.3';});
+    points.forEach(point=>{const selected=Number(point.dataset.year)===year;point.setAttribute('r',selected?5:4);point.setAttribute('stroke',selected?'#ffffff':'none');point.setAttribute('stroke-width',selected?1.5:0);point.style.opacity=selected?'1':point.dataset.endpoint==='true'?'1':'0';});
+    lines.forEach(line=>{line.style.opacity='.85';});
     if(document.activeElement===svg)announcement.textContent=periodOf(rows[index])+': '+labels.map(label=>label.textContent).join(' · ');
   }
   function inspect(event){
