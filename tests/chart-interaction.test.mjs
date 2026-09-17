@@ -6,6 +6,7 @@ import {attachSeriesInteraction,seriesChart,fitSeriesChart} from '../src/series-
 class Element {
   constructor(){this.attributes={};this.style={};this.children=[];this.events={};this.dataset={};this.textContent='';}
   setAttribute(key,value){this.attributes[key]=String(value);}
+  getAttribute(key){return this.attributes[key];}
   removeAttribute(key){delete this.attributes[key];}
   append(...children){this.children.push(...children);}
   addEventListener(name,handler){this.events[name]=handler;}
@@ -22,7 +23,8 @@ test('Dialog resizing uses the allocated viewport and restores the ordinary char
     globalThis.requestAnimationFrame=fn=>{flush=fn;return 1;};globalThis.cancelAnimationFrame=()=>{};
     globalThis.ResizeObserver=class{constructor(fn){resize=fn;}observe(node){observed=node;}disconnect(){disconnected=true;}};
     const viewport={getBoundingClientRect:()=>bounds};
-    const svg=new Element();svg.querySelectorAll=()=>[];
+    const texts=[14,13,12].map(size=>{const text=new Element();text.setAttribute('font-size',size);return text;});
+    const svg=new Element();svg.querySelectorAll=selector=>selector==='text[font-size]'?texts:[];
     // Deliberately different from the available slot: the SVG must not size itself.
     svg.getBoundingClientRect=()=>({width:600,height:465});
     Object.defineProperty(svg,'outerHTML',{set(value){writes++;rendered=value;}});
@@ -34,7 +36,12 @@ test('Dialog resizing uses the allocated viewport and restores the ordinary char
     expanded=true;bounds.height=308;resize();flush();assert.match(rendered,/viewBox="0 0 1000 280"/);
     const count=writes;resize();flush();assert.equal(writes,count);
     bounds.width=1400;bounds.height=630;resize();flush();assert.match(rendered,/viewBox="0 0 1000 450"/);
+    for(const text of texts)assert.ok(Math.abs(parseFloat(text.style.fontSize)*1.4-Number(text.getAttribute('font-size')))<1e-9);
+    // A resize at the same aspect ratio must still update the text size.
+    bounds.width=1200;bounds.height=540;const prior=writes;resize();flush();assert.equal(writes,prior+1);
+    for(const text of texts)assert.ok(Math.abs(parseFloat(text.style.fontSize)*1.2-Number(text.getAttribute('font-size')))<1e-9);
     expanded=false;bounds.height=512;resize();flush();assert.match(rendered,/viewBox="0 0 1000 465"/);
+    for(const text of texts)assert.equal(parseFloat(text.style.fontSize),Number(text.getAttribute('font-size')));
     dispose();assert.equal(disconnected,true);
   }finally{Object.assign(globalThis,saved);}
 });

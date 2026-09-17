@@ -70,7 +70,7 @@ export function seriesChart({series,area,table,measure,date,groups,unit='Antal p
 // Redraw the plot to fit the available shape; retain the SVG text proportions
 // and leave the independent export image at its standard dimensions.
 export function fitSeriesChart(container,options){
-  let frame,lastHeight;
+  let frame,lastHeight,lastTextScale=1;
   const viewport=container.querySelector('.chart-viewport');
   const update=()=>{
     cancelAnimationFrame(frame);
@@ -81,12 +81,18 @@ export function fitSeriesChart(container,options){
       const bounds=viewport.getBoundingClientRect();
       if(!bounds.width||!bounds.height)return;
       const height=container.closest('.visual-dialog')?Math.round(1000*bounds.height/bounds.width):undefined;
-      if(height===lastHeight)return;
-      lastHeight=height;
+      // Cap on-screen SVG typography at its native size (12–14 CSS px),
+      // while allowing the plot to fill the larger viewport. Exports are separate.
+      const textScale=height===undefined?1:Math.min(1,1000/bounds.width);
+      if(height===lastHeight&&textScale===lastTextScale)return;
+      lastHeight=height;lastTextScale=textScale;
       const focused=document.activeElement===svg;
       svg.outerHTML=seriesChart({...options,includeHeading:false,includeDescriptions:false,layoutHeight:height});
       container.querySelector('.sr-only')?.remove();
       attachSeriesInteraction(container,options.series,options.unit);
+      for(const text of container.querySelector('svg').querySelectorAll('text[font-size]')){
+        text.style.fontSize=`${Number(text.getAttribute('font-size'))*textScale}px`;
+      }
       if(focused)container.querySelector('svg').focus({preventScroll:true});
     });
   };
