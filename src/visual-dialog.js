@@ -1,4 +1,7 @@
+import {alignVisualHeadings} from './result-heading.js';
+
 export function initVisualDialog(panel,doc=document){
+  alignVisualHeadings(panel);
   const trigger=doc.createElement('button');
   trigger.type='button';trigger.className='secondary visual-expand';
   trigger.setAttribute('aria-label','Förstora diagram eller karta');

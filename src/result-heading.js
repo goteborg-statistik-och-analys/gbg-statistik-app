@@ -26,6 +26,37 @@ export function visualHeading(result){
   const {title,selection}=resultHeading(result);
   return `<div class="visual-heading"><h3>${esc(title)}</h3>${selection?`<p>${esc(selection)}</p>`:''}</div>`;
 }
+// SVGs preserve their aspect ratio and can have horizontal space around the
+// drawing. Align the HTML heading with the rendered subtitle, not the SVG box.
+export function alignVisualHeadings(panel){
+  let frame;
+  const update=()=>{
+    cancelAnimationFrame(frame);
+    frame=requestAnimationFrame(()=>{
+      for(const heading of panel.querySelectorAll('.visual-heading')){
+        const sibling=heading.nextElementSibling;
+        const svg=sibling?.matches('.chart-viewport')?sibling.querySelector('svg'):sibling;
+        if(svg?.tagName.toLowerCase()!=='svg'||!svg.getBoundingClientRect().width)continue;
+        const subtitle=svg.querySelector('text'),matrix=subtitle?.getScreenCTM();
+        if(!matrix)continue;
+        const point=svg.createSVGPoint();
+        point.x=Number(subtitle.getAttribute('x'));point.y=Number(subtitle.getAttribute('y'));
+        const left=point.matrixTransform(matrix).x-heading.getBoundingClientRect().left;
+        heading.style.paddingLeft=`${Math.max(0,left)}px`;
+      }
+    });
+  };
+  const resize=new ResizeObserver(update);
+  const observe=()=>{
+    resize.disconnect();resize.observe(panel);
+    for(const svg of panel.querySelectorAll('.chart-viewport>svg,.map-canvas>svg'))resize.observe(svg);
+    update();
+  };
+  new MutationObserver(records=>{
+    if(records.some(record=>record.target.matches?.('#chart,.chart-viewport,.map-canvas')))observe();
+  }).observe(panel,{childList:true,subtree:true});
+  observe();
+}
 export function resultAreaLabel(result){
   const dimension=result.table?.metadata&&areaOf(result.table.metadata);
   if(!dimension)return result.area||'Göteborg';

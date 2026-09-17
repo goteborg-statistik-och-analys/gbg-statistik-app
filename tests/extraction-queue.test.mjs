@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {runExtraction} from '../extraction-queue.js';
+import {runExtraction} from '../src/extraction-queue.js';
 const deferred=()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
 

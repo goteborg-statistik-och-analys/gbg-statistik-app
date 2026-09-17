@@ -4,6 +4,12 @@ export function tableMeasure(table){
   return {label:table.kind==='education'?(table.title.startsWith('Gymnasie')?'Gymnasiebehörighet':'Högsta utbildningsnivå'):'Folkmängd',unit:'Antal personer',additive:true};
 }
 export function reviewedCountMeasure(table){
+  if(table.subject==='Utbildning'){
+    if(/^Högsta utbildningsnivå(?=,| |$)/.test(table.title))return {label:'Högsta utbildningsnivå',unit:'Antal personer',additive:true};
+    if(/^Gymnasiebehörighet\b/.test(table.title))return {label:'Gymnasiebehörighet',unit:'Antal personer',additive:true};
+    if(/^Högskolebehörighet\b/.test(table.title))return {label:'Högskolebehörighet',unit:'Antal personer',additive:true};
+    if(/^Antal barn 0-17 år efter föräldrars utbildningsnivå(?=,| |$)/.test(table.title))return {label:'Barn efter föräldrars utbildningsnivå',unit:'Antal barn',additive:true};
+  }
   if(table.subject==='Befolkning'){
     if(/^Befolkningstäthet/.test(table.title))return {label:'Befolkningstäthet',unit:'Personer per km² landyta',additive:false};
     if(/prognos/i.test(table.title))return {label:'Prognostiserad folkmängd',unit:'Antal personer',additive:true,forecast:true};

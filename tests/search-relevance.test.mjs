@@ -1,8 +1,8 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {findTables} from '../search.js';
-import {searchSelection} from '../search-selection.js';
+import {findTables} from '../src/search.js';
+import {searchSelection} from '../src/search-selection.js';
 const catalog=JSON.parse(await readFile(new URL('../data/search-catalog.json',import.meta.url),'utf8'));
 const cases=[
   ['Hur många kvinnor 20–64 år bor i Majorna 2020–2025?',/^Folkmängd 1984/],

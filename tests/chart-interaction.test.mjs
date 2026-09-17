@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {attachSeriesInteraction,seriesChart} from '../series-chart.js';
+import {attachSeriesInteraction,seriesChart,fitSeriesChart} from '../src/series-chart.js';
 
 // Minimal SVG surface to exercise pointer, focus and keyboard events without a browser.
 class Element {
@@ -12,6 +12,32 @@ class Element {
   querySelector(){return null;}
   getComputedTextLength(){return this.textContent.length*7;}
 }
+
+test('Dialog resizing uses the allocated viewport and restores the ordinary chart on close',()=>{
+  const saved={document:globalThis.document,ResizeObserver:globalThis.ResizeObserver,requestAnimationFrame:globalThis.requestAnimationFrame,cancelAnimationFrame:globalThis.cancelAnimationFrame};
+  let resize,flush,observed,disconnected=false,expanded=false,writes=0,rendered='';
+  const bounds={width:1100,height:512};
+  try{
+    globalThis.document={createElementNS:()=>new Element(),createElement:()=>new Element(),activeElement:null};
+    globalThis.requestAnimationFrame=fn=>{flush=fn;return 1;};globalThis.cancelAnimationFrame=()=>{};
+    globalThis.ResizeObserver=class{constructor(fn){resize=fn;}observe(node){observed=node;}disconnect(){disconnected=true;}};
+    const viewport={getBoundingClientRect:()=>bounds};
+    const svg=new Element();svg.querySelectorAll=()=>[];
+    // Deliberately different from the available slot: the SVG must not size itself.
+    svg.getBoundingClientRect=()=>({width:600,height:465});
+    Object.defineProperty(svg,'outerHTML',{set(value){writes++;rendered=value;}});
+    const container=new Element();container.querySelector=selector=>selector==='.chart-viewport'?viewport:selector==='svg'?svg:null;
+    container.closest=()=>expanded?{}:null;
+    const options={series:[{name:'Nordost',rows:[{year:2024,value:100},{year:2025,value:120}]}],table:{level:'Stadsområde'},measure:'Folkmängd',date:'2026-09-17'};
+    const dispose=fitSeriesChart(container,options);assert.equal(observed,viewport);
+    resize();flush();assert.equal(writes,0);
+    expanded=true;bounds.height=308;resize();flush();assert.match(rendered,/viewBox="0 0 1000 280"/);
+    const count=writes;resize();flush();assert.equal(writes,count);
+    bounds.width=1400;bounds.height=630;resize();flush();assert.match(rendered,/viewBox="0 0 1000 450"/);
+    expanded=false;bounds.height=512;resize();flush();assert.match(rendered,/viewBox="0 0 1000 465"/);
+    dispose();assert.equal(disconnected,true);
+  }finally{Object.assign(globalThis,saved);}
+});
 test('Hover anywhere in the plot shows all series, including missing values, and restores styling on exit',()=>{
   const documentBefore=globalThis.document,pointBefore=globalThis.DOMPoint;
   try{

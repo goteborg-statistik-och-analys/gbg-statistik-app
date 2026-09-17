@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {initHelpDialog} from '../help-dialog.js';
+import {initHelpDialog} from '../src/help-dialog.js';
 
 test('Help opens at the overview or requested topic and restores the triggering control on close',()=>{
   const events={},dialogEvents={},buttonEvents={},classes=new Set();

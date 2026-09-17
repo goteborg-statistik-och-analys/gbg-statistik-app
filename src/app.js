@@ -7,7 +7,7 @@ import {tableMeasure} from './table-measures.js';
 import {searchSelection} from './search-selection.js';
 import {initSearchSuggestions} from './search-suggestions.js';
 import {resultCSV,resultExcel} from './exports.js';
-import {seriesChart,attachSeriesInteraction,chartPeriods,chartDescriptions} from './series-chart.js';
+import {seriesChart,fitSeriesChart,chartPeriods,chartDescriptions} from './series-chart.js';
 import {initGroupControls} from './group-controls.js';
 import {planGroups} from './group-selection.js';
 import {initTableSuggestions} from './table-suggestions.js';
@@ -22,6 +22,7 @@ const syncSearchSuggestion=initSearchSuggestions($('search'),$('search-suggestio
 let catalog=[], selected=null, result=null, selectionVersion=0, dataVersion=0;
 let searchResults=[], requestedYears, shown=3, groupControls, searchContext=null;
 let disposeAreaMap=()=>{};
+let disposeChart=()=>{};
 const tableSuggestions=initTableSuggestions($('search'),()=>catalog,table=>{
   searchContext=findTables($('search').value,catalog);
   const area=matchedArea(table),years=searchContext.years;
@@ -152,7 +153,7 @@ function search(text){
   scroll('catalog-section');
 }
 function render(){
-  disposeAreaMap();
+  disposeAreaMap();disposeChart();
   const snapshot=result;
   const {series,rows,area,table,date,measure,unit,notes}=result;
   const start=rows[0],end=rows.at(-1),single=rows.length===1;
@@ -177,13 +178,14 @@ function render(){
   findSeries.addEventListener('input',()=>{const words=findSeries.value.toLocaleLowerCase('sv').trim().split(/\s+/);[...chartChoices.children].forEach(label=>{label.hidden=!words.every(word=>label.textContent.toLocaleLowerCase('sv').includes(word));});});
   const selection=new Set(series.length<=7?series.map((_,i)=>i):[]),checks=[];
   const draw=()=>{
+    disposeChart();
     const visible=chartPeriods(series.filter((_,i)=>selection.has(i)),result.populatedMonths);
     chooserTitle.textContent='Linjer i diagrammet: '+selection.size+' av högst 7';
     checks.forEach((check,i)=>{check.disabled=!selection.has(i)&&selection.size>=7;});
     result.svg=visible.some(s=>s.rows.length)&&!single?seriesChart({...result,series:visible}):'';
-    $('chart').innerHTML=result.svg?visualHeading(result)+seriesChart({...result,series:visible,includeHeading:false,includeDescriptions:false})+chartDescriptions(visible):(visible.length?'<p>Det saknas data för de valda serierna.</p>':'<p>Välj upp till sju serier för diagrammet. Alla serier finns i tabellen och exporterna.</p>');
+    $('chart').innerHTML=result.svg?visualHeading(result)+'<div class="chart-viewport">'+seriesChart({...result,series:visible,includeHeading:false,includeDescriptions:false})+'</div>'+chartDescriptions(visible):(visible.length?'<p>Det saknas data för de valda serierna.</p>':'<p>Välj upp till sju serier för diagrammet. Alla serier finns i tabellen och exporterna.</p>');
     for(const id of ['svg','png'])$(id).disabled=!result.svg;
-    if(result.svg)attachSeriesInteraction($('chart'),visible,unit);
+    if(result.svg)disposeChart=fitSeriesChart($('chart'),{...result,series:visible});
   };
   series.forEach((s,i)=>{const label=document.createElement('label');label.className='check-label';const check=document.createElement('input');check.type='checkbox';check.checked=selection.has(i);check.addEventListener('change',()=>{if(check.checked&&selection.size<7)selection.add(i);else{selection.delete(i);check.checked=false;}draw();});checks.push(check);label.append(check,document.createTextNode(s.name));chartChoices.append(label);});
   chooser.append(findLabel,findSeries,chartChoices);$('chart-panel').querySelector('.chart-series-choice')?.remove();$('chart-panel').insertBefore(chooser,$('chart'));chooser.open=series.length>7;chooser.hidden=single;draw();
@@ -223,7 +225,7 @@ $('selection-form').addEventListener('submit',async e=>{
     const areaLabels=[...new Set(groups.map(group=>group.area))];
     const area=areaLabels.length===1?(areaLabels[0].length>70?'valda områden':areaLabels[0]):'valda områden';
     $('fetch-button').disabled=true;$('fetch-button').textContent='Hämtar statistik …';$('result').hidden=true;status('Hämtar statistik från Göteborgs statistikdatabas …');
-    const series=[],allNotes=new Set();
+    const series=[],allNotes=new Set(table.sourceNotes||[]);
     const cells=groups.reduce((sum,g)=>sum+g.query.query.reduce((n,v)=>n*v.selection.values.length,1),0);
     if(cells>1000000)throw new Error('Urvalet är för stort. Välj färre år eller kategorier (högst en miljon källvärden).');
     const jobs=groups.flatMap(group=>splitQuery(group.query,group.separate||[]).map(query=>({group,query})));

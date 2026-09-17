@@ -1,9 +1,9 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {planGroups,categoryValues} from '../group-selection.js';
-import {splitQuery,detailedSeries,resultGrid} from '../detailed-results.js';
-import {resultCSV,resultExcel} from '../exports.js';
-import {seriesChart} from '../series-chart.js';
+import {planGroups,categoryValues} from '../src/group-selection.js';
+import {splitQuery,detailedSeries,resultGrid} from '../src/detailed-results.js';
+import {resultCSV,resultExcel} from '../src/exports.js';
+import {seriesChart} from '../src/series-chart.js';
 const table={kind:'population',title:'Folkmängd',level:'Primärområde',metadata:{variables:[{code:'Område',values:['A','B']},{code:'Ålder',values:['0 år','1 år','2 år']},{code:'Kön',values:['Man','Kvinna']},{code:'År',values:['2024','2025']}]}};
 const [group]=planGroups(table,'A',2024,2025,[{name:'',separate:['Område','Ålder'],selections:{Område:['A','B'],'Ålder':['0 år','1 år','2 år'],Kön:['Man','Kvinna']}}]);
 const payload={columns:[{code:'Område',type:'d'},{code:'Ålder',type:'d'},{code:'Kön',type:'d'},{code:'År',type:'t'},{code:'Antal',type:'c'}],data:['A','B'].flatMap((a,i)=>['0 år','1 år','2 år'].flatMap((age,j)=>['Man','Kvinna'].flatMap((sex,k)=>['2024','2025'].map(year=>({key:[a,age,sex,year],values:[String(100*i+10*j+k)]})))))};

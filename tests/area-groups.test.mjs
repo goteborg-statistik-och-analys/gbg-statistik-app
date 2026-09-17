@@ -1,8 +1,8 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {planGroups} from '../group-selection.js';
-import {aggregate,makeQuery} from '../core.js';
-import {resultCSV,resultExcel} from '../exports.js';
+import {planGroups} from '../src/group-selection.js';
+import {aggregate,makeQuery} from '../src/core.js';
+import {resultCSV,resultExcel} from '../src/exports.js';
 const table={kind:'population',title:'Folkmängd',metadata:{variables:[{code:'Område',values:['101 A','102 B','Göteborg']},{code:'Kön',values:['Man','Kvinna']},{code:'År',values:['2024','2025']}]}};
 const group=areas=>({name:'',selections:{Område:areas,Kön:['Man','Kvinna']}});
 const payload={columns:[{code:'Område',type:'d'},{code:'Kön',type:'d'},{code:'År',type:'t'},{code:'Antal',type:'c'}],data:['2024','2025'].flatMap(year=>['101 A','102 B'].flatMap((area,i)=>['Man','Kvinna'].map((sex,j)=>({key:[area,sex,year],values:[String((i+1)*10+j)]}))))};

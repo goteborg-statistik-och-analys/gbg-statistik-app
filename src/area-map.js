@@ -12,6 +12,7 @@ const wrap=(text,length=100)=>{
 export const areaCode=value=>String(value??'').trim().match(/^(\d+)(?:\s|$)/)?.[1].replace(/^0+(?=\d)/,'')||'';
 const mapLevels={
   Stadsområde:{file:'stadsomraden',plural:'Stadsområden',codes:['1','2','3','4']},
+  Primärområde:{file:'primaromraden',plural:'Primärområden',codes:["101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","201","202","203","204","205","206","207","208","209","210","211","212","301","302","303","304","305","306","402","403","404","405","406","407","408","409","410","412","413","414","415","416","417","501","502","503","504","505","506","507","508","509","510","511","512","513","514","515","516","517","518","519","520","521","522","523","524","525","601","602","603","604","605","606","609","610","611","612","613","701","702","703","704","705","706","707","708","709"]},
   Mellanområde:{file:'mellanomraden',plural:'Mellanområden',codes:[10,11,12,13,14,15,16,30,31,32,33,34,35,36,37,38,39,50,51,52,53,54,55,56,57,70,71,72,73,74,75,76,77,78,79,80].map(String)}
 };
 export function mapSeries(result){
@@ -26,7 +27,7 @@ export function mapSeries(result){
     const raw=item.dimensionValues?.[dimension.code];
     if(raw===undefined)return null;
     const code=areaCode(raw);
-    if(code==='99'||code==='9')continue;
+    if(code==='99'||code==='9'||(result.table.level==='Primärområde'&&code==='199'))continue;
     if(!level.codes.includes(code)||series.has(code))return null;
     if(item.rows.some(row=>row.period))return null;
     series.set(code,item);
@@ -41,7 +42,7 @@ export function mapScale(series,year){
   return {min,max};
 }
 export function mapUnavailableReason(result){
-  if(!mapLevels[result.table?.level])return 'Kartvyn finns för stadsområden och mellanområden. Välj en tabell med Stadsområde eller Mellanområde som geografisk nivå.';
+  if(!mapLevels[result.table?.level])return 'Kartvyn finns för stadsområden, mellanområden och primärområden. Välj en tabell med Stadsområde, Mellanområde eller Primärområde som geografisk nivå.';
   if(result.table.measure?.monthly)return 'Kartvyn stöder årsdata. Välj en tabell med årsdata i stället för månadsdata.';
   if(result.table.measure?.additive===false)return 'Kartvyn stöder ännu bara summerbara antalsmått, inte detta mått.';
   if(result.groups?.length!==1)return 'Kartvyn kräver en urvalsgrupp. Använd en grupp i stället för flera jämförelsegrupper.';
@@ -77,7 +78,7 @@ export function mapNotes(result){
     `Källa: Göteborgs Stads statistikdatabas · Hämtad ${result.date}`].filter(Boolean);
 }
 export function mapSVG(result,geometry,series,year,scale,{includeNotes=true,includeHeading=true,scaleYear,scaleControl}={}){
-  const middle=result.table.level==='Mellanområde',plural=mapLevels[result.table.level].plural;
+  const compact=result.table.level!=='Stadsområde',plural=mapLevels[result.table.level].plural;
   const entries=mapValues(geometry,series,year);
   const caption=mapHeading(result),titleLines=includeHeading?wrap(caption.title,65):[],selectionLines=includeHeading?wrap(caption.selection):[];
   const headerShift=includeHeading?(titleLines.length-1)*27+selectionLines.length*20:-35;
@@ -93,15 +94,15 @@ export function mapSVG(result,geometry,series,year,scale,{includeNotes=true,incl
     const value=entry.state==='outside'?'Ingår inte i urvalet':entry.state==='missing'?'Uppgift saknas':format(entry.value);
     return `<path d="${entry.path}" fill="${fill}" fill-rule="evenodd" stroke="#1f1f1f" stroke-width="0.7" tabindex="0" role="img" aria-label="${esc(label)} · ${year}" data-map-label="${esc(label)}" data-map-name="${esc(entry.name)}" data-map-value="${esc(value)}" data-map-unit="${esc(entry.state==='value'?result.unit.toLowerCase().replace(/^antal /,''):'')}"></path>`;
   }).join('');
-  const labels=middle?'':entries.map((entry,i)=>`<text x="${geometry.width+30}" y="${155+i*65}" font-weight="800">${esc(entry.name)}</text><text x="${geometry.width+30}" y="${178+i*65}">${esc(entry.state==='outside'?'Ingår inte i urvalet':entry.state==='missing'?'Uppgift saknas':format(entry.value))}</text>`).join('');
+  const labels=compact?'':entries.map((entry,i)=>`<text x="${geometry.width+30}" y="${155+i*65}" font-weight="800">${esc(entry.name)}</text><text x="${geometry.width+30}" y="${178+i*65}">${esc(entry.state==='outside'?'Ingår inte i urvalet':entry.state==='missing'?'Uppgift saknas':format(entry.value))}</text>`).join('');
   const defaultLegend=scale?`<text x="${geometry.width+30}" y="435" font-weight="800">Färgskala</text><rect x="${geometry.width+30}" y="452" width="240" height="12" rx="2" fill="${scale.min===scale.max?mapColor(scale.min,scale):'url(#map-scale)'}"/><text x="${geometry.width+30}" y="486">${format(scale.min)}</text>${scale.min===scale.max?'':`<text x="${geometry.width+270}" y="486" text-anchor="end">${format(scale.max)}</text>`}<text x="${geometry.width+30}" y="516" font-size="13">${scaleYear===undefined?'Samma skala för alla valda år':`Skala låst till ${scaleYear}`}</text>`:`<text x="${geometry.width+30}" y="450">Uppgift saknas för alla valda år</text>`;
   const constant=scale&&scale.min===scale.max&&scaleYear!==undefined;
   const legend=constant?`<text x="${geometry.width+30}" y="435" font-weight="800">Färgskala</text>${[scale.min-1,scale.min,scale.min+1].map((value,i)=>`<rect x="${geometry.width+30+i*80}" y="452" width="80" height="12" fill="${mapColor(value,scale)}"/><text x="${geometry.width+30+i*120}" y="486" text-anchor="${i===0?'start':i===1?'middle':'end'}">${i===0?'&lt; ':i===2?'&gt; ':''}${format(scale.min)}</text>`).join('')}<text x="${geometry.width+30}" y="516" font-size="13">Skala låst till ${scaleYear}</text>`:defaultLegend;
-  const lockControl=scaleControl?`<foreignObject x="${geometry.width+30}" y="${535+headerShift-(middle?260:0)}" width="275" height="95"><div xmlns="http://www.w3.org/1999/xhtml" class="map-scale-control"><label><input id="map-scale-lock" type="checkbox" ${scaleControl.checked?'checked="checked"':''} ${scaleControl.available?'':'disabled="disabled"'}/><span>Lås färgskalan vid senaste år</span></label><p>${scaleControl.available?`Senaste år i urvalet: ${scaleControl.latestYear}`:`Uppgift saknas för ${scaleControl.latestYear}`}</p></div></foreignObject>`:'';
+  const lockControl=scaleControl?`<foreignObject x="${geometry.width+30}" y="${535+headerShift-(compact?260:0)}" width="275" height="95"><div xmlns="http://www.w3.org/1999/xhtml" class="map-scale-control"><label><input id="map-scale-lock" type="checkbox" ${scaleControl.checked?'checked="checked"':''} ${scaleControl.available?'':'disabled="disabled"'}/><span>Lås färgskalan vid senaste år</span></label><p>${scaleControl.available?`Senaste år i urvalet: ${scaleControl.latestYear}`:`Uppgift saknas för ${scaleControl.latestYear}`}</p></div></foreignObject>`:'';
   const clipped=scale&&entries.some(entry=>entry.state==='value'&&(entry.value<scale.min||entry.value>scale.max));
-  const scaleNote=scaleYear!==undefined&&clipped?`<text x="${geometry.width+30}" y="${(scaleControl?652:548)+headerShift-(middle?260:0)}" font-size="12">Värden utanför skalan får ändfärger.</text>`:'';
+  const scaleNote=scaleYear!==undefined&&clipped?`<text x="${geometry.width+30}" y="${(scaleControl?652:548)+headerShift-(compact?260:0)}" font-size="12">Värden utanför skalan får ändfärger.</text>`:'';
   const notes=detailLines.map((line,i)=>`<text x="30" y="${geometry.height+150+headerShift+i*22}" font-size="13">${esc(line)}</text>`).join('');
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${geometry.width+320} ${height}" width="${geometry.width+320}" height="${height}" role="group" aria-label="${esc(caption.title)}. ${esc(caption.selection)}. ${plural} ${year}" style="font-family:Open Sans,Arial,sans-serif;font-size:15px;color:#1f1f1f"><defs><linearGradient id="map-scale" color-interpolation="sRGB">${mapPalette.map((color,i)=>`<stop offset="${i/(mapPalette.length-1)}" stop-color="${color}"/>`).join('')}</linearGradient><pattern id="map-missing" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="#d1d9dc"/><path d="M0 8L8 0" stroke="#1f1f1f" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="#ffffff"/><g fill="#1f1f1f">${header}<g transform="translate(0 ${(includeNotes?105:75)+headerShift}) scale(${geometryScale})">${paths}</g><g transform="translate(0 ${headerShift})">${middle?'':'<text x="'+ (geometry.width+30) +'" y="113" font-size="17" font-weight="800">Värden per stadsområde</text>'}${labels}<g transform="translate(0 ${middle?-260:0})">${legend}</g></g>${lockControl}${scaleNote}${notes}</g></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${geometry.width+320} ${height}" width="${geometry.width+320}" height="${height}" role="group" aria-label="${esc(caption.title)}. ${esc(caption.selection)}. ${plural} ${year}" style="font-family:Open Sans,Arial,sans-serif;font-size:15px;color:#1f1f1f"><defs><linearGradient id="map-scale" color-interpolation="sRGB">${mapPalette.map((color,i)=>`<stop offset="${i/(mapPalette.length-1)}" stop-color="${color}"/>`).join('')}</linearGradient><pattern id="map-missing" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="#d1d9dc"/><path d="M0 8L8 0" stroke="#1f1f1f" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="#ffffff"/><g fill="#1f1f1f">${header}<g transform="translate(0 ${(includeNotes?105:75)+headerShift}) scale(${geometryScale})">${paths}</g><g transform="translate(0 ${headerShift})">${compact?'':'<text x="'+ (geometry.width+30) +'" y="113" font-size="17" font-weight="800">Värden per stadsområde</text>'}${labels}<g transform="translate(0 ${compact?-260:0})">${legend}</g></g>${lockControl}${scaleNote}${notes}</g></svg>`;
 }
 
 export function attachMapTooltip(canvas,year){

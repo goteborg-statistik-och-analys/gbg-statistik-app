@@ -16,7 +16,7 @@ export function resultCSV(result){
 }
 
 export async function resultExcel(result){
-  const XLSX=await import('./vendor/xlsx.mjs');
+  const XLSX=await import('../vendor/xlsx.mjs');
   if(result.series?.some(s=>Object.keys(s.dimensions||{}).length)){
     const grid=resultGrid(result);
     const sheet=XLSX.utils.aoa_to_sheet([['Statistik',result.measure],['Källa',sourceName],['Tabell',result.table.title],['Urval',result.detail],['Hämtad',new Date(`${result.date}T00:00:00Z`)],['Anmärkningar',result.notes||''],['Saknade värden','Tomma dataceller betyder att uppgift saknas.'],[],grid.headers,...grid.rows],{cellDates:true,dateNF:'yyyy-mm-dd'});

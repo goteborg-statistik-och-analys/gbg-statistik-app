@@ -1,9 +1,9 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {reviewedCountMeasure} from '../table-measures.js';
-import {resultCSV,resultExcel} from '../exports.js';
-import {seriesChart} from '../series-chart.js';
-import {aggregate} from '../core.js';
+import {reviewedCountMeasure} from '../src/table-measures.js';
+import {resultCSV,resultExcel} from '../src/exports.js';
+import {seriesChart} from '../src/series-chart.js';
+import {aggregate} from '../src/core.js';
 test('Reviewed count families use their own units; averages and unknown tables stay unsupported',()=>{
   assert.equal(reviewedCountMeasure({subject:'Bostäder och byggande',title:'Bostadsbestånd efter hustyp'}).unit,'Antal bostäder');
   assert.equal(reviewedCountMeasure({subject:'Arbetsmarknad',title:'Antal arbetsställen efter storlek'}).unit,'Antal arbetsställen');

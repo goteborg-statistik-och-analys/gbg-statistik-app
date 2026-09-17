@@ -15,6 +15,6 @@ const catalog=[...skill.matchAll(pattern)].map(([,title,level,url,variables])=>{
 });
 const education=catalog.filter(t=>/Högsta utbildningsnivå/.test(t.title)&&['Kommun','Primärområde'].includes(t.level)||/Gymnasiebehörighet/.test(t.title)&&t.level==='Primärområde');
 for(const t of education)t.kind='education';
-for(const table of catalog){const saved=prior.find(t=>t.url===table.url);if(saved?.metadata)table.metadata=saved.metadata;if(saved?.kind==='count'){table.kind=saved.kind;table.measure=saved.measure;}}
+for(const table of catalog){const saved=prior.find(t=>t.url===table.url);if(saved?.metadata)table.metadata=saved.metadata;if(saved?.kind==='count'||saved?.kind==='education'){table.kind=saved.kind;table.measure=saved.measure;}if(saved?.sourceNotes)table.sourceNotes=saved.sourceNotes;}
 await writeFile('data/search-catalog.json',JSON.stringify(catalog,null,2));
 console.log(JSON.stringify({count:catalog.length,education:education.map(t=>({id:t.id,url:t.url,title:t.title}))},null,2));

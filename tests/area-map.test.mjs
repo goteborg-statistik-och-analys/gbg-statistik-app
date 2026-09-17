@@ -1,9 +1,9 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {areaCode,mapSeries,mapScale,mapColor,mapValues,mapSVG,mountAreaMap,attachMapTooltip,mapHeading,mapUnavailableReason} from '../area-map.js';
-import {planGroups} from '../group-selection.js';
-import {detailedSeries} from '../detailed-results.js';
+import {areaCode,mapSeries,mapScale,mapColor,mapValues,mapSVG,mountAreaMap,attachMapTooltip,mapHeading,mapUnavailableReason} from '../src/area-map.js';
+import {planGroups} from '../src/group-selection.js';
+import {detailedSeries} from '../src/detailed-results.js';
 
 const geometry=JSON.parse(await readFile(new URL('../data/stadsomraden-map.json',import.meta.url),'utf8'));
 const table={kind:'count',level:'Stadsområde',measure:{additive:true},metadata:{variables:[
@@ -14,6 +14,32 @@ const groups=planGroups(table,'01',2024,2025,[{name:'',separate:['Område'],sele
 const payload={columns:[{code:'Område',type:'d'},{code:'Kön',type:'d'},{code:'År',type:'t'},{code:'Antal',type:'c'}],data:['01','02','03','04','99'].flatMap((a,i)=>['Man','Kvinna'].flatMap(sex=>['2024','2025'].map(year=>({key:[a,sex,year],values:[String(i===4?999999:(i+1)*100+(year==='2025'?50:0))]}))))};
 const result={table,groups,series:detailedSeries(payload,groups[0].query,groups[0],table),measure:'Folkmängd',unit:'Antal personer',date:'2026-09-16'};
 const middleGeometry=JSON.parse(await readFile(new URL('../data/mellanomraden-map.json',import.meta.url),'utf8'));
+const primaryGeometry=JSON.parse(await readFile(new URL('../data/primaromraden-map.json',import.meta.url),'utf8'));
+test('All 96 primary areas match catalog codes and render without the sidebar value list',async()=>{
+  const catalog=JSON.parse(await readFile(new URL('../data/catalog.json',import.meta.url),'utf8'));
+  const source=catalog.find(t=>t.level==='Primärområde');
+  const codes=source.metadata.variables.find(v=>v.code==='Område').values.map(areaCode).filter(c=>c!=='199');
+  assert.equal(primaryGeometry.features.length,96);
+  assert.deepEqual(primaryGeometry.features.map(f=>areaCode(f.code)).sort(),codes.sort());
+  assert.ok(primaryGeometry.features.every(f=>f.path.startsWith('M')&&f.path.endsWith('Z')&&!f.path.includes('NaN')));
+  assert.ok(primaryGeometry.features.some(f=>f.name==='Kärralund'));
+  const primary={...result,table:{...table,level:'Primärområde'},series:primaryGeometry.features.map((f,i)=>({dimensionValues:{Område:f.code+' '+f.name},rows:[{year:2024,value:i},{year:2025,value:i+100}]}))};
+  primary.series.push({dimensionValues:{Område:'199 Ospecificerat Göteborg'},rows:[{year:2025,value:999999}]});
+  const series=mapSeries(primary);
+  assert.equal(series.size,96);assert.deepEqual(mapScale(series,2025),{min:100,max:195});
+  for(const includeNotes of [true,false]){
+    const svg=mapSVG(primary,primaryGeometry,series,2025,mapScale(series),{includeNotes,scaleYear:2025});
+    assert.match(svg,/Primärområden · 2025/);assert.match(svg,/Färgskala/);assert.match(svg,/Skala låst till 2025/);
+    assert.doesNotMatch(svg,/Värden per stadsområde|Värden per primärområde/);
+    assert.equal((svg.match(/data-map-label=/g)||[]).length,96);
+    assert.equal((svg.match(/>Kärralund<\/text>/g)||[]).length,0);
+  }
+  assert.equal(mapSeries({...primary,series:[{dimensionValues:{Område:'01 Nordost'},rows:[]}]}),null);
+  const partial=new Map([['207',{rows:[{year:2025,value:null}]}]]);
+  const values=mapValues(primaryGeometry,partial,2025);
+  assert.equal(values.find(v=>v.code==='207').state,'missing');
+  assert.equal(values.filter(v=>v.state==='outside').length,95);
+});
 test('All 36 middle areas match catalog codes and render without the sidebar value list',async()=>{
   const catalog=JSON.parse(await readFile(new URL('../data/catalog.json',import.meta.url),'utf8'));
   const source=catalog.find(t=>t.level==='Mellanområde');
@@ -72,7 +98,7 @@ test('Separate area results retain source codes, map all four areas and exclude 
   assert.equal(geometry.year,2026);
 });
 test('Eligibility excludes other geographies, separate categories, duplicate areas, multiple selections and monthly data',()=>{
-  assert.equal(mapSeries({...result,table:{...table,level:'Primärområde'}}),null);
+  assert.equal(mapSeries({...result,table:{...table,level:'Basområde'}}),null);
   assert.equal(mapSeries({...result,groups:[{...groups[0],separate:['Område','Kön']}]}),null);
   assert.equal(mapSeries({...result,groups:[{...groups[0],separate:[]}]}),null);
   assert.equal(mapSeries({...result,groups:[...groups,...groups]}),null);
@@ -80,7 +106,7 @@ test('Eligibility excludes other geographies, separate categories, duplicate are
   assert.equal(mapSeries({...result,table:{...table,measure:{monthly:true}}}),null);
 });
 test('Unavailable maps explain the specific constraint and the required selection',()=>{
-  assert.match(mapUnavailableReason({...result,table:{...table,level:'Primärområde'}}),/Stadsområde/);
+  assert.match(mapUnavailableReason({...result,table:{...table,level:'Basområde'}}),/Stadsområde/);
   assert.match(mapUnavailableReason({...result,table:{...table,measure:{monthly:true}}}),/årsdata.*månadsdata/);
   assert.match(mapUnavailableReason({...result,groups:[...groups,...groups]}),/en urvalsgrupp/);
   assert.match(mapUnavailableReason({...result,groups:[{...groups[0],separate:[]}]}),/Visa varje kategori separat för Område/);

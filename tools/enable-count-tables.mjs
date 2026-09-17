@@ -1,7 +1,7 @@
 // Activate only reviewed count families with complete metadata and valid totals.
 import {readFile,writeFile} from 'node:fs/promises';
-import {reviewedCountMeasure} from '../table-measures.js';
-import {groupDimensions,totalValues,planGroups} from '../group-selection.js';
+import {reviewedCountMeasure} from '../src/table-measures.js';
+import {groupDimensions,totalValues,planGroups} from '../src/group-selection.js';
 const catalog=JSON.parse(await readFile('data/search-catalog.json','utf8'));
 const audit=JSON.parse(await readFile('data/expanded-metadata.json','utf8'));
 const checks=JSON.parse(await readFile('data/count-table-checks.json','utf8'));

@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {suggestedTables} from '../table-suggestions.js';
+import {suggestedTables} from '../src/table-suggestions.js';
 const catalog=JSON.parse(await readFile(new URL('../data/search-catalog.json',import.meta.url),'utf8'));
 test('Empty input suggests six different subjects, preferring supported tables',()=>{
   const suggestions=suggestedTables('',catalog);

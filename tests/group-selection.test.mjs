@@ -1,10 +1,10 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {ageRangeValues,totalValues,planGroups,groupDimensions} from '../group-selection.js';
-import {aggregate} from '../core.js';
-import {resultCSV,resultExcel} from '../exports.js';
-import {seriesChart} from '../series-chart.js';
+import {ageRangeValues,totalValues,planGroups,groupDimensions} from '../src/group-selection.js';
+import {aggregate} from '../src/core.js';
+import {resultCSV,resultExcel} from '../src/exports.js';
+import {seriesChart} from '../src/series-chart.js';
 const catalog=JSON.parse(await readFile(new URL('../data/search-catalog.json',import.meta.url),'utf8'));
 const table=catalog.find(t=>t.kind==='population'&&t.level==='Primärområde');
 const payload=JSON.parse(await readFile(new URL('../data/verified-majorna.json',import.meta.url),'utf8'));

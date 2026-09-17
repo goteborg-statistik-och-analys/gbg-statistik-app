@@ -1,10 +1,10 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {aggregate,areaOf,timeOf,makeQuery,csv} from '../core.js';
-import {planGroups} from '../group-selection.js';
-import {reviewedCountMeasure} from '../table-measures.js';
-import {detailedSeries} from '../detailed-results.js';
+import {aggregate,areaOf,timeOf,makeQuery,csv} from '../src/core.js';
+import {planGroups} from '../src/group-selection.js';
+import {reviewedCountMeasure} from '../src/table-measures.js';
+import {detailedSeries} from '../src/detailed-results.js';
 const audit=JSON.parse(await readFile(new URL('../data/population-audit.json',import.meta.url),'utf8'));
 const catalog=JSON.parse(await readFile(new URL('../data/search-catalog.json',import.meta.url),'utf8'));
 test('All population tables have complete metadata and a verified numeric source extract',()=>{

@@ -1,8 +1,8 @@
 // Optional live integration check: three small extracts, no files modified.
 import {readFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
-import {planGroups,groupDimensions,totalValues,ageRangeValues} from '../group-selection.js';
-import {aggregate} from '../core.js';
+import {planGroups,groupDimensions,totalValues,ageRangeValues} from '../src/group-selection.js';
+import {aggregate} from '../src/core.js';
 const catalog=JSON.parse(await readFile(new URL('../data/search-catalog.json',import.meta.url),'utf8'));
 const population=catalog.find(t=>t.kind==='population'&&t.level==='Primärområde');
 const education=catalog.find(t=>t.kind==='education'&&t.level==='Kommun');

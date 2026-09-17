@@ -1,8 +1,8 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {browseTables,catalogThemes,filterTables} from '../catalog-filters.js';
-import {findTables} from '../search.js';
+import {browseTables,catalogThemes,filterTables} from '../src/catalog-filters.js';
+import {findTables} from '../src/search.js';
 const catalog=JSON.parse(await readFile(new URL('../data/search-catalog.json',import.meta.url),'utf8'));
 test('Browsing includes every table and prioritizes tables supported by the app',()=>{
   const tables=browseTables(catalog);

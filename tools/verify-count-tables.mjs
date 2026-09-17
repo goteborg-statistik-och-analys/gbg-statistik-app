@@ -1,7 +1,7 @@
 import {readFile,writeFile} from 'node:fs/promises';
-import {reviewedCountMeasure} from '../table-measures.js';
-import {groupDimensions,planGroups} from '../group-selection.js';
-import {aggregate} from '../core.js';
+import {reviewedCountMeasure} from '../src/table-measures.js';
+import {groupDimensions,planGroups} from '../src/group-selection.js';
+import {aggregate} from '../src/core.js';
 const catalog=JSON.parse(await readFile('data/search-catalog.json','utf8'));
 const audit=JSON.parse(await readFile('data/expanded-metadata.json','utf8'));
 let results=[];

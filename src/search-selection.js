@@ -8,8 +8,8 @@ export function searchSelection(metadata,intent={}){
     if(value)selections[area.code]=[value];else warnings.push('Området i sökningen finns inte i denna tabell. Välj område manuellt.');
   }
   if(intent.age){
-    const v=metadata.variables.find(v=>v.code==='Ålder');
-    try{if(!v)throw new Error('Tabellen saknar åldersindelning.');selections['Ålder']=ageRangeValues(v,...intent.age);}
+    const v=metadata.variables.find(v=>v.code==='Ålder'||v.code==='Barnets ålder');
+    try{if(!v)throw new Error('Tabellen saknar åldersindelning.');selections[v.code]=ageRangeValues(v,...intent.age);}
     catch(error){warnings.push('Åldersurvalet kunde inte fyllas i: '+error.message);}
   }
   if(intent.sexes?.length===1){

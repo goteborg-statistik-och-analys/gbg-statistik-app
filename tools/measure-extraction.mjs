@@ -2,9 +2,9 @@
 import {readFile,writeFile} from 'node:fs/promises';
 import {performance} from 'node:perf_hooks';
 import {createHash} from 'node:crypto';
-import {areaOf} from '../core.js';
-import {categoryValues,totalValues,planGroups} from '../group-selection.js';
-import {splitQuery,detailedSeries,alignPeriods,resultGrid} from '../detailed-results.js';
+import {areaOf} from '../src/core.js';
+import {categoryValues,totalValues,planGroups} from '../src/group-selection.js';
+import {splitQuery,detailedSeries,alignPeriods,resultGrid} from '../src/detailed-results.js';
 
 const catalog=JSON.parse(await readFile(new URL('../data/search-catalog.json',import.meta.url),'utf8'));
 const table={...catalog.find(t=>t.id==='primar')};

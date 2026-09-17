@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {resultCSV,resultExcel,sourceName} from '../exports.js';
+import {resultCSV,resultExcel,sourceName} from '../src/exports.js';
 import {read,utils} from '../vendor/xlsx.mjs';
 
 const result={rows:[{year:2023,value:123456},{year:2024,value:null},{year:2025,value:0}],area:'Majorna',date:'2026-09-11',measure:'Folkmängd',detail:'Alla åldrar · Båda könen',notes:'Uppgifter saknas för ett år.',table:{title:'Folkmängd 1984–2025',url:'https://example.org/api/secret-path'}};

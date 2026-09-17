@@ -1,7 +1,7 @@
 import {readFile,writeFile} from 'node:fs/promises';
-import {reviewedCountMeasure} from '../table-measures.js';
-import {planGroups} from '../group-selection.js';
-import {aggregate,areaOf,timeOf} from '../core.js';
+import {reviewedCountMeasure} from '../src/table-measures.js';
+import {planGroups} from '../src/group-selection.js';
+import {aggregate,areaOf,timeOf} from '../src/core.js';
 const catalog=JSON.parse(await readFile('data/search-catalog.json','utf8'));
 const audit=JSON.parse(await readFile('data/population-audit.json','utf8'));
 const enabled=[],pending=[];

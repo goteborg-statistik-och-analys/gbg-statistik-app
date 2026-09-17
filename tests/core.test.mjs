@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {interpret,makeQuery,aggregate,csv} from '../core.js';
+import {interpret,makeQuery,aggregate,csv} from '../src/core.js';
 const catalog=JSON.parse(await readFile(new URL('../data/catalog.json',import.meta.url),'utf8'));
 const primary=catalog.find(t=>t.id==='primar');
 test('Swedish free text resolves Majorna and the requested years',()=>{const r=interpret('Folkmängden i Majorna 2010–2025',catalog);assert.equal(r.matches.length,1);assert.equal(r.matches[0].value,'103 Majorna');assert.deepEqual(r.years,[2010,2025]);assert.equal(r.subgroup,false);});

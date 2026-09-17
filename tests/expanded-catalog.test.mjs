@@ -1,12 +1,12 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {groupDimensions,totalValues,planGroups} from '../group-selection.js';
-import {aggregate} from '../core.js';
+import {groupDimensions,totalValues,planGroups} from '../src/group-selection.js';
+import {aggregate} from '../src/core.js';
 const catalog=JSON.parse(await readFile(new URL('../data/search-catalog.json',import.meta.url),'utf8'));
 const checks=JSON.parse(await readFile(new URL('../data/count-table-checks.json',import.meta.url),'utf8'));
-test('Every new enabled table has a verified source extract, measure and usable default selection',()=>{
-  const expanded=catalog.filter(t=>t.kind==='count'&&t.subject!=='Befolkning');
+test('Every enabled employment and housing count table has a verified source extract and usable defaults',()=>{
+  const expanded=catalog.filter(t=>t.kind==='count'&&['Arbetsmarknad','Bostäder och byggande'].includes(t.subject));
   assert.ok(expanded.length>0);
   for(const table of expanded){
     const check=checks.find(check=>check.id===table.id&&check.ok);

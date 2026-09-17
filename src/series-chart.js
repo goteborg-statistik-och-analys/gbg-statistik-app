@@ -17,19 +17,22 @@ function wrap(text,length=105){
   for(const word of text.split(/\s+/)){if((lines.at(-1)+' '+word).length>length&&lines.at(-1))lines.push('');lines[lines.length-1]+=(lines.at(-1)?' ':'')+word;}
   return lines;
 }
-export function seriesChart({series,area,table,measure,date,groups,unit='Antal personer',includeHeading=true,includeDescriptions=true}){
+export function seriesChart({series,area,table,measure,date,groups,unit='Antal personer',includeHeading=true,includeDescriptions=true,layoutHeight}){
   if(series.length>7)throw new Error('Diagrammet kan visa högst sju linjer.');
   const caption=resultHeading({table,measure,groups});
   const geography=includeHeading?[table.level,resultAreaLabel({table,groups,area})].filter(Boolean).join(' · '):table.level;
   const titleLines=includeHeading?wrap(caption.title,62):[],selectionLines=includeHeading&&caption.selection?wrap(caption.selection,105):[];
   const headerShift=includeHeading?(titleLines.length-1)*27+selectionLines.length*20:0;
-  const width=1000,left=88,right=250,top=(includeHeading?115:65)+headerShift,plotHeight=300,bottom=top+plotHeight;
+  const responsive=!includeHeading&&!includeDescriptions&&Number.isFinite(layoutHeight);
+  const width=1000,left=88,right=250,top=(includeHeading?115:65)+headerShift;
+  const footer=responsive?65:100;
+  const plotHeight=responsive?Math.max(60,layoutHeight-top-footer):300,bottom=top+plotHeight;
   const rows=series[0].rows,start=rows[0].year,end=rows.at(-1).year;
   const values=series.flatMap(s=>s.rows.filter(r=>r.value!==null).map(r=>r.value));
   const max=Math.max(...values,1),min=Math.min(...values,0),magnitude=10**Math.floor(Math.log10(Math.max(max,-min))),limit=Math.ceil(max/magnitude*2)/2*magnitude,lower=Math.floor(min/magnitude*2)/2*magnitude;
   const x=year=>left+(year-start)/(end-start||1)*(width-left-right),y=value=>top+(limit-value)/(limit-lower)*plotHeight;
   const descriptions=includeDescriptions?series.flatMap((s,i)=>wrap(`${i+1}. ${s.name}: ${s.detail||''}`).map(text=>({text,index:i}))):[];
-  const height=bottom+100+descriptions.length*18;
+  const height=bottom+footer+descriptions.length*18;
   const header=titleLines.map((line,i)=>`<text x="${left}" y="${30+i*27}" font-size="22" font-weight="800">${esc(line)}</text>`).join('')+selectionLines.map((line,i)=>`<text x="${left}" y="${54+(titleLines.length-1)*27+i*20}" font-size="14" font-weight="700">${esc(line)}</text>`).join('');
   let svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" data-plot-top="${top}" data-plot-bottom="${bottom}" role="img" aria-label="${esc([caption.title,caption.selection,area].filter(Boolean).join(' · '))}" aria-describedby="chart-desc"><desc id="chart-desc">${series.length} grupper, ${periodOf(rows[0])}–${periodOf(rows.at(-1))}. ${esc(unit)}. Linjeavbrott betyder saknad uppgift. Exakta värden och urval finns i tabellen.</desc><rect width="${width}" height="${height}" fill="#ffffff"/><g font-family="Open Sans, Arial, sans-serif" fill="#1f1f1f">${header}<text x="${left}" y="${includeHeading?56+headerShift:24}" font-size="14">${esc(geography)} · ${periodOf(rows[0])}–${periodOf(rows.at(-1))}</text><text x="${left}" y="${includeHeading?88+headerShift:46}" font-size="13">${esc(unit)}</text>`;
   for(let i=0;i<=4;i++){const value=lower+(limit-lower)*i/4;svg+=`<line x1="${left}" y1="${y(value)}" x2="${width-right}" y2="${y(value)}" stroke="#d1d9dc"/><text x="${left-12}" y="${y(value)+5}" text-anchor="end" font-size="13">${esc(fmt(value))}</text>`;}
@@ -37,9 +40,15 @@ export function seriesChart({series,area,table,measure,date,groups,unit='Antal p
   for(const i of indices)svg+=`<text x="${x(rows[i].year)}" y="${bottom+28}" text-anchor="middle" font-size="13">${periodOf(rows[i])}</text>`;
   // Keep end labels apart while retaining the connection to each line.
   const endings=series.map((s,i)=>({i,last:s.rows.findLast(r=>r.value!==null)})).filter(s=>s.last).sort((a,b)=>y(a.last.value)-y(b.last.value));
-  let previous=top-48;
-  for(const ending of endings){ending.labelY=Math.max(y(ending.last.value),previous+48);previous=ending.labelY;}
-  if(endings.length&&previous>bottom)for(const ending of endings)ending.labelY-=previous-bottom;
+  const labelGap=responsive?Math.min(48,plotHeight/Math.max(1,endings.length-1)):48;
+  let previous=top-labelGap;
+  for(const ending of endings){ending.labelY=Math.max(y(ending.last.value),previous+labelGap);previous=ending.labelY;}
+  if(responsive){
+    // Work backwards from the bottom so a crowded label column never pushes
+    // the first area name above the plot into the subtitle.
+    let next=bottom+labelGap;
+    for(const ending of [...endings].reverse()){ending.labelY=Math.min(ending.labelY,next-labelGap);next=ending.labelY;}
+  }else if(endings.length&&previous>bottom)for(const ending of endings)ending.labelY-=previous-bottom;
   for(const [i,s] of series.entries()){
     const color=colors[i],dash=dashes[i];let drawing=false,path='';
     let previousYear;
@@ -56,6 +65,35 @@ export function seriesChart({series,area,table,measure,date,groups,unit='Antal p
   descriptions.forEach(({text,index},i)=>{const cy=bottom+58+i*18;if(i===0||descriptions[i-1].index!==index)svg+=`<line x1="${left}" y1="${cy-4}" x2="${left+28}" y2="${cy-4}" stroke="${colors[index]}" stroke-width="3" stroke-dasharray="${dashes[index]}"/>`;svg+=`<text x="${left+38}" y="${cy}" font-size="12">${esc(text)}</text>`;});
   svg+=`<text x="${left}" y="${height-16}" font-size="12">Källa: Göteborgs Stads statistikdatabas · Hämtad ${esc(date)}</text></g></svg>`;
   return svg;
+}
+
+// Redraw the plot to fit the available shape; retain the SVG text proportions
+// and leave the independent export image at its standard dimensions.
+export function fitSeriesChart(container,options){
+  let frame,lastHeight;
+  const viewport=container.querySelector('.chart-viewport');
+  const update=()=>{
+    cancelAnimationFrame(frame);
+    frame=requestAnimationFrame(()=>{
+      const svg=container.querySelector('svg');
+      if(!svg||container.hidden)return;
+      // Measure the allocated flex slot, never the SVG being regenerated.
+      const bounds=viewport.getBoundingClientRect();
+      if(!bounds.width||!bounds.height)return;
+      const height=container.closest('.visual-dialog')?Math.round(1000*bounds.height/bounds.width):undefined;
+      if(height===lastHeight)return;
+      lastHeight=height;
+      const focused=document.activeElement===svg;
+      svg.outerHTML=seriesChart({...options,includeHeading:false,includeDescriptions:false,layoutHeight:height});
+      container.querySelector('.sr-only')?.remove();
+      attachSeriesInteraction(container,options.series,options.unit);
+      if(focused)container.querySelector('svg').focus({preventScroll:true});
+    });
+  };
+  const observer=new ResizeObserver(update);
+  attachSeriesInteraction(container,options.series,options.unit);
+  observer.observe(viewport);
+  return ()=>{observer.disconnect();cancelAnimationFrame(frame);};
 }
 
 export function attachSeriesInteraction(container,series,unit='Antal personer'){

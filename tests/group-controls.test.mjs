@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {initGroupControls} from '../group-controls.js';
+import {initGroupControls} from '../src/group-controls.js';
 class Element {
   get options(){return this.children;}
   constructor(tag){this.tag=tag;this.children=[];this.events={};this.attributes={};this.value='';this.checked=false;this.textContent='';}

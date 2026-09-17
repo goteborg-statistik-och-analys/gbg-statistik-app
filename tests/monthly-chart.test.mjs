@@ -1,8 +1,8 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {chartPeriods,seriesChart} from '../series-chart.js';
+import {chartPeriods,seriesChart} from '../src/series-chart.js';
 import {readFile} from 'node:fs/promises';
-import {populatedMonths} from '../monthly-availability.js';
+import {populatedMonths} from '../src/monthly-availability.js';
 test('Actual source zeros after July 2026 are excluded without hiding subgroup zeros',async()=>{
   const {payload}=JSON.parse(await readFile(new URL('../data/monthly-2026-check.json',import.meta.url),'utf8'));
   const available=populatedMonths(payload);

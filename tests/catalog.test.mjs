@@ -1,8 +1,8 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {findTables} from '../search.js';
-import {makeQuery,aggregate,csv} from '../core.js';
+import {findTables} from '../src/search.js';
+import {makeQuery,aggregate,csv} from '../src/core.js';
 const catalog=JSON.parse(await readFile(new URL('../data/search-catalog.json',import.meta.url),'utf8'));
 test('Full catalog has 237 unique tables and retain the six original tables',()=>{assert.equal(catalog.length,237);assert.equal(new Set(catalog.map(t=>t.url)).size,237);assert.equal(catalog.filter(t=>['population','education'].includes(t.kind)).length,6);assert.ok(catalog.every(t=>t.webUrl.includes('/pxweb/sv/')&&t.webUrl.includes('__')));});
 test('Education search finds all education subject tables and related titles',()=>{const found=findTables('Vad har vi för statistik om utbildning?',catalog);assert.equal(found.tables.length,32);for(const t of catalog.filter(t=>t.subject==='Utbildning'))assert.ok(found.tables.some(r=>r.id===t.id));assert.ok(found.tables.some(t=>t.title.startsWith('Gymnasiebehörighet')));assert.equal(findTables('utbildning primärområden',catalog).tables.every(t=>t.level==='Primärområde'),true);assert.equal(findTables('zqxzy',catalog).tables.length,0);assert.equal(findTables('',catalog).tables.length,237);});

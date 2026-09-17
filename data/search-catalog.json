@@ -59642,7 +59642,293 @@
       2025
     ],
     "webUrl": "https://statistikdatabas.goteborg.se/pxweb/sv/1.%20G%C3%B6teborg%20och%20dess%20delomr%C3%A5den/1.%20G%C3%B6teborg%20och%20dess%20delomr%C3%A5den__Stadsomr%C3%A5den__Inkomst%20och%20Utbildning__Utbildning/10_UtbNiva_SO.px/",
-    "kind": null
+    "kind": "count",
+    "metadata": {
+      "title": "Högsta utbildningsnivå, 15- år, 2008-2025",
+      "variables": [
+        {
+          "code": "Område",
+          "text": "Område",
+          "values": [
+            "01 Nordost",
+            "02 Centrum",
+            "03 Sydväst",
+            "04 Hisingen",
+            "99 Ospecificerat Göteborg"
+          ],
+          "valueTexts": [
+            "01 Nordost",
+            "02 Centrum",
+            "03 Sydväst",
+            "04 Hisingen",
+            "99 Ospecificerat Göteborg"
+          ]
+        },
+        {
+          "code": "Ålder",
+          "text": "Ålder",
+          "values": [
+            "15 år",
+            "16 år",
+            "17 år",
+            "18 år",
+            "19 år",
+            "20 år",
+            "21 år",
+            "22 år",
+            "23 år",
+            "24 år",
+            "25 år",
+            "26 år",
+            "27 år",
+            "28 år",
+            "29 år",
+            "30 år",
+            "31 år",
+            "32 år",
+            "33 år",
+            "34 år",
+            "35 år",
+            "36 år",
+            "37 år",
+            "38 år",
+            "39 år",
+            "40 år",
+            "41 år",
+            "42 år",
+            "43 år",
+            "44 år",
+            "45 år",
+            "46 år",
+            "47 år",
+            "48 år",
+            "49 år",
+            "50 år",
+            "51 år",
+            "52 år",
+            "53 år",
+            "54 år",
+            "55 år",
+            "56 år",
+            "57 år",
+            "58 år",
+            "59 år",
+            "60 år",
+            "61 år",
+            "62 år",
+            "63 år",
+            "64 år",
+            "65 år",
+            "66 år",
+            "67 år",
+            "68 år",
+            "69 år",
+            "70 år",
+            "71 år",
+            "72 år",
+            "73 år",
+            "74 år",
+            "75 år",
+            "76 år",
+            "77 år",
+            "78 år",
+            "79 år",
+            "80 år",
+            "81 år",
+            "82 år",
+            "83 år",
+            "84 år",
+            "85 år",
+            "86 år",
+            "87 år",
+            "88 år",
+            "89 år",
+            "90 år",
+            "91 år",
+            "92 år",
+            "93 år",
+            "94 år",
+            "95 år",
+            "96 år",
+            "97 år",
+            "98 år",
+            "99 år",
+            "100- år"
+          ],
+          "valueTexts": [
+            "15 år",
+            "16 år",
+            "17 år",
+            "18 år",
+            "19 år",
+            "20 år",
+            "21 år",
+            "22 år",
+            "23 år",
+            "24 år",
+            "25 år",
+            "26 år",
+            "27 år",
+            "28 år",
+            "29 år",
+            "30 år",
+            "31 år",
+            "32 år",
+            "33 år",
+            "34 år",
+            "35 år",
+            "36 år",
+            "37 år",
+            "38 år",
+            "39 år",
+            "40 år",
+            "41 år",
+            "42 år",
+            "43 år",
+            "44 år",
+            "45 år",
+            "46 år",
+            "47 år",
+            "48 år",
+            "49 år",
+            "50 år",
+            "51 år",
+            "52 år",
+            "53 år",
+            "54 år",
+            "55 år",
+            "56 år",
+            "57 år",
+            "58 år",
+            "59 år",
+            "60 år",
+            "61 år",
+            "62 år",
+            "63 år",
+            "64 år",
+            "65 år",
+            "66 år",
+            "67 år",
+            "68 år",
+            "69 år",
+            "70 år",
+            "71 år",
+            "72 år",
+            "73 år",
+            "74 år",
+            "75 år",
+            "76 år",
+            "77 år",
+            "78 år",
+            "79 år",
+            "80 år",
+            "81 år",
+            "82 år",
+            "83 år",
+            "84 år",
+            "85 år",
+            "86 år",
+            "87 år",
+            "88 år",
+            "89 år",
+            "90 år",
+            "91 år",
+            "92 år",
+            "93 år",
+            "94 år",
+            "95 år",
+            "96 år",
+            "97 år",
+            "98 år",
+            "99 år",
+            "100- år"
+          ],
+          "elimination": true
+        },
+        {
+          "code": "Kön",
+          "text": "Kön",
+          "values": [
+            "Män",
+            "Kvinnor"
+          ],
+          "valueTexts": [
+            "Män",
+            "Kvinnor"
+          ],
+          "elimination": true
+        },
+        {
+          "code": "Utbildningsnivå",
+          "text": "Utbildningsnivå",
+          "values": [
+            "Förgymnasial",
+            "Gymnasial",
+            "Eftergymnasial",
+            "Uppgift saknas"
+          ],
+          "valueTexts": [
+            "Förgymnasial",
+            "Gymnasial",
+            "Eftergymnasial",
+            "Uppgift saknas"
+          ]
+        },
+        {
+          "code": "År",
+          "text": "År",
+          "values": [
+            "2008",
+            "2009",
+            "2010",
+            "2011",
+            "2012",
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"
+          ],
+          "valueTexts": [
+            "2008",
+            "2009",
+            "2010",
+            "2011",
+            "2012",
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"
+          ],
+          "time": true
+        }
+      ]
+    },
+    "measure": {
+      "label": "Högsta utbildningsnivå",
+      "unit": "Antal personer",
+      "additive": true
+    },
+    "sourceNotes": [
+      "Materialet har sekretessgranskats. Det innebär att vissa värden ersatts med '0'. Detta påverkar även en eventuell summering."
+    ]
   },
   {
     "id": "10904f0f8739",
@@ -59656,7 +59942,86 @@
       2025
     ],
     "webUrl": "https://statistikdatabas.goteborg.se/pxweb/sv/1.%20G%C3%B6teborg%20och%20dess%20delomr%C3%A5den/1.%20G%C3%B6teborg%20och%20dess%20delomr%C3%A5den__Stadsomr%C3%A5den__Inkomst%20och%20Utbildning__Utbildning/30_Gymnbehorig_SO.px/",
-    "kind": null
+    "kind": "count",
+    "metadata": {
+      "title": "Gymnasiebehörighet, 2013-2025",
+      "variables": [
+        {
+          "code": "Område",
+          "text": "Område",
+          "values": [
+            "01 Nordost",
+            "02 Centrum",
+            "03 Sydväst",
+            "04 Hisingen",
+            "99 Ospecificerat Göteborg"
+          ],
+          "valueTexts": [
+            "01 Nordost",
+            "02 Centrum",
+            "03 Sydväst",
+            "04 Hisingen",
+            "99 Ospecificerat Göteborg"
+          ]
+        },
+        {
+          "code": "Behörighet",
+          "text": "Behörighet",
+          "values": [
+            "0",
+            "1"
+          ],
+          "valueTexts": [
+            "Behörig till gymnasiet",
+            "Ej behörig till gymnasiet"
+          ]
+        },
+        {
+          "code": "År",
+          "text": "År",
+          "values": [
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"
+          ],
+          "valueTexts": [
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"
+          ],
+          "time": true
+        }
+      ]
+    },
+    "measure": {
+      "label": "Gymnasiebehörighet",
+      "unit": "Antal personer",
+      "additive": true
+    },
+    "sourceNotes": [
+      "Materialet har sekretessgranskats. Det innebär att vissa värden ersatts med '0'. Detta påverkar även en eventuell summering.",
+      "Enligt ÅK 9-registret\nFör att en elev skall vara behörig till gymnasieskolan krävs betyget godkänd i ämnena svenska/svenska som andra språk, engelska och matematik. \nDessutom krävs godkända betyg i ytterligare fem ämnen, det vill säga totalt åtta."
+    ]
   },
   {
     "id": "e3607b16d637",
@@ -59670,7 +60035,85 @@
       2025
     ],
     "webUrl": "https://statistikdatabas.goteborg.se/pxweb/sv/1.%20G%C3%B6teborg%20och%20dess%20delomr%C3%A5den/1.%20G%C3%B6teborg%20och%20dess%20delomr%C3%A5den__Stadsomr%C3%A5den__Inkomst%20och%20Utbildning__Utbildning/40_Hogskolbehorig_SO.px/",
-    "kind": null
+    "kind": "count",
+    "metadata": {
+      "title": "Högskolebehörighet, 2013-2025",
+      "variables": [
+        {
+          "code": "Område",
+          "text": "Område",
+          "values": [
+            "01 Nordost",
+            "02 Centrum",
+            "03 Sydväst",
+            "04 Hisingen",
+            "99 Ospecificerat Göteborg"
+          ],
+          "valueTexts": [
+            "01 Nordost",
+            "02 Centrum",
+            "03 Sydväst",
+            "04 Hisingen",
+            "99 Ospecificerat Göteborg"
+          ]
+        },
+        {
+          "code": "Behörighet",
+          "text": "Behörighet",
+          "values": [
+            "Behörig till högskolan",
+            "Ej behörig till högskolan"
+          ],
+          "valueTexts": [
+            "Behörig till högskolan",
+            "Ej behörig till högskolan"
+          ]
+        },
+        {
+          "code": "År",
+          "text": "År",
+          "values": [
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"
+          ],
+          "valueTexts": [
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"
+          ],
+          "time": true
+        }
+      ]
+    },
+    "measure": {
+      "label": "Högskolebehörighet",
+      "unit": "Antal personer",
+      "additive": true
+    },
+    "sourceNotes": [
+      "Materialet har sekretessgranskats. Det innebär att vissa värden ersatts med '0'. Detta påverkar även en eventuell summering."
+    ]
   },
   {
     "id": "e134656ac0d7",
@@ -59684,7 +60127,133 @@
       2025
     ],
     "webUrl": "https://statistikdatabas.goteborg.se/pxweb/sv/1.%20G%C3%B6teborg%20och%20dess%20delomr%C3%A5den/1.%20G%C3%B6teborg%20och%20dess%20delomr%C3%A5den__Stadsomr%C3%A5den__Inkomst%20och%20Utbildning__Utbildning/50_UtbForalder_SO.px/",
-    "kind": null
+    "kind": "count",
+    "metadata": {
+      "title": "Antal barn 0-17 år efter föräldrars utbildningsnivå, 2008-2025",
+      "variables": [
+        {
+          "code": "Område",
+          "text": "Område",
+          "values": [
+            "01 Nordost",
+            "02 Centrum",
+            "03 Sydväst",
+            "04 Hisingen",
+            "99 Ospecificerat Göteborg"
+          ],
+          "valueTexts": [
+            "01 Nordost",
+            "02 Centrum",
+            "03 Sydväst",
+            "04 Hisingen",
+            "99 Ospecificerat Göteborg"
+          ]
+        },
+        {
+          "code": "Barnets ålder",
+          "text": "Barnets ålder",
+          "values": [
+            "0",
+            "1",
+            "2"
+          ],
+          "valueTexts": [
+            "0-5 år",
+            "6-15 år",
+            "16-17 år"
+          ],
+          "elimination": true
+        },
+        {
+          "code": "Moderns utbildningsnivå",
+          "text": "Moderns utbildningsnivå",
+          "values": [
+            "Mor förgymnasial utbildning",
+            "Mor gymnasial utbildning",
+            "Mor eftergymnasial utbildning",
+            "Mor Uppgift saknas"
+          ],
+          "valueTexts": [
+            "Mor förgymnasial utbildning",
+            "Mor gymnasial utbildning",
+            "Mor eftergymnasial utbildning",
+            "Mor Uppgift saknas"
+          ],
+          "elimination": true
+        },
+        {
+          "code": "Faderns utbildningsnivå",
+          "text": "Faderns utbildningsnivå",
+          "values": [
+            "Far förgymnasial utbildning",
+            "Far gymnasial utbildning",
+            "Far eftergymnasial utbildning",
+            "Far Uppgift saknas"
+          ],
+          "valueTexts": [
+            "Far förgymnasial utbildning",
+            "Far gymnasial utbildning",
+            "Far eftergymnasial utbildning",
+            "Far Uppgift saknas"
+          ],
+          "elimination": true
+        },
+        {
+          "code": "År",
+          "text": "År",
+          "values": [
+            "2008",
+            "2009",
+            "2010",
+            "2011",
+            "2012",
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"
+          ],
+          "valueTexts": [
+            "2008",
+            "2009",
+            "2010",
+            "2011",
+            "2012",
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"
+          ],
+          "time": true
+        }
+      ]
+    },
+    "measure": {
+      "label": "Barn efter föräldrars utbildningsnivå",
+      "unit": "Antal barn",
+      "additive": true
+    },
+    "sourceNotes": [
+      "Materialet har sekretessgranskats. Det innebär att vissa värden ersatts med '0'. Detta påverkar även en eventuell summering.",
+      "Förälder som ej ingår i utbildningsregistret ingår ej i tabellen. Därmed ingår inte heller alla barn 0-17 år."
+    ]
   },
   {
     "id": "18020b501271",
@@ -60028,7 +60597,15 @@
           "time": true
         }
       ]
-    }
+    },
+    "measure": {
+      "label": "Högsta utbildningsnivå",
+      "unit": "Antal personer",
+      "additive": true
+    },
+    "sourceNotes": [
+      "Materialet har sekretessgranskats. Det innebär att vissa värden ersatts med '0'. Detta påverkar även en eventuell summering."
+    ]
   },
   {
     "id": "05db83a71634",
@@ -60042,7 +60619,67 @@
       2025
     ],
     "webUrl": "https://statistikdatabas.goteborg.se/pxweb/sv/1.%20G%C3%B6teborg%20och%20dess%20delomr%C3%A5den/1.%20G%C3%B6teborg%20och%20dess%20delomr%C3%A5den__Kommun__Inkomst%20och%20utbildning__Utbildning/30_Gymnbehorig_GBG.px/",
-    "kind": null
+    "kind": "count",
+    "metadata": {
+      "title": "Gymnasiebehörighet, 2013-2025",
+      "variables": [
+        {
+          "code": "Behörighet",
+          "text": "Behörighet",
+          "values": [
+            "0",
+            "1"
+          ],
+          "valueTexts": [
+            "Behörig till gymnasiet",
+            "Ej behörig till gymnasiet"
+          ]
+        },
+        {
+          "code": "År",
+          "text": "År",
+          "values": [
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"
+          ],
+          "valueTexts": [
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"
+          ],
+          "time": true
+        }
+      ]
+    },
+    "measure": {
+      "label": "Gymnasiebehörighet",
+      "unit": "Antal personer",
+      "additive": true
+    },
+    "sourceNotes": [
+      "Enligt ÅK 9-registret\nFör att en elev skall vara behörig till gymnasieskolan krävs betyget godkänd i ämnena svenska/svenska som andra språk, engelska och matematik. \nDessutom krävs godkända betyg i ytterligare fem ämnen, det vill säga totalt åtta."
+    ]
   },
   {
     "id": "98a661250ca3",
@@ -60056,7 +60693,65 @@
       2025
     ],
     "webUrl": "https://statistikdatabas.goteborg.se/pxweb/sv/1.%20G%C3%B6teborg%20och%20dess%20delomr%C3%A5den/1.%20G%C3%B6teborg%20och%20dess%20delomr%C3%A5den__Kommun__Inkomst%20och%20utbildning__Utbildning/40_Hogskolbehorig_GBG.px/",
-    "kind": null
+    "kind": "count",
+    "metadata": {
+      "title": "Högskolebehörighet, 2013-2025",
+      "variables": [
+        {
+          "code": "Behörighet",
+          "text": "Behörighet",
+          "values": [
+            "Behörig till högskolan",
+            "Ej behörig till högskolan"
+          ],
+          "valueTexts": [
+            "Behörig till högskolan",
+            "Ej behörig till högskolan"
+          ]
+        },
+        {
+          "code": "År",
+          "text": "År",
+          "values": [
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"
+          ],
+          "valueTexts": [
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"
+          ],
+          "time": true
+        }
+      ]
+    },
+    "measure": {
+      "label": "Högskolebehörighet",
+      "unit": "Antal personer",
+      "additive": true
+    },
+    "sourceNotes": []
   },
   {
     "id": "ec646d0f7b3d",
@@ -60070,7 +60765,114 @@
       2025
     ],
     "webUrl": "https://statistikdatabas.goteborg.se/pxweb/sv/1.%20G%C3%B6teborg%20och%20dess%20delomr%C3%A5den/1.%20G%C3%B6teborg%20och%20dess%20delomr%C3%A5den__Kommun__Inkomst%20och%20utbildning__Utbildning/50_UtbForalder_GBG.px/",
-    "kind": null
+    "kind": "count",
+    "metadata": {
+      "title": "Antal barn 0-17 år efter föräldrars utbildningsnivå, 2008-2025",
+      "variables": [
+        {
+          "code": "Barnets ålder",
+          "text": "Barnets ålder",
+          "values": [
+            "0-5 år",
+            "6-15 år",
+            "16-17 år"
+          ],
+          "valueTexts": [
+            "0-5 år",
+            "6-15 år",
+            "16-17 år"
+          ],
+          "elimination": true
+        },
+        {
+          "code": "Moderns utbildningsnivå",
+          "text": "Moderns utbildningsnivå",
+          "values": [
+            "Mor förgymnasial utbildning",
+            "Mor gymnasial utbildning",
+            "Mor eftergymnasial utbildning",
+            "Mor Uppgift saknas"
+          ],
+          "valueTexts": [
+            "Mor förgymnasial utbildning",
+            "Mor gymnasial utbildning",
+            "Mor eftergymnasial utbildning",
+            "Mor Uppgift saknas"
+          ],
+          "elimination": true
+        },
+        {
+          "code": "Faderns utbildningsnivå",
+          "text": "Faderns utbildningsnivå",
+          "values": [
+            "Far förgymnasial utbildning",
+            "Far gymnasial utbildning",
+            "Far eftergymnasial utbildning",
+            "Far Uppgift saknas"
+          ],
+          "valueTexts": [
+            "Far förgymnasial utbildning",
+            "Far gymnasial utbildning",
+            "Far eftergymnasial utbildning",
+            "Far Uppgift saknas"
+          ],
+          "elimination": true
+        },
+        {
+          "code": "År",
+          "text": "År",
+          "values": [
+            "2008",
+            "2009",
+            "2010",
+            "2011",
+            "2012",
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"
+          ],
+          "valueTexts": [
+            "2008",
+            "2009",
+            "2010",
+            "2011",
+            "2012",
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"
+          ],
+          "time": true
+        }
+      ]
+    },
+    "measure": {
+      "label": "Barn efter föräldrars utbildningsnivå",
+      "unit": "Antal barn",
+      "additive": true
+    },
+    "sourceNotes": [
+      "Förälder som ej ingår i utbildningsregistret ingår ej i tabellen. Därmed ingår inte heller alla barn 0-17 år."
+    ]
   },
   {
     "id": "cb388953ce64",
@@ -60154,7 +60956,357 @@
       2025
     ],
     "webUrl": "https://statistikdatabas.goteborg.se/pxweb/sv/1.%20G%C3%B6teborg%20och%20dess%20delomr%C3%A5den/1.%20G%C3%B6teborg%20och%20dess%20delomr%C3%A5den__Mellanomr%C3%A5den%202021-__Inkomst%20och%20utbildning__Utbildning/10_UtbNiva_MO.px/",
-    "kind": null
+    "kind": "count",
+    "metadata": {
+      "title": "Högsta utbildningsnivå, 15- år, 2008-2025",
+      "variables": [
+        {
+          "code": "Område",
+          "text": "Område",
+          "values": [
+            "10 Östra Angered",
+            "11 Bergsjön",
+            "12 Gamlestaden-Utby",
+            "13 Kortedala",
+            "14 Södra Angered",
+            "15 Centrala Angered",
+            "16 Norra Angered",
+            "30 Kålltorp-Torpa-Björkekärr",
+            "31 Kallebäck-Skår-Kärralund",
+            "32 Krokslätt-Johanneberg",
+            "33 Guldheden-Landala",
+            "34 Olivedal-Haga-Annedal-Änggården",
+            "35 Kungsladugård-Sanna",
+            "36 Majorna-Stigberget-Masthugget",
+            "37 Norra Centrum",
+            "38 Lunden-Härlanda-Överås",
+            "39 Olskroken-Redbergslid-Bagaregården",
+            "50 Stora Högsbo",
+            "51 Askim-Hovås",
+            "52 Billdal",
+            "53 Södra Skärgården",
+            "54 Bratthammar-Näset-Önnered",
+            "55 Centrala Tynnered",
+            "56 Frölunda Torg-Tofta",
+            "57 Älvsborg",
+            "70 Kärra-Rödbo",
+            "71 Backa",
+            "72 Kvillebäcken",
+            "73 Kyrkbyn-Rambergsstaden",
+            "74 Norra Älvstranden",
+            "75 Södra Torslanda",
+            "76 Björlanda",
+            "77 Tuve-Säve",
+            "78 Kärrdalen-Slättadamm",
+            "79 Östra Biskopsgården",
+            "80 Västra Biskopsgården",
+            "99 Ospecificerat Göteborg"
+          ],
+          "valueTexts": [
+            "10 Östra Angered",
+            "11 Bergsjön",
+            "12 Gamlestaden-Utby",
+            "13 Kortedala",
+            "14 Södra Angered",
+            "15 Centrala Angered",
+            "16 Norra Angered",
+            "30 Kålltorp-Torpa-Björkekärr",
+            "31 Kallebäck-Skår-Kärralund",
+            "32 Krokslätt-Johanneberg",
+            "33 Guldheden-Landala",
+            "34 Olivedal-Haga-Annedal-Änggården",
+            "35 Kungsladugård-Sanna",
+            "36 Majorna-Stigberget-Masthugget",
+            "37 Norra Centrum",
+            "38 Lunden-Härlanda-Överås",
+            "39 Olskroken-Redbergslid-Bagaregården",
+            "50 Stora Högsbo",
+            "51 Askim-Hovås",
+            "52 Billdal",
+            "53 Södra Skärgården",
+            "54 Bratthammar-Näset-Önnered",
+            "55 Centrala Tynnered",
+            "56 Frölunda Torg-Tofta",
+            "57 Älvsborg",
+            "70 Kärra-Rödbo",
+            "71 Backa",
+            "72 Kvillebäcken",
+            "73 Kyrkbyn-Rambergsstaden",
+            "74 Norra Älvstranden",
+            "75 Södra Torslanda",
+            "76 Björlanda",
+            "77 Tuve-Säve",
+            "78 Kärrdalen-Slättadamm",
+            "79 Östra Biskopsgården",
+            "80 Västra Biskopsgården",
+            "99 Ospecificerat Göteborg"
+          ]
+        },
+        {
+          "code": "Ålder",
+          "text": "Ålder",
+          "values": [
+            "15 år",
+            "16 år",
+            "17 år",
+            "18 år",
+            "19 år",
+            "20 år",
+            "21 år",
+            "22 år",
+            "23 år",
+            "24 år",
+            "25 år",
+            "26 år",
+            "27 år",
+            "28 år",
+            "29 år",
+            "30 år",
+            "31 år",
+            "32 år",
+            "33 år",
+            "34 år",
+            "35 år",
+            "36 år",
+            "37 år",
+            "38 år",
+            "39 år",
+            "40 år",
+            "41 år",
+            "42 år",
+            "43 år",
+            "44 år",
+            "45 år",
+            "46 år",
+            "47 år",
+            "48 år",
+            "49 år",
+            "50 år",
+            "51 år",
+            "52 år",
+            "53 år",
+            "54 år",
+            "55 år",
+            "56 år",
+            "57 år",
+            "58 år",
+            "59 år",
+            "60 år",
+            "61 år",
+            "62 år",
+            "63 år",
+            "64 år",
+            "65 år",
+            "66 år",
+            "67 år",
+            "68 år",
+            "69 år",
+            "70 år",
+            "71 år",
+            "72 år",
+            "73 år",
+            "74 år",
+            "75 år",
+            "76 år",
+            "77 år",
+            "78 år",
+            "79 år",
+            "80 år",
+            "81 år",
+            "82 år",
+            "83 år",
+            "84 år",
+            "85 år",
+            "86 år",
+            "87 år",
+            "88 år",
+            "89 år",
+            "90 år",
+            "91 år",
+            "92 år",
+            "93 år",
+            "94 år",
+            "95 år",
+            "96 år",
+            "97 år",
+            "98 år",
+            "99 år",
+            "100- år"
+          ],
+          "valueTexts": [
+            "15 år",
+            "16 år",
+            "17 år",
+            "18 år",
+            "19 år",
+            "20 år",
+            "21 år",
+            "22 år",
+            "23 år",
+            "24 år",
+            "25 år",
+            "26 år",
+            "27 år",
+            "28 år",
+            "29 år",
+            "30 år",
+            "31 år",
+            "32 år",
+            "33 år",
+            "34 år",
+            "35 år",
+            "36 år",
+            "37 år",
+            "38 år",
+            "39 år",
+            "40 år",
+            "41 år",
+            "42 år",
+            "43 år",
+            "44 år",
+            "45 år",
+            "46 år",
+            "47 år",
+            "48 år",
+            "49 år",
+            "50 år",
+            "51 år",
+            "52 år",
+            "53 år",
+            "54 år",
+            "55 år",
+            "56 år",
+            "57 år",
+            "58 år",
+            "59 år",
+            "60 år",
+            "61 år",
+            "62 år",
+            "63 år",
+            "64 år",
+            "65 år",
+            "66 år",
+            "67 år",
+            "68 år",
+            "69 år",
+            "70 år",
+            "71 år",
+            "72 år",
+            "73 år",
+            "74 år",
+            "75 år",
+            "76 år",
+            "77 år",
+            "78 år",
+            "79 år",
+            "80 år",
+            "81 år",
+            "82 år",
+            "83 år",
+            "84 år",
+            "85 år",
+            "86 år",
+            "87 år",
+            "88 år",
+            "89 år",
+            "90 år",
+            "91 år",
+            "92 år",
+            "93 år",
+            "94 år",
+            "95 år",
+            "96 år",
+            "97 år",
+            "98 år",
+            "99 år",
+            "100- år"
+          ],
+          "elimination": true
+        },
+        {
+          "code": "Kön",
+          "text": "Kön",
+          "values": [
+            "Män",
+            "Kvinnor"
+          ],
+          "valueTexts": [
+            "Män",
+            "Kvinnor"
+          ],
+          "elimination": true
+        },
+        {
+          "code": "Utbildningsnivå",
+          "text": "Utbildningsnivå",
+          "values": [
+            "Förgymnasial",
+            "Gymnasial",
+            "Eftergymnasial",
+            "Uppgift saknas"
+          ],
+          "valueTexts": [
+            "Förgymnasial",
+            "Gymnasial",
+            "Eftergymnasial",
+            "Uppgift saknas"
+          ]
+        },
+        {
+          "code": "År",
+          "text": "År",
+          "values": [
+            "2008",
+            "2009",
+            "2010",
+            "2011",
+            "2012",
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"
+          ],
+          "valueTexts": [
+            "2008",
+            "2009",
+            "2010",
+            "2011",
+            "2012",
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"
+          ],
+          "time": true
+        }
+      ]
+    },
+    "measure": {
+      "label": "Högsta utbildningsnivå",
+      "unit": "Antal personer",
+      "additive": true
+    },
+    "sourceNotes": [
+      "Materialet har sekretessgranskats. Det innebär att vissa värden ersatts med '0'. Detta påverkar även en eventuell summering."
+    ]
   },
   {
     "id": "ca43f997ea54",
@@ -60168,7 +61320,150 @@
       2025
     ],
     "webUrl": "https://statistikdatabas.goteborg.se/pxweb/sv/1.%20G%C3%B6teborg%20och%20dess%20delomr%C3%A5den/1.%20G%C3%B6teborg%20och%20dess%20delomr%C3%A5den__Mellanomr%C3%A5den%202021-__Inkomst%20och%20utbildning__Utbildning/30_Gymnbehorig_MO21.px/",
-    "kind": null
+    "kind": "count",
+    "metadata": {
+      "title": "Gymnasiebehörighet, 2013-2025",
+      "variables": [
+        {
+          "code": "Område",
+          "text": "Område",
+          "values": [
+            "10 Östra Angered",
+            "11 Bergsjön",
+            "12 Gamlestaden-Utby",
+            "13 Kortedala",
+            "14 Södra Angered",
+            "15 Centrala Angered",
+            "16 Norra Angered",
+            "30 Kålltorp-Torpa-Björkekärr",
+            "31 Kallebäck-Skår-Kärralund",
+            "32 Krokslätt-Johanneberg",
+            "33 Guldheden-Landala",
+            "34 Olivedal-Haga-Annedal-Änggården",
+            "35 Kungsladugård-Sanna",
+            "36 Majorna-Stigberget-Masthugget",
+            "37 Norra Centrum",
+            "38 Lunden-Härlanda-Överås",
+            "39 Olskroken-Redbergslid-Bagaregården",
+            "50 Stora Högsbo",
+            "51 Askim-Hovås",
+            "52 Billdal",
+            "53 Södra Skärgården",
+            "54 Bratthammar-Näset-Önnered",
+            "55 Centrala Tynnered",
+            "56 Frölunda Torg-Tofta",
+            "57 Älvsborg",
+            "70 Kärra-Rödbo",
+            "71 Backa",
+            "72 Kvillebäcken",
+            "73 Kyrkbyn-Rambergsstaden",
+            "74 Norra Älvstranden",
+            "75 Södra Torslanda",
+            "76 Björlanda",
+            "77 Tuve-Säve",
+            "78 Kärrdalen-Slättadamm",
+            "79 Östra Biskopsgården",
+            "80 Västra Biskopsgården",
+            "99 Ospecificerat Göteborg"
+          ],
+          "valueTexts": [
+            "10 Östra Angered",
+            "11 Bergsjön",
+            "12 Gamlestaden-Utby",
+            "13 Kortedala",
+            "14 Södra Angered",
+            "15 Centrala Angered",
+            "16 Norra Angered",
+            "30 Kålltorp-Torpa-Björkekärr",
+            "31 Kallebäck-Skår-Kärralund",
+            "32 Krokslätt-Johanneberg",
+            "33 Guldheden-Landala",
+            "34 Olivedal-Haga-Annedal-Änggården",
+            "35 Kungsladugård-Sanna",
+            "36 Majorna-Stigberget-Masthugget",
+            "37 Norra Centrum",
+            "38 Lunden-Härlanda-Överås",
+            "39 Olskroken-Redbergslid-Bagaregården",
+            "50 Stora Högsbo",
+            "51 Askim-Hovås",
+            "52 Billdal",
+            "53 Södra Skärgården",
+            "54 Bratthammar-Näset-Önnered",
+            "55 Centrala Tynnered",
+            "56 Frölunda Torg-Tofta",
+            "57 Älvsborg",
+            "70 Kärra-Rödbo",
+            "71 Backa",
+            "72 Kvillebäcken",
+            "73 Kyrkbyn-Rambergsstaden",
+            "74 Norra Älvstranden",
+            "75 Södra Torslanda",
+            "76 Björlanda",
+            "77 Tuve-Säve",
+            "78 Kärrdalen-Slättadamm",
+            "79 Östra Biskopsgården",
+            "80 Västra Biskopsgården",
+            "99 Ospecificerat Göteborg"
+          ]
+        },
+        {
+          "code": "Behörighet",
+          "text": "Behörighet",
+          "values": [
+            "0",
+            "1"
+          ],
+          "valueTexts": [
+            "Behörig till gymnasiet",
+            "Ej behörig till gymnasiet"
+          ]
+        },
+        {
+          "code": "År",
+          "text": "År",
+          "values": [
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"
+          ],
+          "valueTexts": [
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"
+          ],
+          "time": true
+        }
+      ]
+    },
+    "measure": {
+      "label": "Gymnasiebehörighet",
+      "unit": "Antal personer",
+      "additive": true
+    },
+    "sourceNotes": [
+      "Materialet har sekretessgranskats. Det innebär att vissa värden ersatts med '0'. Detta påverkar även en eventuell summering.",
+      "Enligt ÅK 9-registret\nFör att en elev skall vara behörig till gymnasieskolan krävs betyget godkänd i ämnena svenska/svenska som andra språk, engelska och matematik. \nDessutom krävs godkända betyg i ytterligare fem ämnen, det vill säga totalt åtta."
+    ]
   },
   {
     "id": "f6f35b0cc1dd",
@@ -60182,7 +61477,149 @@
       2025
     ],
     "webUrl": "https://statistikdatabas.goteborg.se/pxweb/sv/1.%20G%C3%B6teborg%20och%20dess%20delomr%C3%A5den/1.%20G%C3%B6teborg%20och%20dess%20delomr%C3%A5den__Mellanomr%C3%A5den%202021-__Inkomst%20och%20utbildning__Utbildning/40_Hogskolbehorig_MO21.px/",
-    "kind": null
+    "kind": "count",
+    "metadata": {
+      "title": "Högskolebehörighet, 2013-2025",
+      "variables": [
+        {
+          "code": "Område",
+          "text": "Område",
+          "values": [
+            "10 Östra Angered",
+            "11 Bergsjön",
+            "12 Gamlestaden-Utby",
+            "13 Kortedala",
+            "14 Södra Angered",
+            "15 Centrala Angered",
+            "16 Norra Angered",
+            "30 Kålltorp-Torpa-Björkekärr",
+            "31 Kallebäck-Skår-Kärralund",
+            "32 Krokslätt-Johanneberg",
+            "33 Guldheden-Landala",
+            "34 Olivedal-Haga-Annedal-Änggården",
+            "35 Kungsladugård-Sanna",
+            "36 Majorna-Stigberget-Masthugget",
+            "37 Norra Centrum",
+            "38 Lunden-Härlanda-Överås",
+            "39 Olskroken-Redbergslid-Bagaregården",
+            "50 Stora Högsbo",
+            "51 Askim-Hovås",
+            "52 Billdal",
+            "53 Södra Skärgården",
+            "54 Bratthammar-Näset-Önnered",
+            "55 Centrala Tynnered",
+            "56 Frölunda Torg-Tofta",
+            "57 Älvsborg",
+            "70 Kärra-Rödbo",
+            "71 Backa",
+            "72 Kvillebäcken",
+            "73 Kyrkbyn-Rambergsstaden",
+            "74 Norra Älvstranden",
+            "75 Södra Torslanda",
+            "76 Björlanda",
+            "77 Tuve-Säve",
+            "78 Kärrdalen-Slättadamm",
+            "79 Östra Biskopsgården",
+            "80 Västra Biskopsgården",
+            "99 Ospecificerat Göteborg"
+          ],
+          "valueTexts": [
+            "10 Östra Angered",
+            "11 Bergsjön",
+            "12 Gamlestaden-Utby",
+            "13 Kortedala",
+            "14 Södra Angered",
+            "15 Centrala Angered",
+            "16 Norra Angered",
+            "30 Kålltorp-Torpa-Björkekärr",
+            "31 Kallebäck-Skår-Kärralund",
+            "32 Krokslätt-Johanneberg",
+            "33 Guldheden-Landala",
+            "34 Olivedal-Haga-Annedal-Änggården",
+            "35 Kungsladugård-Sanna",
+            "36 Majorna-Stigberget-Masthugget",
+            "37 Norra Centrum",
+            "38 Lunden-Härlanda-Överås",
+            "39 Olskroken-Redbergslid-Bagaregården",
+            "50 Stora Högsbo",
+            "51 Askim-Hovås",
+            "52 Billdal",
+            "53 Södra Skärgården",
+            "54 Bratthammar-Näset-Önnered",
+            "55 Centrala Tynnered",
+            "56 Frölunda Torg-Tofta",
+            "57 Älvsborg",
+            "70 Kärra-Rödbo",
+            "71 Backa",
+            "72 Kvillebäcken",
+            "73 Kyrkbyn-Rambergsstaden",
+            "74 Norra Älvstranden",
+            "75 Södra Torslanda",
+            "76 Björlanda",
+            "77 Tuve-Säve",
+            "78 Kärrdalen-Slättadamm",
+            "79 Östra Biskopsgården",
+            "80 Västra Biskopsgården",
+            "99 Ospecificerat Göteborg"
+          ]
+        },
+        {
+          "code": "Behörighet",
+          "text": "Behörighet",
+          "values": [
+            "Behörig till högskolan",
+            "Ej behörig till högskolan"
+          ],
+          "valueTexts": [
+            "Behörig till högskolan",
+            "Ej behörig till högskolan"
+          ]
+        },
+        {
+          "code": "År",
+          "text": "År",
+          "values": [
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"
+          ],
+          "valueTexts": [
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"
+          ],
+          "time": true
+        }
+      ]
+    },
+    "measure": {
+      "label": "Högskolebehörighet",
+      "unit": "Antal personer",
+      "additive": true
+    },
+    "sourceNotes": [
+      "Materialet har sekretessgranskats. Det innebär att vissa värden ersatts med '0'. Detta påverkar även en eventuell summering."
+    ]
   },
   {
     "id": "023508899cd4",
@@ -60196,7 +61633,197 @@
       2025
     ],
     "webUrl": "https://statistikdatabas.goteborg.se/pxweb/sv/1.%20G%C3%B6teborg%20och%20dess%20delomr%C3%A5den/1.%20G%C3%B6teborg%20och%20dess%20delomr%C3%A5den__Mellanomr%C3%A5den%202021-__Inkomst%20och%20utbildning__Utbildning/50_UtbForalder_MO.px/",
-    "kind": null
+    "kind": "count",
+    "metadata": {
+      "title": "Antal barn 0-17 år efter föräldrars utbildningsnivå, 2008-2025",
+      "variables": [
+        {
+          "code": "Område",
+          "text": "Område",
+          "values": [
+            "10 Östra Angered",
+            "11 Bergsjön",
+            "12 Gamlestaden-Utby",
+            "13 Kortedala",
+            "14 Södra Angered",
+            "15 Centrala Angered",
+            "16 Norra Angered",
+            "30 Kålltorp-Torpa-Björkekärr",
+            "31 Kallebäck-Skår-Kärralund",
+            "32 Krokslätt-Johanneberg",
+            "33 Guldheden-Landala",
+            "34 Olivedal-Haga-Annedal-Änggården",
+            "35 Kungsladugård-Sanna",
+            "36 Majorna-Stigberget-Masthugget",
+            "37 Norra Centrum",
+            "38 Lunden-Härlanda-Överås",
+            "39 Olskroken-Redbergslid-Bagaregården",
+            "50 Stora Högsbo",
+            "51 Askim-Hovås",
+            "52 Billdal",
+            "53 Södra Skärgården",
+            "54 Bratthammar-Näset-Önnered",
+            "55 Centrala Tynnered",
+            "56 Frölunda Torg-Tofta",
+            "57 Älvsborg",
+            "70 Kärra-Rödbo",
+            "71 Backa",
+            "72 Kvillebäcken",
+            "73 Kyrkbyn-Rambergsstaden",
+            "74 Norra Älvstranden",
+            "75 Södra Torslanda",
+            "76 Björlanda",
+            "77 Tuve-Säve",
+            "78 Kärrdalen-Slättadamm",
+            "79 Östra Biskopsgården",
+            "80 Västra Biskopsgården",
+            "99 Ospecificerat Göteborg"
+          ],
+          "valueTexts": [
+            "10 Östra Angered",
+            "11 Bergsjön",
+            "12 Gamlestaden-Utby",
+            "13 Kortedala",
+            "14 Södra Angered",
+            "15 Centrala Angered",
+            "16 Norra Angered",
+            "30 Kålltorp-Torpa-Björkekärr",
+            "31 Kallebäck-Skår-Kärralund",
+            "32 Krokslätt-Johanneberg",
+            "33 Guldheden-Landala",
+            "34 Olivedal-Haga-Annedal-Änggården",
+            "35 Kungsladugård-Sanna",
+            "36 Majorna-Stigberget-Masthugget",
+            "37 Norra Centrum",
+            "38 Lunden-Härlanda-Överås",
+            "39 Olskroken-Redbergslid-Bagaregården",
+            "50 Stora Högsbo",
+            "51 Askim-Hovås",
+            "52 Billdal",
+            "53 Södra Skärgården",
+            "54 Bratthammar-Näset-Önnered",
+            "55 Centrala Tynnered",
+            "56 Frölunda Torg-Tofta",
+            "57 Älvsborg",
+            "70 Kärra-Rödbo",
+            "71 Backa",
+            "72 Kvillebäcken",
+            "73 Kyrkbyn-Rambergsstaden",
+            "74 Norra Älvstranden",
+            "75 Södra Torslanda",
+            "76 Björlanda",
+            "77 Tuve-Säve",
+            "78 Kärrdalen-Slättadamm",
+            "79 Östra Biskopsgården",
+            "80 Västra Biskopsgården",
+            "99 Ospecificerat Göteborg"
+          ]
+        },
+        {
+          "code": "Barnets ålder",
+          "text": "Barnets ålder",
+          "values": [
+            "0-5 år",
+            "6-15 år",
+            "16-17 år"
+          ],
+          "valueTexts": [
+            "0-5 år",
+            "6-15 år",
+            "16-17 år"
+          ],
+          "elimination": true
+        },
+        {
+          "code": "Moderns utbildningsnivå",
+          "text": "Moderns utbildningsnivå",
+          "values": [
+            "Mor förgymnasial utbildning",
+            "Mor gymnasial utbildning",
+            "Mor eftergymnasial utbildning",
+            "Mor Uppgift saknas"
+          ],
+          "valueTexts": [
+            "Mor förgymnasial utbildning",
+            "Mor gymnasial utbildning",
+            "Mor eftergymnasial utbildning",
+            "Mor Uppgift saknas"
+          ],
+          "elimination": true
+        },
+        {
+          "code": "Faderns utbildningsnivå",
+          "text": "Faderns utbildningsnivå",
+          "values": [
+            "Far förgymnasial utbildning",
+            "Far gymnasial utbildning",
+            "Far eftergymnasial utbildning",
+            "Far Uppgift saknas"
+          ],
+          "valueTexts": [
+            "Far förgymnasial utbildning",
+            "Far gymnasial utbildning",
+            "Far eftergymnasial utbildning",
+            "Far Uppgift saknas"
+          ],
+          "elimination": true
+        },
+        {
+          "code": "År",
+          "text": "År",
+          "values": [
+            "2008",
+            "2009",
+            "2010",
+            "2011",
+            "2012",
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"
+          ],
+          "valueTexts": [
+            "2008",
+            "2009",
+            "2010",
+            "2011",
+            "2012",
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"
+          ],
+          "time": true
+        }
+      ]
+    },
+    "measure": {
+      "label": "Barn efter föräldrars utbildningsnivå",
+      "unit": "Antal barn",
+      "additive": true
+    },
+    "sourceNotes": [
+      "Materialet har sekretessgranskats. Det innebär att vissa värden ersatts med '0'. Detta påverkar även en eventuell summering.",
+      "Förälder som ej ingår i utbildningsregistret ingår ej i tabellen. Därmed ingår inte heller alla barn 0-17 år."
+    ]
   },
   {
     "id": "a4ada44c7831",
@@ -60604,7 +62231,15 @@
           "time": true
         }
       ]
-    }
+    },
+    "measure": {
+      "label": "Högsta utbildningsnivå",
+      "unit": "Antal personer",
+      "additive": true
+    },
+    "sourceNotes": [
+      "Materialet har sekretessgranskats. Det innebär att vissa värden ersatts med '0'. Detta påverkar även en eventuell summering."
+    ]
   },
   {
     "id": "5ac1cca83630",
@@ -60872,7 +62507,16 @@
           "time": true
         }
       ]
-    }
+    },
+    "measure": {
+      "label": "Gymnasiebehörighet",
+      "unit": "Antal personer",
+      "additive": true
+    },
+    "sourceNotes": [
+      "Materialet har sekretessgranskats. Det innebär att vissa värden ersatts med '0'. Detta påverkar även en eventuell summering.",
+      "Enligt ÅK 9-registret\nFör att en elev skall vara behörig till gymnasieskolan krävs betyget godkänd i ämnena svenska/svenska som andra språk, engelska och matematik. \nDessutom krävs godkända betyg i ytterligare fem ämnen, det vill säga totalt åtta."
+    ]
   },
   {
     "id": "15b385499f93",
@@ -60886,7 +62530,269 @@
       2025
     ],
     "webUrl": "https://statistikdatabas.goteborg.se/pxweb/sv/1.%20G%C3%B6teborg%20och%20dess%20delomr%C3%A5den/1.%20G%C3%B6teborg%20och%20dess%20delomr%C3%A5den__Prim%C3%A4romr%C3%A5den__Inkomst%20och%20utbildning__Utbildning/40_Hogskolbehorig_PRI.px/",
-    "kind": null
+    "kind": "count",
+    "metadata": {
+      "title": "Högskolebehörighet, 2013-2025",
+      "variables": [
+        {
+          "code": "Område",
+          "text": "Område",
+          "values": [
+            "101 Kungsladugård",
+            "102 Sanna",
+            "103 Majorna",
+            "104 Stigberget",
+            "105 Masthugget",
+            "106 Änggården",
+            "107 Haga",
+            "108 Annedal",
+            "109 Olivedal",
+            "110 Krokslätt",
+            "111 Johanneberg",
+            "112 Landala",
+            "113 Guldheden",
+            "114 Lorensberg",
+            "115 Vasastaden",
+            "116 Inom Vallgraven",
+            "117 Stampen",
+            "118 Heden",
+            "201 Olskroken",
+            "202 Redbergslid",
+            "203 Bagaregården",
+            "204 Kallebäck",
+            "205 Skår",
+            "206 Överås",
+            "207 Kärralund",
+            "208 Lunden",
+            "209 Härlanda",
+            "210 Kålltorp",
+            "211 Torpa",
+            "212 Björkekärr",
+            "301 Gamlestaden",
+            "302 Utby",
+            "303 Södra Kortedala",
+            "304 Norra Kortedala",
+            "305 Västra Bergsjön",
+            "306 Östra Bergsjön",
+            "402 Kvillebäcken",
+            "403 Slättadamm",
+            "404 Kärrdalen",
+            "405 Tuve",
+            "406 Säve",
+            "407 Kärra",
+            "408 Rödbo",
+            "409 Skogome",
+            "410 Brunnsbo",
+            "412 Backa",
+            "413 Skälltorp",
+            "414 Kyrkbyn",
+            "415 Rambergsstaden",
+            "416 Eriksberg",
+            "417 Lindholmen",
+            "501 Fiskebäck",
+            "502 Långedrag",
+            "503 Hagen",
+            "504 Grimmered",
+            "505 Södra Skärgården",
+            "506 Bratthammar",
+            "507 Guldringen",
+            "508 Skattegården",
+            "509 Kaverös",
+            "510 Flatås",
+            "511 Högsbohöjd",
+            "512 Högsbotorp",
+            "513 Tofta",
+            "514 Ruddalen",
+            "515 Järnbrott",
+            "516 Högsbo",
+            "517 Frölunda Torg",
+            "518 Ängås",
+            "519 Önnered",
+            "520 Grevegården",
+            "521 Näset",
+            "522 Kannebäck",
+            "523 Askim",
+            "524 Hovås",
+            "525 Billdal",
+            "601 Lövgärdet",
+            "602 Rannebergen",
+            "603 Gårdstensberget",
+            "604 Angereds Centrum",
+            "605 Agnesberg",
+            "606 Hammarkullen",
+            "609 Linnarhult",
+            "610 Gunnilse",
+            "611 Bergum",
+            "612 Hjällbo",
+            "613 Eriksbo",
+            "701 Norra Biskopsgården",
+            "702 Länsmansgården",
+            "703 Svartedalen",
+            "704 Hjuvik",
+            "705 Nolered",
+            "706 Björlanda",
+            "707 Arendal",
+            "708 Södra Biskopsgården",
+            "709 Jättesten",
+            "199 Ospecificerat Göteborg"
+          ],
+          "valueTexts": [
+            "101 Kungsladugård",
+            "102 Sanna",
+            "103 Majorna",
+            "104 Stigberget",
+            "105 Masthugget",
+            "106 Änggården",
+            "107 Haga",
+            "108 Annedal",
+            "109 Olivedal",
+            "110 Krokslätt",
+            "111 Johanneberg",
+            "112 Landala",
+            "113 Guldheden",
+            "114 Lorensberg",
+            "115 Vasastaden",
+            "116 Inom Vallgraven",
+            "117 Stampen",
+            "118 Heden",
+            "201 Olskroken",
+            "202 Redbergslid",
+            "203 Bagaregården",
+            "204 Kallebäck",
+            "205 Skår",
+            "206 Överås",
+            "207 Kärralund",
+            "208 Lunden",
+            "209 Härlanda",
+            "210 Kålltorp",
+            "211 Torpa",
+            "212 Björkekärr",
+            "301 Gamlestaden",
+            "302 Utby",
+            "303 Södra Kortedala",
+            "304 Norra Kortedala",
+            "305 Västra Bergsjön",
+            "306 Östra Bergsjön",
+            "402 Kvillebäcken",
+            "403 Slättadamm",
+            "404 Kärrdalen",
+            "405 Tuve",
+            "406 Säve",
+            "407 Kärra",
+            "408 Rödbo",
+            "409 Skogome",
+            "410 Brunnsbo",
+            "412 Backa",
+            "413 Skälltorp",
+            "414 Kyrkbyn",
+            "415 Rambergsstaden",
+            "416 Eriksberg",
+            "417 Lindholmen",
+            "501 Fiskebäck",
+            "502 Långedrag",
+            "503 Hagen",
+            "504 Grimmered",
+            "505 Södra Skärgården",
+            "506 Bratthammar",
+            "507 Guldringen",
+            "508 Skattegården",
+            "509 Kaverös",
+            "510 Flatås",
+            "511 Högsbohöjd",
+            "512 Högsbotorp",
+            "513 Tofta",
+            "514 Ruddalen",
+            "515 Järnbrott",
+            "516 Högsbo",
+            "517 Frölunda Torg",
+            "518 Ängås",
+            "519 Önnered",
+            "520 Grevegården",
+            "521 Näset",
+            "522 Kannebäck",
+            "523 Askim",
+            "524 Hovås",
+            "525 Billdal",
+            "601 Lövgärdet",
+            "602 Rannebergen",
+            "603 Gårdstensberget",
+            "604 Angereds Centrum",
+            "605 Agnesberg",
+            "606 Hammarkullen",
+            "609 Linnarhult",
+            "610 Gunnilse",
+            "611 Bergum",
+            "612 Hjällbo",
+            "613 Eriksbo",
+            "701 Norra Biskopsgården",
+            "702 Länsmansgården",
+            "703 Svartedalen",
+            "704 Hjuvik",
+            "705 Nolered",
+            "706 Björlanda",
+            "707 Arendal",
+            "708 Södra Biskopsgården",
+            "709 Jättesten",
+            "199 Ospecificerat Göteborg"
+          ]
+        },
+        {
+          "code": "Behörighet",
+          "text": "Behörighet",
+          "values": [
+            "Behörig till högskolan",
+            "Ej behörig till högskolan"
+          ],
+          "valueTexts": [
+            "Behörig till högskolan",
+            "Ej behörig till högskolan"
+          ]
+        },
+        {
+          "code": "År",
+          "text": "År",
+          "values": [
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"
+          ],
+          "valueTexts": [
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"
+          ],
+          "time": true
+        }
+      ]
+    },
+    "measure": {
+      "label": "Högskolebehörighet",
+      "unit": "Antal personer",
+      "additive": true
+    },
+    "sourceNotes": [
+      "Materialet har sekretessgranskats. Det innebär att vissa värden ersatts med '0'. Detta påverkar även en eventuell summering."
+    ]
   },
   {
     "id": "587f851a8fe8",
@@ -60900,7 +62806,317 @@
       2025
     ],
     "webUrl": "https://statistikdatabas.goteborg.se/pxweb/sv/1.%20G%C3%B6teborg%20och%20dess%20delomr%C3%A5den/1.%20G%C3%B6teborg%20och%20dess%20delomr%C3%A5den__Prim%C3%A4romr%C3%A5den__Inkomst%20och%20utbildning__Utbildning/50_UtbForalder_PRI.px/",
-    "kind": null
+    "kind": "count",
+    "metadata": {
+      "title": "Antal barn 0-17 år efter föräldrars utbildningsnivå, 2008-2025",
+      "variables": [
+        {
+          "code": "Område",
+          "text": "Område",
+          "values": [
+            "101 Kungsladugård",
+            "102 Sanna",
+            "103 Majorna",
+            "104 Stigberget",
+            "105 Masthugget",
+            "106 Änggården",
+            "107 Haga",
+            "108 Annedal",
+            "109 Olivedal",
+            "110 Krokslätt",
+            "111 Johanneberg",
+            "112 Landala",
+            "113 Guldheden",
+            "114 Lorensberg",
+            "115 Vasastaden",
+            "116 Inom Vallgraven",
+            "117 Stampen",
+            "118 Heden",
+            "201 Olskroken",
+            "202 Redbergslid",
+            "203 Bagaregården",
+            "204 Kallebäck",
+            "205 Skår",
+            "206 Överås",
+            "207 Kärralund",
+            "208 Lunden",
+            "209 Härlanda",
+            "210 Kålltorp",
+            "211 Torpa",
+            "212 Björkekärr",
+            "301 Gamlestaden",
+            "302 Utby",
+            "303 Södra Kortedala",
+            "304 Norra Kortedala",
+            "305 Västra Bergsjön",
+            "306 Östra Bergsjön",
+            "402 Kvillebäcken",
+            "403 Slättadamm",
+            "404 Kärrdalen",
+            "405 Tuve",
+            "406 Säve",
+            "407 Kärra",
+            "408 Rödbo",
+            "409 Skogome",
+            "410 Brunnsbo",
+            "412 Backa",
+            "413 Skälltorp",
+            "414 Kyrkbyn",
+            "415 Rambergsstaden",
+            "416 Eriksberg",
+            "417 Lindholmen",
+            "501 Fiskebäck",
+            "502 Långedrag",
+            "503 Hagen",
+            "504 Grimmered",
+            "505 Södra Skärgården",
+            "506 Bratthammar",
+            "507 Guldringen",
+            "508 Skattegården",
+            "509 Kaverös",
+            "510 Flatås",
+            "511 Högsbohöjd",
+            "512 Högsbotorp",
+            "513 Tofta",
+            "514 Ruddalen",
+            "515 Järnbrott",
+            "516 Högsbo",
+            "517 Frölunda Torg",
+            "518 Ängås",
+            "519 Önnered",
+            "520 Grevegården",
+            "521 Näset",
+            "522 Kannebäck",
+            "523 Askim",
+            "524 Hovås",
+            "525 Billdal",
+            "601 Lövgärdet",
+            "602 Rannebergen",
+            "603 Gårdstensberget",
+            "604 Angereds Centrum",
+            "605 Agnesberg",
+            "606 Hammarkullen",
+            "609 Linnarhult",
+            "610 Gunnilse",
+            "611 Bergum",
+            "612 Hjällbo",
+            "613 Eriksbo",
+            "701 Norra Biskopsgården",
+            "702 Länsmansgården",
+            "703 Svartedalen",
+            "704 Hjuvik",
+            "705 Nolered",
+            "706 Björlanda",
+            "707 Arendal",
+            "708 Södra Biskopsgården",
+            "709 Jättesten",
+            "199 Ospecificerat Göteborg"
+          ],
+          "valueTexts": [
+            "101 Kungsladugård",
+            "102 Sanna",
+            "103 Majorna",
+            "104 Stigberget",
+            "105 Masthugget",
+            "106 Änggården",
+            "107 Haga",
+            "108 Annedal",
+            "109 Olivedal",
+            "110 Krokslätt",
+            "111 Johanneberg",
+            "112 Landala",
+            "113 Guldheden",
+            "114 Lorensberg",
+            "115 Vasastaden",
+            "116 Inom Vallgraven",
+            "117 Stampen",
+            "118 Heden",
+            "201 Olskroken",
+            "202 Redbergslid",
+            "203 Bagaregården",
+            "204 Kallebäck",
+            "205 Skår",
+            "206 Överås",
+            "207 Kärralund",
+            "208 Lunden",
+            "209 Härlanda",
+            "210 Kålltorp",
+            "211 Torpa",
+            "212 Björkekärr",
+            "301 Gamlestaden",
+            "302 Utby",
+            "303 Södra Kortedala",
+            "304 Norra Kortedala",
+            "305 Västra Bergsjön",
+            "306 Östra Bergsjön",
+            "402 Kvillebäcken",
+            "403 Slättadamm",
+            "404 Kärrdalen",
+            "405 Tuve",
+            "406 Säve",
+            "407 Kärra",
+            "408 Rödbo",
+            "409 Skogome",
+            "410 Brunnsbo",
+            "412 Backa",
+            "413 Skälltorp",
+            "414 Kyrkbyn",
+            "415 Rambergsstaden",
+            "416 Eriksberg",
+            "417 Lindholmen",
+            "501 Fiskebäck",
+            "502 Långedrag",
+            "503 Hagen",
+            "504 Grimmered",
+            "505 Södra Skärgården",
+            "506 Bratthammar",
+            "507 Guldringen",
+            "508 Skattegården",
+            "509 Kaverös",
+            "510 Flatås",
+            "511 Högsbohöjd",
+            "512 Högsbotorp",
+            "513 Tofta",
+            "514 Ruddalen",
+            "515 Järnbrott",
+            "516 Högsbo",
+            "517 Frölunda Torg",
+            "518 Ängås",
+            "519 Önnered",
+            "520 Grevegården",
+            "521 Näset",
+            "522 Kannebäck",
+            "523 Askim",
+            "524 Hovås",
+            "525 Billdal",
+            "601 Lövgärdet",
+            "602 Rannebergen",
+            "603 Gårdstensberget",
+            "604 Angereds Centrum",
+            "605 Agnesberg",
+            "606 Hammarkullen",
+            "609 Linnarhult",
+            "610 Gunnilse",
+            "611 Bergum",
+            "612 Hjällbo",
+            "613 Eriksbo",
+            "701 Norra Biskopsgården",
+            "702 Länsmansgården",
+            "703 Svartedalen",
+            "704 Hjuvik",
+            "705 Nolered",
+            "706 Björlanda",
+            "707 Arendal",
+            "708 Södra Biskopsgården",
+            "709 Jättesten",
+            "199 Ospecificerat Göteborg"
+          ]
+        },
+        {
+          "code": "Barnets ålder",
+          "text": "Barnets ålder",
+          "values": [
+            "0",
+            "1",
+            "2"
+          ],
+          "valueTexts": [
+            "0-5 år",
+            "6-15 år",
+            "16-17 år"
+          ],
+          "elimination": true
+        },
+        {
+          "code": "Moderns utbildningsnivå",
+          "text": "Moderns utbildningsnivå",
+          "values": [
+            "Mor förgymnasial utbildning",
+            "Mor gymnasial utbildning",
+            "Mor eftergymnasial utbildning",
+            "Mor Uppgift saknas"
+          ],
+          "valueTexts": [
+            "Mor förgymnasial utbildning",
+            "Mor gymnasial utbildning",
+            "Mor eftergymnasial utbildning",
+            "Mor Uppgift saknas"
+          ],
+          "elimination": true
+        },
+        {
+          "code": "Faderns utbildningsnivå",
+          "text": "Faderns utbildningsnivå",
+          "values": [
+            "Far förgymnasial utbildning",
+            "Far gymnasial utbildning",
+            "Far eftergymnasial utbildning",
+            "Far Uppgift saknas"
+          ],
+          "valueTexts": [
+            "Far förgymnasial utbildning",
+            "Far gymnasial utbildning",
+            "Far eftergymnasial utbildning",
+            "Far Uppgift saknas"
+          ],
+          "elimination": true
+        },
+        {
+          "code": "År",
+          "text": "År",
+          "values": [
+            "2008",
+            "2009",
+            "2010",
+            "2011",
+            "2012",
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"
+          ],
+          "valueTexts": [
+            "2008",
+            "2009",
+            "2010",
+            "2011",
+            "2012",
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"
+          ],
+          "time": true
+        }
+      ]
+    },
+    "measure": {
+      "label": "Barn efter föräldrars utbildningsnivå",
+      "unit": "Antal barn",
+      "additive": true
+    },
+    "sourceNotes": [
+      "Materialet har sekretessgranskats. Det innebär att vissa värden ersatts med '0'. Detta påverkar även en eventuell summering.",
+      "Förälder som ej ingår i utbildningsregistret ingår ej i tabellen. Därmed ingår inte heller alla barn 0-17 år."
+    ]
   },
   {
     "id": "d83298014cc8",

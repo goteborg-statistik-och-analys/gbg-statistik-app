@@ -1,12 +1,38 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {resultHeading,resultHeadingText,resultAreaLabel} from '../result-heading.js';
-import {seriesChart,chartDescriptions} from '../series-chart.js';
+import {resultHeading,resultHeadingText,resultAreaLabel} from '../src/result-heading.js';
+import {seriesChart,chartDescriptions} from '../src/series-chart.js';
 const table={title:'Arbetssökande efter kategori och utbildningsnivå 2010-2025',level:'Stadsområde',metadata:{variables:[
   {code:'Område',values:['01 Nordost']},{code:'Utbildningsnivå',values:['Förgymnasial','Gymnasial']},{code:'Arbetssökandekategori',values:['Öppet arbetslösa','Övriga']},{code:'År',values:['2024','2025']}
 ]}};
 const group={selections:{Område:['01 Nordost'],Utbildningsnivå:['Förgymnasial'],Arbetssökandekategori:['Öppet arbetslösa']}};
 const result={table,groups:[group],measure:'Arbetssökande',area:'Nordost',date:'2026-09-16',series:[{name:'Nordost',detail:'Urval',rows:[{year:2024,value:100},{year:2025,value:110}]}]};
+test('Responsive chart keeps axes, points and source inside short and tall viewports without changing exports',()=>{
+  const exported=seriesChart(result);
+  for(const height of [240,320,600]){
+    const svg=seriesChart({...result,includeHeading:false,includeDescriptions:false,layoutHeight:height});
+    assert.ok(svg.includes(`viewBox="0 0 1000 ${height}"`));
+    const bottom=Number(svg.match(/data-plot-bottom="([^"]+)"/)[1]);
+    assert.equal(bottom,height-65);
+    for(const match of svg.matchAll(/<circle[^>]*cy="([^"]+)"/g))assert.ok(Number(match[1])>=65&&Number(match[1])<=bottom);
+    for(const match of svg.matchAll(/<text[^>]*y="([^"]+)"/g))assert.ok(Number(match[1])>=0&&Number(match[1])<height);
+    assert.match(svg,/>0<\/text>/);
+    assert.match(svg,/Källa: Göteborgs Stads statistikdatabas/);
+  }
+  assert.equal(seriesChart({...result,layoutHeight:240}),exported);
+});
+test('Crowded end labels stay inside the plot on short screens',()=>{
+  const series=Array.from({length:5},(_,i)=>({name:`Område ${i+1}`,rows:[{year:2024,value:90+i},{year:2025,value:100+i}]}));
+  for(const layoutHeight of [240,320,450]){
+    const svg=seriesChart({...result,series,includeHeading:false,includeDescriptions:false,layoutHeight});
+    const bottom=layoutHeight-65;
+    const labels=[...svg.matchAll(/<text x="772" y="([^"]+)"/g)].map(match=>Number(match[1])-4);
+    assert.equal(labels.length,5);
+    assert.ok(labels.every(y=>y>=65&&y<=bottom));
+    const sorted=labels.toSorted((a,b)=>a-b);
+    assert.ok(sorted.slice(1).every((y,i)=>y>sorted[i]));
+  }
+});
 test('The chart uses the table title and selected filters; only the export repeats the visible heading',()=>{
   assert.equal(resultHeadingText(result),'Arbetssökande efter kategori och utbildningsnivå · Utbildningsnivå: Förgymnasial · Arbetssökandekategori: Öppet arbetslösa');
   const exported=seriesChart(result),screen=seriesChart({...result,includeHeading:false});
