@@ -8,6 +8,15 @@ const table={kind:'population',title:'Folkmängd',level:'Primärområde',metadat
 const [group]=planGroups(table,'A',2024,2025,[{name:'',separate:['Område','Ålder'],selections:{Område:['A','B'],'Ålder':['0 år','1 år','2 år'],Kön:['Man','Kvinna']}}]);
 const payload={columns:[{code:'Område',type:'d'},{code:'Ålder',type:'d'},{code:'Kön',type:'d'},{code:'År',type:'t'},{code:'Antal',type:'c'}],data:['A','B'].flatMap((a,i)=>['0 år','1 år','2 år'].flatMap((age,j)=>['Man','Kvinna'].flatMap((sex,k)=>['2024','2025'].map(year=>({key:[a,age,sex,year],values:[String(100*i+10*j+k)]})))))};
 const filter=query=>({...payload,data:payload.data.filter(row=>query.query.every((v,i)=>v.selection.values.includes(row.key[i])))});
+
+test('Large extraction packs into nine bounded requests without duplicate or omitted ages',()=>{
+  const query={query:[['Område',97],['Ålder',101],['Kön',2],['År',42]].map(([code,count])=>({code,selection:{filter:'item',values:Array.from({length:count},(_,i)=>String(i))}})),response:{format:'json'}};
+  const chunks=splitQuery(query,['Område','Ålder']);
+  const sizes=chunks.map(q=>q.query.reduce((n,v)=>n*v.selection.values.length,1));
+  assert.equal(chunks.length,9);assert.ok(sizes.every(n=>n<=100000));assert.equal(sizes.reduce((a,b)=>a+b),822948);
+  assert.deepEqual(chunks.flatMap(q=>q.query.find(v=>v.code==='Ålder').selection.values),query.query[1].selection.values);
+  for(const chunk of chunks)for(const i of [0,2,3])assert.deepEqual(chunk.query[i],query.query[i]);
+});
 test('Separate areas and ages form all combinations while sexes are summed; chunking loses no series',()=>{
   const chunks=splitQuery(group.query,group.separate,8);
   assert.ok(chunks.length>1);assert.ok(chunks.every(q=>q.query.reduce((n,v)=>n*v.selection.values.length,1)<=8));

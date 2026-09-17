@@ -157,7 +157,8 @@ export function mountAreaMap({result,panel,toolbar=panel,chart,chooser,heading,d
   }
   const mapPanel=document.createElement('div');mapPanel.className='area-map';mapPanel.hidden=true;
   const canvas=document.createElement('div');canvas.className='map-canvas';
-  const notes=document.createElement('div');notes.className='map-notes';
+  const notes=document.createElement('details');notes.className='map-notes';
+  const notesTitle=document.createElement('summary');notesTitle.textContent='Visa källa och beskrivning';notes.append(notesTitle);
   for(const text of mapNotes(result)){const paragraph=document.createElement('p');paragraph.textContent=text;notes.append(paragraph);}
   const controls=document.createElement('div');controls.className='map-years';
   const previous=document.createElement('button'),next=document.createElement('button');previous.type=next.type='button';previous.textContent='←';next.textContent='→';previous.setAttribute('aria-label','Föregående år');next.setAttribute('aria-label','Nästa år');

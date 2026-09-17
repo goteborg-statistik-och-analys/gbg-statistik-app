@@ -1,0 +1,280 @@
+{
+  "measuredAt": "2026-09-17T08:10:53.379Z",
+  "mode": "baseline",
+  "concurrency": 1,
+  "runtime": "v24.19.0",
+  "table": "Folkmängd 1984-2025 (SCB)",
+  "metadataMs": 186.11239999999998,
+  "dimensions": [
+    {
+      "code": "Område",
+      "count": 97
+    },
+    {
+      "code": "Ålder",
+      "count": 101
+    },
+    {
+      "code": "Kön",
+      "count": 2
+    },
+    {
+      "code": "År",
+      "count": 42
+    }
+  ],
+  "preparationMs": 4.106399999999979,
+  "requests": [
+    {
+      "part": 1,
+      "cells": 54600,
+      "attempts": [
+        {
+          "status": 200,
+          "headersMs": 88.45880000000002,
+          "bodyMs": 1124.7359000000001,
+          "parseMs": 30.891599999999926,
+          "bytes": 3546931
+        }
+      ],
+      "retryWaitMs": 0,
+      "processingMs": 104.73610000000008
+    },
+    {
+      "part": 2,
+      "cells": 52416,
+      "attempts": [
+        {
+          "status": 200,
+          "headersMs": 31.08179999999993,
+          "bodyMs": 1021.9755000000002,
+          "parseMs": 23.991099999999733,
+          "bytes": 3430817
+        }
+      ],
+      "retryWaitMs": 0,
+      "processingMs": 76.94369999999981
+    },
+    {
+      "part": 3,
+      "cells": 52500,
+      "attempts": [
+        {
+          "status": 200,
+          "headersMs": 29.009599999999864,
+          "bodyMs": 1019.8359999999998,
+          "parseMs": 23.273200000000088,
+          "bytes": 3442593
+        }
+      ],
+      "retryWaitMs": 0,
+      "processingMs": 66.51340000000027
+    },
+    {
+      "part": 4,
+      "cells": 50400,
+      "attempts": [
+        {
+          "status": 200,
+          "headersMs": 26.307000000000244,
+          "bodyMs": 922.2812999999996,
+          "parseMs": 21.552300000000287,
+          "bytes": 3321776
+        }
+      ],
+      "retryWaitMs": 0,
+      "processingMs": 43.539700000000266
+    },
+    {
+      "part": 5,
+      "cells": 52416,
+      "attempts": [
+        {
+          "status": 200,
+          "headersMs": 30.068999999999505,
+          "bodyMs": 1008.0974999999999,
+          "parseMs": 22.33440000000064,
+          "bytes": 3436284
+        }
+      ],
+      "retryWaitMs": 0,
+      "processingMs": 42.4968000000008
+    },
+    {
+      "part": 6,
+      "cells": 52416,
+      "attempts": [
+        {
+          "status": 200,
+          "headersMs": 28.080799999999726,
+          "bodyMs": 1038.2965999999997,
+          "parseMs": 18.499000000000706,
+          "bytes": 3506167
+        }
+      ],
+      "retryWaitMs": 0,
+      "processingMs": 45.13270000000011
+    },
+    {
+      "part": 7,
+      "cells": 50400,
+      "attempts": [
+        {
+          "status": 200,
+          "headersMs": 26.657100000000355,
+          "bodyMs": 963.6458999999995,
+          "parseMs": 19.339700000000448,
+          "bytes": 3326037
+        }
+      ],
+      "retryWaitMs": 0,
+      "processingMs": 43.367199999999684
+    },
+    {
+      "part": 8,
+      "cells": 50400,
+      "attempts": [
+        {
+          "status": 200,
+          "headersMs": 26.96140000000014,
+          "bodyMs": 954.9784,
+          "parseMs": 18.07679999999891,
+          "bytes": 3392204
+        }
+      ],
+      "retryWaitMs": 0,
+      "processingMs": 43.878099999999904
+    },
+    {
+      "part": 9,
+      "cells": 52500,
+      "attempts": [
+        {
+          "status": 200,
+          "headersMs": 27.717799999998533,
+          "bodyMs": 965.5589,
+          "parseMs": 18.667600000000675,
+          "bytes": 3432553
+        }
+      ],
+      "retryWaitMs": 0,
+      "processingMs": 46.67829999999958
+    },
+    {
+      "part": 10,
+      "cells": 50400,
+      "attempts": [
+        {
+          "status": 200,
+          "headersMs": 28.27729999999974,
+          "bodyMs": 949.265800000001,
+          "parseMs": 18.27679999999964,
+          "bytes": 3316612
+        }
+      ],
+      "retryWaitMs": 0,
+      "processingMs": 43.23019999999997
+    },
+    {
+      "part": 11,
+      "cells": 52500,
+      "attempts": [
+        {
+          "status": 200,
+          "headersMs": 34.149999999999636,
+          "bodyMs": 983.4187000000002,
+          "parseMs": 24.122400000000198,
+          "bytes": 3409691
+        }
+      ],
+      "retryWaitMs": 0,
+      "processingMs": 46.406699999999546
+    },
+    {
+      "part": 12,
+      "cells": 50400,
+      "attempts": [
+        {
+          "status": 200,
+          "headersMs": 29.20930000000044,
+          "bodyMs": 986.6234999999997,
+          "parseMs": 17.83220000000074,
+          "bytes": 3294173
+        }
+      ],
+      "retryWaitMs": 0,
+      "processingMs": 46.7447000000011
+    },
+    {
+      "part": 13,
+      "cells": 50400,
+      "attempts": [
+        {
+          "status": 200,
+          "headersMs": 28.576599999998507,
+          "bodyMs": 966.1476000000002,
+          "parseMs": 18.5554000000011,
+          "bytes": 3324420
+        }
+      ],
+      "retryWaitMs": 0,
+      "processingMs": 43.86490000000049
+    },
+    {
+      "part": 14,
+      "cells": 50400,
+      "attempts": [
+        {
+          "status": 200,
+          "headersMs": 27.036799999999857,
+          "bodyMs": 983.4791999999998,
+          "parseMs": 17.489199999999983,
+          "bytes": 3386825
+        }
+      ],
+      "retryWaitMs": 0,
+      "processingMs": 55.76059999999961
+    },
+    {
+      "part": 15,
+      "cells": 50400,
+      "attempts": [
+        {
+          "status": 200,
+          "headersMs": 29.306699999999182,
+          "bodyMs": 940.6936000000005,
+          "parseMs": 17.515400000000227,
+          "bytes": 3298765
+        }
+      ],
+      "retryWaitMs": 0,
+      "processingMs": 50.01919999999882
+    },
+    {
+      "part": 16,
+      "cells": 50400,
+      "attempts": [
+        {
+          "status": 200,
+          "headersMs": 26.953800000002957,
+          "bodyMs": 959.4286999999968,
+          "parseMs": 18.153700000002573,
+          "bytes": 3362118
+        }
+      ],
+      "retryWaitMs": 0,
+      "processingMs": 42.66019999999844
+    }
+  ],
+  "alignMs": 63.20010000000184,
+  "gridMs": 84.89489999999932,
+  "totalMs": 17662.1698,
+  "series": 9797,
+  "rows": 411474,
+  "networkMs": 16306.316899999996,
+  "parseMs": 328.5708000000059,
+  "processingMs": 990.0674999999997,
+  "retryWaitMs": 0,
+  "bytes": 54227966,
+  "resultSha256": "ccec3d32b3c2f393ab3ee9d170c5e38141a6eb270d01bbc0835e3367e8b3493b"
+}

@@ -1,5 +1,5 @@
 import {escapeXML as esc,periodOf} from './core.js';
-import {resultHeading} from './result-heading.js';
+import {resultHeading,resultAreaLabel} from './result-heading.js';
 const colors=['#008391','#674b99','#d24723','#3f5564','#008767','#d53878','#ffcd37'];
 const dashes=['','9 4','3 4','12 4 3 4','2 3','8 3 2 3','14 5'];
 const fmt=value=>new Intl.NumberFormat('sv-SE').format(value);
@@ -20,6 +20,7 @@ function wrap(text,length=105){
 export function seriesChart({series,area,table,measure,date,groups,unit='Antal personer',includeHeading=true,includeDescriptions=true}){
   if(series.length>7)throw new Error('Diagrammet kan visa högst sju linjer.');
   const caption=resultHeading({table,measure,groups});
+  const geography=includeHeading?[table.level,resultAreaLabel({table,groups,area})].filter(Boolean).join(' · '):table.level;
   const titleLines=includeHeading?wrap(caption.title,62):[],selectionLines=includeHeading&&caption.selection?wrap(caption.selection,105):[];
   const headerShift=includeHeading?(titleLines.length-1)*27+selectionLines.length*20:0;
   const width=1000,left=88,right=250,top=(includeHeading?115:65)+headerShift,plotHeight=300,bottom=top+plotHeight;
@@ -27,10 +28,10 @@ export function seriesChart({series,area,table,measure,date,groups,unit='Antal p
   const values=series.flatMap(s=>s.rows.filter(r=>r.value!==null).map(r=>r.value));
   const max=Math.max(...values,1),min=Math.min(...values,0),magnitude=10**Math.floor(Math.log10(Math.max(max,-min))),limit=Math.ceil(max/magnitude*2)/2*magnitude,lower=Math.floor(min/magnitude*2)/2*magnitude;
   const x=year=>left+(year-start)/(end-start||1)*(width-left-right),y=value=>top+(limit-value)/(limit-lower)*plotHeight;
-  const descriptions=includeDescriptions&&series.length>1?series.flatMap((s,i)=>wrap(`${i+1}. ${s.name}: ${s.detail}`).map(text=>({text,index:i}))):[];
+  const descriptions=includeDescriptions?series.flatMap((s,i)=>wrap(`${i+1}. ${s.name}: ${s.detail||''}`).map(text=>({text,index:i}))):[];
   const height=bottom+100+descriptions.length*18;
   const header=titleLines.map((line,i)=>`<text x="${left}" y="${30+i*27}" font-size="22" font-weight="800">${esc(line)}</text>`).join('')+selectionLines.map((line,i)=>`<text x="${left}" y="${54+(titleLines.length-1)*27+i*20}" font-size="14" font-weight="700">${esc(line)}</text>`).join('');
-  let svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" data-plot-top="${top}" data-plot-bottom="${bottom}" role="img" aria-label="${esc([caption.title,caption.selection,area].filter(Boolean).join(' · '))}" aria-describedby="chart-desc"><desc id="chart-desc">${series.length} grupper, ${periodOf(rows[0])}–${periodOf(rows.at(-1))}. ${esc(unit)}. Linjeavbrott betyder saknad uppgift. Exakta värden och urval finns i tabellen.</desc><rect width="${width}" height="${height}" fill="#ffffff"/><g font-family="Open Sans, Arial, sans-serif" fill="#1f1f1f">${header}<text x="${left}" y="${includeHeading?56+headerShift:24}" font-size="14">${esc(table.level)} · ${periodOf(rows[0])}–${periodOf(rows.at(-1))}</text><text x="${left}" y="${includeHeading?88+headerShift:46}" font-size="13">${esc(unit)}</text>`;
+  let svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" data-plot-top="${top}" data-plot-bottom="${bottom}" role="img" aria-label="${esc([caption.title,caption.selection,area].filter(Boolean).join(' · '))}" aria-describedby="chart-desc"><desc id="chart-desc">${series.length} grupper, ${periodOf(rows[0])}–${periodOf(rows.at(-1))}. ${esc(unit)}. Linjeavbrott betyder saknad uppgift. Exakta värden och urval finns i tabellen.</desc><rect width="${width}" height="${height}" fill="#ffffff"/><g font-family="Open Sans, Arial, sans-serif" fill="#1f1f1f">${header}<text x="${left}" y="${includeHeading?56+headerShift:24}" font-size="14">${esc(geography)} · ${periodOf(rows[0])}–${periodOf(rows.at(-1))}</text><text x="${left}" y="${includeHeading?88+headerShift:46}" font-size="13">${esc(unit)}</text>`;
   for(let i=0;i<=4;i++){const value=lower+(limit-lower)*i/4;svg+=`<line x1="${left}" y1="${y(value)}" x2="${width-right}" y2="${y(value)}" stroke="#d1d9dc"/><text x="${left-12}" y="${y(value)+5}" text-anchor="end" font-size="13">${esc(fmt(value))}</text>`;}
   const indices=[...new Set([0,Math.round((rows.length-1)/4),Math.round((rows.length-1)/2),Math.round(3*(rows.length-1)/4),rows.length-1])];
   for(const i of indices)svg+=`<text x="${x(rows[i].year)}" y="${bottom+28}" text-anchor="middle" font-size="13">${periodOf(rows[i])}</text>`;
@@ -68,7 +69,7 @@ export function attachSeriesInteraction(container,series,unit='Antal personer'){
   box.style.filter='drop-shadow(0 3px 5px rgb(31 31 31 / 16%))';
   const typography={fill:'#1f1f1f','font-family':'Open Sans, Arial, sans-serif'};
   const yearLabel=make('text',{...typography,'font-size':12,'font-weight':700});
-  const labels=series.map(()=>make('text',{...typography,'font-size':13}));
+  const labels=series.map(()=>make('text',{...typography,'font-size':11}));
   const swatches=series.map((_,i)=>make('line',{stroke:colors[i],'stroke-width':3,'stroke-dasharray':dashes[i]}));
   overlay.append(guide,box,yearLabel,...swatches,...labels);overlay.style.display='none';svg.append(overlay);
   const announcement=document.createElement('span');announcement.className='sr-only';announcement.setAttribute('role','status');container.append(announcement);
@@ -87,11 +88,11 @@ export function attachSeriesInteraction(container,series,unit='Antal personer'){
     yearLabel.textContent=periodOf(rows[index]);
     labels.forEach((label,i)=>{const value=series[i].rows.find(row=>row.year===year)?.value;label.textContent=(series.length===1&&series[i].isDefaultName?'':series[i].name+': ')+(value==null?'Uppgift saknas':fmt(value)+' '+unit.toLowerCase().replace(/^antal /,''));});
     overlay.style.display='';
-    const width=Math.max(100,...labels.map(label=>label.getComputedTextLength()+60)),height=36+series.length*25;
+    const width=Math.max(100,...labels.map(label=>label.getComputedTextLength()+60)),height=36+series.length*20;
     const bx=Math.max(8,Math.min(992-width,x+width+16<992?x+16:x-width-16)),by=top+8;
     box.setAttribute('x',bx);box.setAttribute('y',by);box.setAttribute('width',width);box.setAttribute('height',height);
     yearLabel.setAttribute('x',bx+12);yearLabel.setAttribute('y',by+20);
-    labels.forEach((label,i)=>{const cy=by+43+i*25;label.setAttribute('x',bx+43);label.setAttribute('y',cy);swatches[i].setAttribute('x1',bx+12);swatches[i].setAttribute('x2',bx+34);swatches[i].setAttribute('y1',cy-4);swatches[i].setAttribute('y2',cy-4);});
+    labels.forEach((label,i)=>{const cy=by+39+i*20;label.setAttribute('x',bx+43);label.setAttribute('y',cy);swatches[i].setAttribute('x1',bx+12);swatches[i].setAttribute('x2',bx+34);swatches[i].setAttribute('y1',cy-4);swatches[i].setAttribute('y2',cy-4);});
     guide.setAttribute('x1',x);guide.setAttribute('x2',x);
     points.forEach(point=>{const selected=Number(point.dataset.year)===year;point.setAttribute('r',selected?5:4);point.setAttribute('stroke',selected?'#ffffff':'none');point.setAttribute('stroke-width',selected?1.5:0);point.style.opacity=selected?'1':point.dataset.endpoint==='true'?'1':'0';});
     lines.forEach(line=>{line.style.opacity='.85';});

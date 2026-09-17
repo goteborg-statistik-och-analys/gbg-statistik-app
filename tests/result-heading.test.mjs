@@ -22,6 +22,15 @@ test('Comparison headings show shared filters without applying the first group t
   assert.equal(resultHeading({...result,groups:[group,other]}).selection,'Arbetssökandekategori: Öppet arbetslösa');
   assert.equal(resultHeading({...result,groups:[]}).selection,'');
 });
+test('A single-series export visibly identifies the area and includes its complete selection',()=>{
+  const single={...result,series:[{...result.series[0],name:'Grupp 1',detail:'Område: Nordost · Ålder: 18–29 år · Kön: Kvinnor'}]};
+  const exported=seriesChart(single).split('<g font-family')[1];
+  assert.match(exported,/>Stadsområde · Nordost · 2024–2025<\/text>/);
+  assert.match(exported,/Område: Nordost · Ålder: 18–29 år · Kön: Kvinnor/);
+  assert.match(exported,/Källa: Göteborgs Stads statistikdatabas/);
+  const screen=seriesChart({...single,includeHeading:false,includeDescriptions:false}).split('<g font-family')[1];
+  assert.doesNotMatch(screen,/Område: Nordost/);
+});
 test('Long series descriptions are available on demand while exports retain them',()=>{
   const series=[{...result.series[0],detail:'Unik urvalsbeskrivning A'},{...result.series[0],name:'Centrum',detail:'Unik urvalsbeskrivning B'}];
   const screen=seriesChart({...result,series,includeDescriptions:false});

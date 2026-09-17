@@ -33,6 +33,30 @@
 .help-topic:last-child{border-top:1px solid #d1d9dc;padding-top:20px}
 .help-topic a{overflow-wrap:anywhere}
 .help-open{overflow:hidden}
+.visual-open{overflow:hidden}
+.visual-dialog{width:min(1440px,calc(100vw - 48px));max-height:92vh;max-height:92dvh;overflow:hidden}
+.visual-dialog-content{overflow:auto;overscroll-behavior:contain;min-height:0;padding:0 24px 24px}
+.visual-dialog #chart-panel{margin:0;border:0;padding:16px 0 0}
+/* Fit the complete SVG into the space left by headings and controls. */
+.visual-dialog:has(#chart:not([hidden])>svg,.area-map:not([hidden])){height:92vh;height:92dvh}
+.visual-dialog-content:has(#chart:not([hidden])>svg,.area-map:not([hidden])){display:flex;flex:1;overflow:hidden}
+.visual-dialog-content:has(#chart:not([hidden])>svg,.area-map:not([hidden])) #chart-panel{display:flex;flex-direction:column;flex:1;min-width:0;min-height:0}
+.visual-dialog #chart-panel>.section-heading{flex:none}
+.visual-dialog .chart-series-choice{flex:none;max-height:25%;overflow:auto}
+.visual-dialog #chart:not([hidden]):has(>svg){display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden}
+.visual-dialog #chart>.visual-heading{flex:none}
+.visual-dialog #chart>svg{flex:1;min-height:0;min-width:0;width:100%;height:0}
+.visual-dialog .chart-descriptions{flex:none;max-height:25%;overflow:auto}
+.visual-close{display:grid;place-items:center;min-width:36px;min-height:36px;border-radius:5px;flex:none}
+.visual-close:hover{background:#f4f6f7}
+.downloads .visual-expand[hidden]{display:none}
+.visual-dialog .area-map:not([hidden]){display:flex;flex-direction:column;flex:1;min-height:0}
+.visual-dialog .map-canvas{display:flex;flex-direction:column;flex:1;min-height:0;width:100%;max-width:none;overflow:visible}
+.visual-dialog .map-canvas>.visual-heading{flex:none}
+.visual-dialog .map-canvas>svg{flex:1;min-height:0;min-width:0;width:100%;height:0;max-height:none}
+.visual-dialog .map-years{flex:none;width:min(100%,560px)}
+.visual-dialog .map-notes{flex:none;max-height:25%;overflow:auto}
+@media(max-width:600px){.visual-dialog{width:calc(100vw - 24px)}.visual-dialog-content{padding:0 12px 16px}#chart-panel>.section-heading{flex-wrap:wrap}.downloads .visual-expand{padding-inline:10px}.visual-expand span{display:none}}
 @media(max-width:600px){.header-actions{justify-content:flex-start;gap:6px}.help-dialog-heading{padding:16px}.help-dialog-content{padding:18px 16px}}
 .map-canvas{position:relative;margin-inline:auto;max-width:min(100%,calc(clamp(360px,calc(100vh - 340px),560px) * var(--map-aspect,1.3)));max-width:min(100%,calc(clamp(360px,calc(100dvh - 340px),560px) * var(--map-aspect,1.3)))}
 .map-canvas svg{display:block;width:100%;height:auto;max-height:clamp(360px,calc(100vh - 340px),560px);max-height:clamp(360px,calc(100dvh - 340px),560px)}
@@ -79,6 +103,8 @@
 .map-years button:disabled{cursor:default;opacity:.35}
 .map-years output{font-weight:700;min-width:4ch;font-variant-numeric:tabular-nums}
 .map-notes{border-top:1px solid var(--border);padding-top:10px;font-size:12px;line-height:1.5}
+.map-notes summary{font-size:12px;cursor:pointer}
+.map-notes[open] summary{margin-bottom:12px}
 .map-notes p{margin:0 0 4px;line-height:1.5}
 @media(max-width:600px){.map-canvas{overflow:auto}.map-canvas svg{min-width:650px}.map-years{gap:8px}}
 @media(forced-colors:active){.view-toggle button[aria-pressed="true"]{outline:2px solid Highlight;outline-offset:-3px}.map-years input{appearance:auto}.map-tooltip{border:1px solid CanvasText}}

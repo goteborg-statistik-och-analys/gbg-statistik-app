@@ -12,7 +12,7 @@ test('Actual source zeros after July 2026 are excluded without hiding subgroup z
   assert.equal(filtered[0].rows.length,7);assert.equal(filtered[0].rows.at(-1).value,0);
   const svg=seriesChart({series:filtered,area:'Göteborg',table:{level:'Kommun'},measure:'Folkmängd',date:'idag'});
   assert.ok(svg.includes('2026-07'));assert.ok(!svg.includes('2026-08'));assert.ok(!svg.includes('2026-12'));
-  assert.ok(!svg.includes('1. Grupp 1'));assert.ok(!svg.includes('Urval'));
+  assert.ok(svg.includes('1. Grupp 1'));assert.ok(svg.includes('Urval'));
   const comparison=seriesChart({series:[...filtered,{...filtered[0],name:'Grupp 2'}],area:'Göteborg',table:{level:'Kommun'},measure:'Folkmängd',date:'idag'});
   assert.ok(comparison.includes('1. Grupp 1'));assert.ok(comparison.includes('2. Grupp 2'));
 });

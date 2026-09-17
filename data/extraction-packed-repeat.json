@@ -1,0 +1,175 @@
+{
+  "measuredAt": "2026-09-17T08:10:13.660Z",
+  "mode": "packed",
+  "concurrency": 1,
+  "runtime": "v24.19.0",
+  "table": "Folkmängd 1984-2025 (SCB)",
+  "metadataMs": 179.7073,
+  "dimensions": [
+    {
+      "code": "Område",
+      "count": 97
+    },
+    {
+      "code": "Ålder",
+      "count": 101
+    },
+    {
+      "code": "Kön",
+      "count": 2
+    },
+    {
+      "code": "År",
+      "count": 42
+    }
+  ],
+  "preparationMs": 4.094599999999986,
+  "requests": [
+    {
+      "part": 1,
+      "cells": 97776,
+      "attempts": [
+        {
+          "status": 200,
+          "headersMs": 90.79669999999999,
+          "bodyMs": 1911.3575,
+          "parseMs": 70.10669999999982,
+          "bytes": 6378042
+        }
+      ],
+      "retryWaitMs": 0,
+      "processingMs": 130.21839999999975
+    },
+    {
+      "part": 2,
+      "cells": 97776,
+      "attempts": [
+        {
+          "status": 200,
+          "headersMs": 35.230099999999766,
+          "bodyMs": 1868.0322999999999,
+          "parseMs": 62.714600000000246,
+          "bytes": 6462073
+        }
+      ],
+      "retryWaitMs": 0,
+      "processingMs": 87.8701000000001
+    },
+    {
+      "part": 3,
+      "cells": 97776,
+      "attempts": [
+        {
+          "status": 200,
+          "headersMs": 30.934400000000096,
+          "bodyMs": 1888.8181999999997,
+          "parseMs": 35.71070000000054,
+          "bytes": 6475798
+        }
+      ],
+      "retryWaitMs": 0,
+      "processingMs": 103.71550000000025
+    },
+    {
+      "part": 4,
+      "cells": 97776,
+      "attempts": [
+        {
+          "status": 200,
+          "headersMs": 35.39639999999963,
+          "bodyMs": 1848.3300000000008,
+          "parseMs": 43.14309999999932,
+          "bytes": 6468546
+        }
+      ],
+      "retryWaitMs": 0,
+      "processingMs": 101.19939999999951
+    },
+    {
+      "part": 5,
+      "cells": 97776,
+      "attempts": [
+        {
+          "status": 200,
+          "headersMs": 44.47909999999865,
+          "bodyMs": 1863.3479000000007,
+          "parseMs": 35.616399999998976,
+          "bytes": 6465924
+        }
+      ],
+      "retryWaitMs": 0,
+      "processingMs": 105.59209999999985
+    },
+    {
+      "part": 6,
+      "cells": 97776,
+      "attempts": [
+        {
+          "status": 200,
+          "headersMs": 30.92280000000028,
+          "bodyMs": 1843.3349999999991,
+          "parseMs": 37.518299999999726,
+          "bytes": 6459881
+        }
+      ],
+      "retryWaitMs": 0,
+      "processingMs": 115.16210000000137
+    },
+    {
+      "part": 7,
+      "cells": 97776,
+      "attempts": [
+        {
+          "status": 200,
+          "headersMs": 42.165499999999156,
+          "bodyMs": 1859.0434000000005,
+          "parseMs": 34.780000000000655,
+          "bytes": 6441988
+        }
+      ],
+      "retryWaitMs": 0,
+      "processingMs": 91.58840000000055
+    },
+    {
+      "part": 8,
+      "cells": 97776,
+      "attempts": [
+        {
+          "status": 200,
+          "headersMs": 52.217500000000655,
+          "bodyMs": 1820.4559999999983,
+          "parseMs": 34.19250000000102,
+          "bytes": 6397498
+        }
+      ],
+      "retryWaitMs": 0,
+      "processingMs": 94.01829999999973
+    },
+    {
+      "part": 9,
+      "cells": 40740,
+      "attempts": [
+        {
+          "status": 200,
+          "headersMs": 30.11109999999826,
+          "bodyMs": 778.4612000000016,
+          "parseMs": 14.173800000000483,
+          "bytes": 2675241
+        }
+      ],
+      "retryWaitMs": 0,
+      "processingMs": 30.03269999999975
+    }
+  ],
+  "alignMs": 70.82130000000325,
+  "gridMs": 77.19650000000183,
+  "totalMs": 17485.4306,
+  "series": 9797,
+  "rows": 411474,
+  "networkMs": 16073.435099999997,
+  "parseMs": 367.9561000000008,
+  "processingMs": 1007.4148000000059,
+  "retryWaitMs": 0,
+  "bytes": 54224991,
+  "resultSha256": "ccec3d32b3c2f393ab3ee9d170c5e38141a6eb270d01bbc0835e3367e8b3493b"
+}

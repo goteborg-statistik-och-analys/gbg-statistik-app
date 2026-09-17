@@ -1,6 +1,7 @@
 import {interpret,periodOf,yearsOf,areaOf,labelOf,aggregate,escapeXML as esc} from './core.js';
 import {findTables} from './search.js';
 import {splitQuery,detailedSeries,resultGrid,alignPeriods} from './detailed-results.js';
+import {runExtraction} from './extraction-queue.js';
 import {monthlyAvailabilityQuery,populatedMonths} from './monthly-availability.js';
 import {tableMeasure} from './table-measures.js';
 import {searchSelection} from './search-selection.js';
@@ -15,6 +16,7 @@ import {browseTables,catalogThemes,filterTables} from './catalog-filters.js';
 import {mapSeries,mountAreaMap} from './area-map.js';
 import {resultHeadingText,visualHeading,resultAreaLabel} from './result-heading.js';
 import {initHelpDialog} from './help-dialog.js';
+import {initVisualDialog} from './visual-dialog.js';
 const $=id=>document.getElementById(id), fmt=n=>n===null?'Uppgift saknas':new Intl.NumberFormat('sv-SE').format(n);
 const syncSearchSuggestion=initSearchSuggestions($('search'),$('search-suggestion'));
 let catalog=[], selected=null, result=null, selectionVersion=0, dataVersion=0;
@@ -207,6 +209,7 @@ function render(){
 function download(content,type,name){const url=URL.createObjectURL(new Blob([content],{type}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 const filename=extension=>`statistik-${result.area.toLowerCase().replace(/[^a-zåäö0-9]+/g,'-')}-${periodOf(result.rows[0])}-${periodOf(result.rows.at(-1))}.${extension}`;
 initHelpDialog($('app-help'),$('help-close'));
+initVisualDialog($('chart-panel'));
 $('search-form').addEventListener('submit',e=>{e.preventDefault();search($('search').value);});
 $('search').addEventListener('focus',()=>{resetCatalogFilters();shown=3;cards();});
 $('search').addEventListener('input',()=>{if(!$('search').value.trim())resetSearch();});
@@ -223,18 +226,16 @@ $('selection-form').addEventListener('submit',async e=>{
     const series=[],allNotes=new Set();
     const cells=groups.reduce((sum,g)=>sum+g.query.query.reduce((n,v)=>n*v.selection.values.length,1),0);
     if(cells>1000000)throw new Error('Urvalet är för stort. Välj färre år eller kategorier (högst en miljon källvärden).');
-    for(const group of groups){
-      for(const query of splitQuery(group.query,group.separate||[])){
-        if(version!==dataVersion)return;
-        let payload;
-        for(let attempt=0;attempt<3;attempt++){
-          try{payload=await request(table.url,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify(query)});break;}
-          catch(error){if(!error.message.startsWith('Många uttag')||attempt===2)throw error;status('Väntar på statistikdatabasen. Hämtningen fortsätter automatiskt …');await new Promise(resolve=>setTimeout(resolve,12000));if(version!==dataVersion)return;}
-        }
-        if(version!==dataVersion)return;
-        for(const column of payload.columns||[])if(column.comment)allNotes.add(column.text+': '+column.comment);
-        for(const item of detailedSeries(payload,query,group,table))series.push(item);
-      }
+    const jobs=groups.flatMap(group=>splitQuery(group.query,group.separate||[]).map(query=>({group,query})));
+    const parts=await runExtraction(jobs,async({group,query})=>{
+      const payload=await request(table.url,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify(query)});
+      if(version!==dataVersion)return;
+      return {series:detailedSeries(payload,query,group,table),notes:(payload.columns||[]).filter(column=>column.comment).map(column=>column.text+': '+column.comment)};
+    },{isCurrent:()=>version===dataVersion,onRateLimit:()=>status('Väntar på statistikdatabasen. Hämtningen fortsätter automatiskt …')});
+    if(!parts||version!==dataVersion)return;
+    for(const part of parts){
+      for(const note of part.notes)allNotes.add(note);
+      for(const item of part.series)series.push(item);
     }
     let availableMonths;
     if(table.measure?.monthly){

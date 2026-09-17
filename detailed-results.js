@@ -10,8 +10,13 @@ export function splitQuery(query,separate,maxCells=100000){
   if(count<=maxCells)return [query];
   const dimension=query.query.filter(v=>separate.includes(v.code)&&v.selection.values.length>1).sort((a,b)=>b.selection.values.length-a.selection.values.length)[0];
   if(!dimension)throw new Error('Urvalet är för stort per serie. Välj färre år eller kategorier att summera.');
-  const size=Math.ceil(dimension.selection.values.length/2);
-  return [dimension.selection.values.slice(0,size),dimension.selection.values.slice(size)].flatMap(values=>splitQuery({...query,query:query.query.map(v=>v===dimension?{...v,selection:{...v.selection,values}}:v)},separate,maxCells));
+  const size=Math.max(1,Math.floor(maxCells/(count/dimension.selection.values.length)));
+  const chunks=[];
+  for(let offset=0;offset<dimension.selection.values.length;offset+=size){
+    const values=dimension.selection.values.slice(offset,offset+size);
+    chunks.push(...splitQuery({...query,query:query.query.map(v=>v===dimension?{...v,selection:{...v.selection,values}}:v)},separate,maxCells));
+  }
+  return chunks;
 }
 export function detailedSeries(payload,query,group,table){
   if(!Array.isArray(payload.columns)||!Array.isArray(payload.data))throw new Error('Statistikdatabasen svarade med ett oväntat format.');
