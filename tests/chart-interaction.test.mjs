@@ -62,9 +62,9 @@ test('Hover anywhere in the plot shows all series, including missing values, and
     assert.equal(overlay.style.display,'');
     assert.ok(overlay.children.some(n=>n.textContent==='Män: 13 personer'));
     assert.ok(overlay.children.some(n=>n.textContent==='Kvinnor: Uppgift saknas'));
-    assert.equal(points[1].attributes.r,'5');assert.equal(points[0].style.opacity,'0');assert.equal(lines[0].style.opacity,'.85');
+    assert.equal(points[1].attributes.r,'4');assert.equal(points[0].style.opacity,'0');assert.equal(lines[0].style.opacity,'.85');
     assert.equal(points[1].attributes.stroke,'#ffffff');assert.equal(points[1].attributes['stroke-width'],'1.5');
-    svg.events.pointerleave();assert.equal(overlay.style.display,'none');assert.equal(lines[0].style.opacity,'');assert.equal(points[1].attributes.r,'4');
+    svg.events.pointerleave();assert.equal(overlay.style.display,'none');assert.equal(lines[0].style.opacity,'');assert.equal(points[1].attributes.r,'3');
     assert.equal(points[1].attributes.stroke,undefined);
     document.activeElement=svg;svg.events.focus();
     svg.events.keydown({key:'Home',preventDefault(){}});

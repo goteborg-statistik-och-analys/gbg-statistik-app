@@ -35,10 +35,10 @@ export function seriesChart({series,area,table,measure,date,groups,unit='Antal p
   const descriptions=includeDescriptions?series.flatMap((s,i)=>wrap(`${i+1}. ${s.name}: ${s.detail||''}`).map(text=>({text,index:i}))):[];
   const height=bottom+footer+descriptions.length*18;
   const header=titleLines.map((line,i)=>`<text x="${left}" y="${30+i*27}" font-size="22" font-weight="800">${esc(line)}</text>`).join('')+selectionLines.map((line,i)=>`<text x="${left}" y="${54+(titleLines.length-1)*27+i*20}" font-size="14" font-weight="700">${esc(line)}</text>`).join('');
-  let svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" data-plot-top="${top}" data-plot-bottom="${bottom}" role="img" aria-label="${esc([caption.title,caption.selection,area].filter(Boolean).join(' · '))}" aria-describedby="chart-desc"><desc id="chart-desc">${series.length} grupper, ${periodOf(rows[0])}–${periodOf(rows.at(-1))}. ${esc(unit)}. Linjeavbrott betyder saknad uppgift. Exakta värden och urval finns i tabellen.</desc><rect width="${width}" height="${height}" fill="#ffffff"/><g font-family="Open Sans, Arial, sans-serif" fill="#1f1f1f">${header}<text x="${left}" y="${includeHeading?56+headerShift:24}" font-size="14">${esc(geography)} · ${periodOf(rows[0])}–${periodOf(rows.at(-1))}</text><text x="${left}" y="${includeHeading?88+headerShift:46}" font-size="13">${esc(unit)}</text>`;
-  for(let i=0;i<=4;i++){const value=lower+(limit-lower)*i/4;svg+=`<line x1="${left}" y1="${y(value)}" x2="${width-right}" y2="${y(value)}" stroke="#d1d9dc"/><text x="${left-12}" y="${y(value)+5}" text-anchor="end" font-size="13">${esc(fmt(value))}</text>`;}
+  let svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" data-plot-top="${top}" data-plot-bottom="${bottom}" role="img" aria-label="${esc([caption.title,caption.selection,area].filter(Boolean).join(' · '))}" aria-describedby="chart-desc"><desc id="chart-desc">${series.length} grupper, ${periodOf(rows[0])}–${periodOf(rows.at(-1))}. ${esc(unit)}. Linjeavbrott betyder saknad uppgift. Exakta värden och urval finns i tabellen.</desc><rect width="${width}" height="${height}" fill="#ffffff"/><g font-family="Open Sans, Arial, sans-serif" fill="#1f1f1f">${header}<text x="${left}" y="${includeHeading?56+headerShift:24}" font-size="13">${esc(geography)} · ${periodOf(rows[0])}–${periodOf(rows.at(-1))}</text><text x="${left}" y="${includeHeading?88+headerShift:46}" font-size="12">${esc(unit)}</text>`;
+  for(let i=0;i<=4;i++){const value=lower+(limit-lower)*i/4;svg+=`<line x1="${left}" y1="${y(value)}" x2="${width-right}" y2="${y(value)}" stroke="#d1d9dc"/><text x="${left-12}" y="${y(value)+5}" text-anchor="end" font-size="12">${esc(fmt(value))}</text>`;}
   const indices=[...new Set([0,Math.round((rows.length-1)/4),Math.round((rows.length-1)/2),Math.round(3*(rows.length-1)/4),rows.length-1])];
-  for(const i of indices)svg+=`<text x="${x(rows[i].year)}" y="${bottom+28}" text-anchor="middle" font-size="13">${periodOf(rows[i])}</text>`;
+  for(const i of indices)svg+=`<text x="${x(rows[i].year)}" y="${bottom+28}" text-anchor="middle" font-size="12">${periodOf(rows[i])}</text>`;
   // Keep end labels apart while retaining the connection to each line.
   const endings=series.map((s,i)=>({i,last:s.rows.findLast(r=>r.value!==null)})).filter(s=>s.last).sort((a,b)=>y(a.last.value)-y(b.last.value));
   const labelGap=responsive?Math.min(48,plotHeight/Math.max(1,endings.length-1)):48;
@@ -54,9 +54,9 @@ export function seriesChart({series,area,table,measure,date,groups,unit='Antal p
     const color=colors[i],dash=dashes[i];let drawing=false,path='';
     let previousYear;
     for(const row of s.rows){if(row.value===null){drawing=false;continue;}if(row.period&&previousYear!==undefined&&row.year-previousYear>1/12+1e-8)drawing=false;path+=`${drawing?'L':'M'} ${x(row.year)} ${y(row.value)} `;drawing=true;previousYear=row.year;}
-    svg+=`<path data-series="${i}" d="${path}" fill="none" stroke="${color}" stroke-width="3" stroke-dasharray="${dash}"/>`;
+    svg+=`<path data-series="${i}" d="${path}" fill="none" stroke="${color}" stroke-width="2.5" stroke-dasharray="${dash}"/>`;
     const lastYear=endings.find(e=>e.i===i)?.last.year;
-    for(const row of s.rows.filter(r=>r.value!==null))svg+=`<circle data-series="${i}" data-year="${row.year}" cx="${x(row.year)}" cy="${y(row.value)}" r="4" opacity="${row.year===lastYear?1:0}" data-endpoint="${row.year===lastYear}" fill="${color}" tabindex="0" role="img" aria-label="${esc(s.name)}, ${periodOf(row)}: ${esc(fmt(row.value))} ${esc(unit.toLowerCase().replace(/^antal /,''))}"><title>${esc(s.name)}, ${periodOf(row)}: ${esc(fmt(row.value))} ${esc(unit.toLowerCase().replace(/^antal /,''))}</title></circle>`;
+    for(const row of s.rows.filter(r=>r.value!==null))svg+=`<circle data-series="${i}" data-year="${row.year}" cx="${x(row.year)}" cy="${y(row.value)}" r="3" opacity="${row.year===lastYear?1:0}" data-endpoint="${row.year===lastYear}" fill="${color}" tabindex="0" role="img" aria-label="${esc(s.name)}, ${periodOf(row)}: ${esc(fmt(row.value))} ${esc(unit.toLowerCase().replace(/^antal /,''))}"><title>${esc(s.name)}, ${periodOf(row)}: ${esc(fmt(row.value))} ${esc(unit.toLowerCase().replace(/^antal /,''))}</title></circle>`;
     const ending=endings.find(e=>e.i===i);
     if(ending&&series.length>1){
       svg+='<g data-chart-ending="true">';
@@ -84,7 +84,7 @@ export function fitSeriesChart(container,options){
       const bounds=viewport.getBoundingClientRect();
       if(!bounds.width||!bounds.height)return;
       const height=container.closest('.visual-dialog')?Math.round(1000*bounds.height/bounds.width):undefined;
-      // Cap on-screen SVG typography at its native size (12–14 CSS px),
+      // Cap on-screen SVG typography at its native size (12–13 CSS px),
       // while allowing the plot to fill the larger viewport. Exports are separate.
       const textScale=height===undefined?1:Math.min(1,1000/bounds.width);
       if(height===lastHeight&&textScale===lastTextScale)return;
@@ -127,7 +127,7 @@ export function attachSeriesInteraction(container,series,unit='Antal personer'){
   let active=-1;
   function clear(){
     active=-1;overlay.style.display='none';
-    points.forEach(point=>{point.setAttribute('r',4);point.removeAttribute('stroke');point.removeAttribute('stroke-width');point.style.opacity='';});lines.forEach(line=>{line.style.opacity='';});
+    points.forEach(point=>{point.setAttribute('r',3);point.removeAttribute('stroke');point.removeAttribute('stroke-width');point.style.opacity='';});lines.forEach(line=>{line.style.opacity='';});
     announcement.textContent='';
   }
   function show(index){
@@ -142,7 +142,7 @@ export function attachSeriesInteraction(container,series,unit='Antal personer'){
     yearLabel.setAttribute('x',bx+12);yearLabel.setAttribute('y',by+20);
     labels.forEach((label,i)=>{const cy=by+39+i*20;label.setAttribute('x',bx+43);label.setAttribute('y',cy);swatches[i].setAttribute('x1',bx+12);swatches[i].setAttribute('x2',bx+34);swatches[i].setAttribute('y1',cy-4);swatches[i].setAttribute('y2',cy-4);});
     guide.setAttribute('x1',x);guide.setAttribute('x2',x);
-    points.forEach(point=>{const selected=Number(point.dataset.year)===year;point.setAttribute('r',selected?5:4);point.setAttribute('stroke',selected?'#ffffff':'none');point.setAttribute('stroke-width',selected?1.5:0);point.style.opacity=selected?'1':point.dataset.endpoint==='true'?'1':'0';});
+    points.forEach(point=>{const selected=Number(point.dataset.year)===year;point.setAttribute('r',selected?4:3);point.setAttribute('stroke',selected?'#ffffff':'none');point.setAttribute('stroke-width',selected?1.5:0);point.style.opacity=selected?'1':point.dataset.endpoint==='true'?'1':'0';});
     lines.forEach(line=>{line.style.opacity='.85';});
     if(document.activeElement===svg)announcement.textContent=periodOf(rows[index])+': '+labels.map(label=>label.textContent).join(' · ');
   }

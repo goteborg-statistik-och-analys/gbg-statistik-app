@@ -163,17 +163,23 @@ function render(){
   $('result-subtitle').textContent=table.level+' · '+periodOf(start)+'–'+periodOf(end)+' · '+series.length+' '+(series.length===1?'grupp':'grupper');
   $('metrics').innerHTML=(series.length>7?[]:series).map(s=>{
     const first=s.rows[0],last=s.rows.at(-1),difference=first.value!==null&&last.value!==null?last.value-first.value:null;
-    return '<div class="metric"><p>'+esc(s.name)+' · '+periodOf(last)+'</p><strong>'+esc(fmt(last.value))+'</strong><small>'+esc(unit)+(single?'':' · Förändring: '+(difference===null?'Uppgift saknas':(difference>0?'+':'')+fmt(difference)))+'</small><p class="metric-detail">'+esc(s.detail)+'</p></div>';
+    const change=difference===null?'Uppgift saknas':(difference>0?'+':'')+fmt(difference);
+    return '<div class="metric"><p class="metric-label">'+esc(s.name)+' · '+esc(periodOf(last))+'</p><strong>'+esc(fmt(last.value))+'</strong><small>'+esc(unit)+'</small>'+(single?'':'<p class="metric-change"><span class="sr-only">Förändring: </span><strong>'+esc(change)+'</strong> sedan '+esc(periodOf(first))+'</p>')+(s.detail?'<details class="metric-details"><summary>Visa urval<span class="sr-only"> för '+esc(s.name)+'</span></summary><p>'+esc(s.detail)+'</p></details>':'')+'</div>';
   }).join('');
   if(series.length===1&&!single){
     const difference=start.value!==null&&end.value!==null?end.value-start.value:null;
-    const metrics=[[`${measure} ${periodOf(start)}`,fmt(start.value),unit],[`${measure} ${periodOf(end)}`,fmt(end.value),unit],['Förändring under perioden',difference===null?'Uppgift saknas':`${difference>0?'+':''}${fmt(difference)}`,difference!==null&&start.value>0?`${new Intl.NumberFormat('sv-SE',{maximumFractionDigits:1,signDisplay:'exceptZero'}).format(difference/start.value*100)} procent`:unit]];
+    const metrics=[[`${measure} ${periodOf(start)}`,fmt(start.value),unit],[`${measure} ${periodOf(end)}`,fmt(end.value),unit],[`Förändring ${periodOf(end)} jämfört med ${periodOf(start)}`,difference===null?'Uppgift saknas':`${difference>0?'+':''}${fmt(difference)}`,unit+(difference!==null&&start.value>0?` · ${new Intl.NumberFormat('sv-SE',{maximumFractionDigits:1,signDisplay:'exceptZero'}).format(difference/start.value*100)} procent`:'')]];
     $('metrics').innerHTML=metrics.map(m=>`<div class="metric"><p>${esc(m[0])}</p><strong>${esc(m[1])}</strong><small>${esc(m[2])}</small></div>`).join('');
     $('result-subtitle').textContent+=' · '+series[0].detail;
   }
   $('chart-panel').hidden=single||series.every(s=>s.rows.every(r=>r.value===null));
   const chooser=document.createElement('details');chooser.className='chart-series-choice';
   const chooserTitle=document.createElement('summary');chooserTitle.textContent='Välj linjer i diagrammet (högst 7)';chooser.append(chooserTitle);
+  const closeChooser=document.createElement('button');closeChooser.type='button';closeChooser.className='chart-series-close';
+  closeChooser.setAttribute('aria-label','Stäng linjeväljaren');closeChooser.title='Stäng linjeväljaren';
+  closeChooser.innerHTML='<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg>';
+  closeChooser.addEventListener('click',()=>{chooser.open=false;chooserTitle.focus({preventScroll:true});});
+  chooser.append(closeChooser);
   const chartChoices=document.createElement('div');chartChoices.className='category-list';
   const findLabel=document.createElement('label');findLabel.htmlFor='find-chart-series';findLabel.textContent='Sök bland serier';
   const findSeries=document.createElement('input');findSeries.id='find-chart-series';findSeries.type='search';findSeries.placeholder='Till exempel Majorna eller 20 år';

@@ -44,8 +44,14 @@
 .dimension-choice { min-width: 0; border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
 .dimension-choice legend { font-size: 14px; font-weight: 700; }
 .dimension-choice > select { width: auto; max-width: 100%; margin-bottom: 10px; padding: 6px 8px; border-color: var(--border); border-radius: 6px; font-size: 12px; background: transparent; }
-.chart-series-choice { margin-bottom: 20px; }
-.chart-series-choice .category-list { margin-top: 12px; }
+.chart-series-choice { position: relative; margin-bottom: 16px; }
+.chart-series-choice[open] { padding: 12px 14px; border: 1px solid var(--border); border-radius: 6px; background: #fff; }
+.chart-series-choice > summary { padding: 2px 0; }
+.chart-series-choice[open] > summary { padding-right: 40px; }
+.chart-series-close { position: absolute; top: 6px; right: 6px; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 5px; }
+.chart-series-close:hover { background: var(--border); }
+.chart-panel .chart-series-close svg { width: 18px; height: 18px; }
+.chart-series-choice .category-list { margin-top: 12px; overscroll-behavior: contain; scrollbar-gutter: stable; }
 .chart-series-choice > label { margin-top: 12px; }
 .chart-series-choice input[type="search"] { width: min(100%, 420px); padding: 10px 12px; border: 1px solid #8cbdd8; border-radius: 8px; }
 .table-pagination { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 16px; font-size: 13px; }
@@ -62,7 +68,18 @@
 .filter-action:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
 .range-error { font-size: 13px; font-weight: 600; }
 .range-error:empty { display: none; }
-.metric .metric-detail { margin: 12px 0 0; font-size: 12px; font-weight: 400; }
+.metrics { grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 12px; align-items: start; }
+.metric { min-width: 0; padding: 16px; background: #eef7fb; color: #1f1f1f; border: 1px solid #eef7fb; border-radius: 6px; }
+.metric p { margin-bottom: 6px; font-size: 12px; line-height: 1.5; }
+.metric .metric-label { font-weight: 700; }
+.metric > strong { font-size: 28px; letter-spacing: -.5px; line-height: 1.3; font-variant-numeric: tabular-nums; }
+.metric small { margin-top: 2px; font-size: 12px; }
+.metric .metric-change { margin: 10px 0 0; font-size: 12px; }
+.metric-change strong { display: inline; font-size: 16px; letter-spacing: 0; font-variant-numeric: tabular-nums; }
+.metric-details { margin-top: 8px; }
+.metric-details summary { font-size: 11px; font-weight: 400; }
+.metric-details summary:focus-visible { outline-color: #1f1f1f; }
+.metric-details p { margin: 8px 0 0; font-size: 12px; }
 .chart-inspection { min-height: 44px; margin: 12px 0 0; font-size: 13px; }
 #chart circle:focus { outline: 2px solid #1f1f1f; outline-offset: 3px; }
 .hero { padding-bottom: 90px; }
