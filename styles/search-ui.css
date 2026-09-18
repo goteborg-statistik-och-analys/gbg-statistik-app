@@ -28,8 +28,14 @@
   .footer-links, .footer-about { padding: 28px 20px; }
 }
 .group-controls { margin: 24px 0; }
-.group-controls > select { width: min(100%, 420px); margin-bottom: 12px; }
+.selection-help { max-width: 90ch; margin: 4px 0 24px; font-size: 13px; line-height: 1.65; }
+.selection-help > summary { padding: 8px 0; }
+.selection-help-content { padding-top: 8px; }
+.selection-help p { margin: 0 0 12px; }
+.selection-help ul { margin: -4px 0 12px; padding-left: 24px; }
+.selection-help li + li { margin-top: 6px; }
 .group-controls select, .group-controls input[type="text"], .group-controls input[type="number"] { font: inherit; padding: 10px 12px; border: 1px solid #8cbdd8; border-radius: 8px; background: #fff; }
+.group-controls > select { width: min(100%, 420px); margin-bottom: 24px; font-size: 14px; }
 .selection-groups { display: grid; gap: 18px; margin-bottom: 16px; }
 .selection-group { min-width: 0; margin: 0; padding: 20px; border: 2px solid #8cbdd8; border-radius: 12px; }
 .selection-group > legend { padding: 0 8px; font-weight: 700; }

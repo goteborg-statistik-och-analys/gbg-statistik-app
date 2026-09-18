@@ -9,7 +9,10 @@ export function initGroupControls(container,metadata,getArea,initial={},measure=
   const modeLabel=document.createElement('label');modeLabel.htmlFor='group-mode';modeLabel.textContent='Hur vill du visa statistiken?';
   const mode=document.createElement('select');mode.id='group-mode';
   for(const [value,label] of [['sum','Välj urval'],['compare','Jämför egna grupper']])mode.add(new Option(label,value));
-  const help=document.createElement('p');help.className='selection-note';
+  const help=document.createElement('details');help.className='selection-help';
+  const helpTitle=document.createElement('summary');helpTitle.textContent='Så här gör du ett urval';
+  const helpContent=document.createElement('div');helpContent.className='selection-help-content';
+  help.append(helpTitle,helpContent);
   const cards=document.createElement('div');cards.className='selection-groups';
   const add=document.createElement('button');add.type='button';add.className='secondary';add.textContent='+ Lägg till grupp';
   container.append(modeLabel,mode,help,cards,add);
@@ -92,7 +95,13 @@ export function initGroupControls(container,metadata,getArea,initial={},measure=
   function sync(){
     const compare=mode.value==='compare';add.hidden=!compare;add.disabled=editors.length>=7;
     editors.forEach((editor,i)=>{editor.card.hidden=!compare&&i>0;editor.card.disabled=!compare&&i>0;editor.name.hidden=!compare;editor.name.disabled=!compare;editor.nameLabel.hidden=!compare;editor.remove.hidden=!compare||editors.length<=2;editor.legend.textContent=compare?`Grupp ${i+1}`:'Ditt urval';});
-    help.textContent=compare?'Varje grupp blir en egen linje. Välj Totalt eller kategorier i varje filter för varje grupp. Flera val inom en grupp summeras. Högst sju grupper.':'Välj Totalt eller minst en kategori i varje filter. Välj hur varje filter redovisas: summerat eller som separata kategorier. Välj alla tar med delkategorierna utan en extra total. Totalt är ett aktivt val och omfattar även kategorier som ”Ej sysselsatt” om de ingår i filtret.';
+    helpContent.innerHTML='<p><strong>1. Välj år.</strong> Ange Från år och Till år för den period du vill undersöka. Ange samma år i båda fälten om du bara vill se ett år.</p>'+
+      '<p><strong>2. Välj hur du vill visa statistiken.</strong> Med <strong>Välj urval</strong> gör du ett urval som du kan visa tillsammans eller uppdelat i kategorier. Med <strong>Jämför egna grupper</strong> gör du flera urval och ger dem egna namn, till exempel två åldersgrupper som du vill jämföra. Du kan skapa upp till sju grupper.</p>'+
+      '<p><strong>3. Välj vad som ska ingå.</strong> Gör ett val i varje filter nedan, till exempel område, ålder och kön. Välj <strong>Totalt</strong> om alla ska ingå, eller kryssa i de alternativ du vill undersöka. Om du jämför egna grupper gör du dessa val för varje grupp.</p>'+
+      '<p><strong>4. Välj hur alternativen ska redovisas.</strong> Under <strong>Redovisning</strong> väljer du vad som ska hända när du har kryssat i flera alternativ:</p>'+
+      '<ul><li><strong>Summera valda</strong> räknar ihop alternativen till ett gemensamt värde. Två valda åldersgrupper visas till exempel tillsammans.</li><li><strong>Visa varje kategori separat</strong> visar ett värde för varje alternativ, så att du kan jämföra dem. Åldersgrupperna får då varsin linje i diagrammet.</li></ul>'+
+      '<p><strong>Skillnaden mellan Totalt och Välj alla:</strong> Totalt ger ett sammanlagt värde. Välj alla kryssar i alternativen i listan, så att du kan visa dem separat eller ändra vilka som ingår. En eventuell total i listan markeras inte samtidigt.</p>'+
+      '<p>Totalt omfattar också exempelvis ”Ej sysselsatt” eller ”Uppgift saknas” om sådana kategorier ingår i filtret. Om du bara vill undersöka vissa kategorier behöver du välja dem själv. Vissa mått kan inte räknas ihop; då är Summera valda inte tillgängligt.</p>';
   }
   mode.addEventListener('change',()=>{if(mode.value==='compare'&&editors.length<2)createGroup();sync();});
   add.addEventListener('click',()=>{const editor=createGroup();sync();changed();editor.name.focus();});

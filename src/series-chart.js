@@ -1,5 +1,6 @@
 import {escapeXML as esc,periodOf} from './core.js';
 import {resultHeading,resultAreaLabel} from './result-heading.js';
+import {animateChartEntrance} from './chart-animation.js';
 const colors=['#008391','#674b99','#d24723','#3f5564','#008767','#d53878','#ffcd37'];
 const dashes=['','9 4','3 4','12 4 3 4','2 3','8 3 2 3','14 5'];
 const fmt=value=>new Intl.NumberFormat('sv-SE').format(value);
@@ -58,8 +59,9 @@ export function seriesChart({series,area,table,measure,date,groups,unit='Antal p
     for(const row of s.rows.filter(r=>r.value!==null))svg+=`<circle data-series="${i}" data-year="${row.year}" cx="${x(row.year)}" cy="${y(row.value)}" r="4" opacity="${row.year===lastYear?1:0}" data-endpoint="${row.year===lastYear}" fill="${color}" tabindex="0" role="img" aria-label="${esc(s.name)}, ${periodOf(row)}: ${esc(fmt(row.value))} ${esc(unit.toLowerCase().replace(/^antal /,''))}"><title>${esc(s.name)}, ${periodOf(row)}: ${esc(fmt(row.value))} ${esc(unit.toLowerCase().replace(/^antal /,''))}</title></circle>`;
     const ending=endings.find(e=>e.i===i);
     if(ending&&series.length>1){
+      svg+='<g data-chart-ending="true">';
       svg+=`<path d="M ${x(ending.last.year)} ${y(ending.last.value)} L ${width-right+15} ${ending.labelY}" fill="none" stroke="${color}" stroke-dasharray="${dash}"/><text x="${width-right+22}" y="${ending.labelY+4}" font-size="12" font-weight="700" fill="${color}">`;
-      wrap(`${i+1}. ${s.name}`,28).slice(0,3).forEach((line,j)=>{svg+=`<tspan x="${width-right+22}" dy="${j?14:0}">${esc(line)}</tspan>`;});svg+='</text>';
+      wrap(`${i+1}. ${s.name}`,28).slice(0,3).forEach((line,j)=>{svg+=`<tspan x="${width-right+22}" dy="${j?14:0}">${esc(line)}</tspan>`;});svg+='</text></g>';
     }
   }
   descriptions.forEach(({text,index},i)=>{const cy=bottom+58+i*18;if(i===0||descriptions[i-1].index!==index)svg+=`<line x1="${left}" y1="${cy-4}" x2="${left+28}" y2="${cy-4}" stroke="${colors[index]}" stroke-width="3" stroke-dasharray="${dashes[index]}"/>`;svg+=`<text x="${left+38}" y="${cy}" font-size="12">${esc(text)}</text>`;});
@@ -71,6 +73,7 @@ export function seriesChart({series,area,table,measure,date,groups,unit='Antal p
 // and leave the independent export image at its standard dimensions.
 export function fitSeriesChart(container,options){
   let frame,lastHeight,lastTextScale=1;
+  const finishEntrance=animateChartEntrance(container.querySelector('svg'));
   const viewport=container.querySelector('.chart-viewport');
   const update=()=>{
     cancelAnimationFrame(frame);
@@ -87,6 +90,7 @@ export function fitSeriesChart(container,options){
       if(height===lastHeight&&textScale===lastTextScale)return;
       lastHeight=height;lastTextScale=textScale;
       const focused=document.activeElement===svg;
+      finishEntrance();
       svg.outerHTML=seriesChart({...options,includeHeading:false,includeDescriptions:false,layoutHeight:height});
       container.querySelector('.sr-only')?.remove();
       attachSeriesInteraction(container,options.series,options.unit);
@@ -99,7 +103,7 @@ export function fitSeriesChart(container,options){
   const observer=new ResizeObserver(update);
   attachSeriesInteraction(container,options.series,options.unit);
   observer.observe(viewport);
-  return ()=>{observer.disconnect();cancelAnimationFrame(frame);};
+  return ()=>{finishEntrance();observer.disconnect();cancelAnimationFrame(frame);};
 }
 
 export function attachSeriesInteraction(container,series,unit='Antal personer'){

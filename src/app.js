@@ -106,6 +106,8 @@ async function choose(table,area,range){
   if(area&&dimension?.values.includes(area)&&!preset.selections[dimension?.code||'Område'])preset.selections[dimension?.code||'Område']=[area];
   if(preset.selections[dimension?.code||'Område'])$('area').value=preset.selections[dimension?.code||'Område'][0];
   groupControls=initGroupControls($('extra-filters'),metadata,()=>$('area').value,preset.selections,tableMeasure(table));
+  $('selection-form').querySelector(':scope > .selection-help')?.remove();
+  $('selection-form').prepend($('extra-filters').querySelector('.selection-help'));
   $('selection-note').textContent='Enhet: '+tableMeasure(table).unit+'. Totalt avser de kategorier och åldrar som ingår i källtabellen.';
   for(const id of ['start','end']){$(id).min=years[0];$(id).max=years.at(-1);}
   $('start').value=range?.[0]??years[0];$('end').value=range?.at(-1)??years.at(-1);
