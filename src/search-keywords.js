@@ -5,7 +5,7 @@ export const concepts=[
   {id:'density',label:'befolkningstäthet',query:/^(befolkningstat|tathet)/,terms:['befolkningstathet']},
   {id:'monthly',label:'månadsstatistik',query:/^manads/,terms:['manadsvis']},
   {id:'foreignborn',label:'utrikes födda',query:/^utrikesfodd/,terms:['fodda i sverige eller utlandet','fodelseland']},
-  {id:'population',label:'folkmängd',query:/^(befolk|folkm|invan|mannisk|barn|forskolealder)|^person(?:er)?$/,terms:['folkmangd','befolkning'],prefer:/^folkmangd \d/},
+  {id:'population',label:'folkmängd',query:/^(befolk|folkm|invan|mannisk|barn|forskolealder)|^(folk|person(?:er)?)$/,terms:['folkmangd','befolkning'],prefer:/^folkmangd \d/},
   {id:'education',label:'utbildning',query:/^(utbild|skol)/,terms:['utbild','behorig'],prefer:/^hogsta utbild/},
   {id:'income',label:'inkomst',query:/^inkomst/,terms:['inkomst','ekonomisk standard'],prefer:/^forvarvsinkomst/},
   {id:'median',label:'medianinkomst',query:/^median/,terms:['medianinkomst'],variables:true},

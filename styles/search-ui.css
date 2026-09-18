@@ -83,6 +83,27 @@
 .chart-inspection { min-height: 44px; margin: 12px 0 0; font-size: 13px; }
 #chart circle:focus { outline: 2px solid #1f1f1f; outline-offset: 3px; }
 .hero { padding-bottom: 90px; }
+.app-layout { position: relative; }
+.hub-sidebar { position: absolute; top: 65px; left: 32px; width: 200px; }
+.hub-menu-toggle { display: none; }
+.hub-preview { padding-right: 20px; border-right: 1px solid var(--border); }
+.hub-preview-heading { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 6px; }
+.hub-preview-heading h2 { margin: 0; font-size: 14px; letter-spacing: 0; }
+.hub-preview-heading > span { padding: 2px 8px; border-radius: 4px; background: #eef7fb; font-size: 11px; }
+.hub-preview > p { margin-bottom: 12px; font-size: 12px; }
+.hub-preview-options { display: grid; gap: 4px; align-items: start; }
+.hub-preview-options details { padding: 8px 0; }
+.hub-preview-options summary { min-height: 24px; font-weight: 600; }
+.hub-preview-options summary:hover { background: #eef7fb; text-decoration: underline; text-underline-offset: 3px; }
+.hub-preview-options p { margin: 10px 0 0; font-size: 12px; }
+@media(max-width:1679px){
+  .hub-sidebar { top: 4px; left: 28px; width: min(280px, calc(100% - 40px)); z-index: 3; }
+  #hub-menu { padding: 0 12px; background: #fff; border-radius: 6px; }
+  #hub-menu[open] { border: 1px solid var(--border); box-shadow: 0 8px 24px rgb(31 31 31 / 10%); max-height: calc(100dvh - 160px); overflow-y: auto; }
+  .hub-menu-toggle { display: list-item; padding: 8px 0; font-size: 12px; font-weight: 600; }
+  .hub-preview { padding: 12px 0; border-right: 0; border-top: 1px solid var(--border); }
+  .hub-preview-options summary { min-height: 28px; }
+}
 .search-box, .table-suggestions {
   border-color: #8cbdd8;
   border-radius: 12px;
@@ -93,18 +114,30 @@
 .search-box { flex-wrap: nowrap; }
 .search-box > span { color: var(--blue); }
 .search-box:focus-within {
-  border-color: var(--blue);
-  box-shadow: 0 0 0 4px rgb(0 119 188 / 14%), 0 8px 28px rgb(0 119 188 / 10%);
+  border-color: #8cbdd8;
+  box-shadow: 0 8px 28px rgb(0 119 188 / 10%);
 }
 .search-input-wrap { position: relative; flex: 1; min-width: 0; }
 #search-form { position: relative; z-index: 2; }
-.table-suggestions { position: absolute; top: calc(100% + 10px); left: 0; right: 0; border-width: 2px; border-style: solid; background: #fff; max-height: min(460px, 55vh); overflow-y: auto; }
+.table-suggestions { position: absolute; top: 100%; left: 0; right: 0; border-width: 2px; border-top: 0; border-style: solid; border-radius: 0 0 12px 12px; background: #fff; max-height: min(460px, 55vh); overflow-y: auto; }
+#search-form:has(.table-suggestions:not([hidden])) .search-box { border-radius: 12px 12px 0 0; border-bottom-color: var(--border); box-shadow: none; }
+#search-form:focus-within .table-suggestions { border-color: #8cbdd8; }
 .suggestions-heading { margin: 4px 12px 8px; font-size: 12px; color: #596974; }
 .table-option { padding: 12px; border-radius: 8px; cursor: pointer; }
 .table-option:hover, .table-option[aria-selected="true"] { background: #eef7fb; }
 .table-option[aria-selected="true"] { outline: 2px solid var(--blue); outline-offset: -2px; }
 .table-option-title { display: block; font-size: 14px; font-weight: 600; }
+.fact-suggestion-badge { display: inline-block; margin-left: 8px; padding: 1px 6px; border-radius: 4px; background: #eef7fb; font-size: 11px; font-weight: 400; }
+.hub-search-preview { font-weight: 700; }
+.table-group-choice { padding: 4px 6px; margin: -4px -6px 0; border-radius: 4px; }
+.table-group-choice:hover, .table-group-choice[aria-selected="true"] { text-decoration: underline; text-underline-offset: 3px; }
 .table-option-detail { display: block; margin-top: 4px; font-size: 12px; color: #596974; }
+.table-suggestion-group { padding: 8px 12px; }
+.table-suggestion-group + .table-suggestion-group { border-top: 1px solid var(--border); }
+.table-suggestion-levels { display: flex; flex-wrap: wrap; gap: 0 8px; margin: 2px -6px 0; }
+.table-suggestion-levels .table-option { padding: 4px 6px; border-radius: 4px; font-size: 12px; font-weight: 400; min-height: 28px; display: flex; align-items: center; text-decoration: underline; text-decoration-color: var(--border); text-underline-offset: 3px; }
+.table-suggestion-levels .table-option:hover, .table-suggestion-levels .table-option[aria-selected="true"] { text-decoration-color: currentColor; }
+@media(pointer:coarse){.table-suggestion-levels .table-option{min-height:44px}}
 .search-box input { display: block; width: 100%; background: transparent; }
 .search-box input:focus { outline: none; }
 .search-box input.has-suggestions::placeholder { color: transparent; }

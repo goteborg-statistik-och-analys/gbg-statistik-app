@@ -46,10 +46,14 @@ export function findTables(text,catalog){
     if(level&&table.level!==level)return null;
     if(areas.length&&!areas.every(area=>entry.areas.includes(area)))return null;
     let score=0;
+    const titleWords=title.split(/[^a-z0-9]+/);
     for(const {token,concept} of terms){
       if(concept){if(!concept.terms.some(term=>(concept.variables?body:heading).includes(term)))return null;score+=8;if(concept.prefer?.test(title))score+=12;}
       else if(!body.includes(token))return null;
       if(title.includes(token))score+=5;
+      // A word beginning is a stronger signal than a match inside a compound.
+      // Keep substring matches eligible so broad searches retain their coverage.
+      if(titleWords.some(word=>word.startsWith(token)))score+=4;
     }
     if(city&&table.level==='Kommun')score+=4;
     if(age&&/alder/.test(body))score+=2;

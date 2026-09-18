@@ -19,6 +19,9 @@ import {initHelpDialog} from './help-dialog.js';
 import {initVisualDialog} from './visual-dialog.js';
 const $=id=>document.getElementById(id), fmt=n=>n===null?'Uppgift saknas':new Intl.NumberFormat('sv-SE').format(n);
 const syncSearchSuggestion=initSearchSuggestions($('search'),$('search-suggestion'));
+const compactHubMenu=window.matchMedia('(max-width:1679px)');
+const syncHubMenu=()=>{$('hub-menu').open=!compactHubMenu.matches;};
+syncHubMenu();compactHubMenu.addEventListener('change',syncHubMenu);
 let catalog=[], selected=null, result=null, selectionVersion=0, dataVersion=0;
 let searchResults=[], requestedYears, shown=3, groupControls, searchContext=null;
 let disposeAreaMap=()=>{};
@@ -29,6 +32,25 @@ const tableSuggestions=initTableSuggestions($('search'),()=>catalog,table=>{
   $('search').value=table.title;syncSearchSuggestion();
   if(table.kind)choose(table,area,years.length?years:undefined);
   else window.open(table.webUrl,'_blank','noopener');
+},group=>{
+  searchContext=findTables($('search').value,catalog);
+  requestedYears=searchContext.years.length?searchContext.years:undefined;
+  resetCatalogFilters();searchResults=group.tables;shown=3;
+  ++selectionVersion;++dataVersion;selected=null;
+  $('selection-section').hidden=true;$('result').hidden=true;status('');
+  $('catalog-section').classList.add('is-active');
+  $('catalog-title').textContent='Välj geografisk nivå';
+  $('search-summary').hidden=false;$('search-summary').textContent='Välj geografi för tabellen nedan.';
+  cards();scroll('catalog-section');
+  $('catalog').querySelector('.level-choice')?.focus({preventScroll:true});
+},sheet=>{
+  const preview=$(sheet.factSheet);
+  $('hub-menu').open=true;preview.open=true;
+  document.querySelector('.hub-search-preview')?.remove();
+  const note=document.createElement('p');note.className='hub-search-preview';
+  note.textContent=sheet.title+' – kommande funktion. Det går ännu inte att skapa faktabladet.';
+  preview.querySelector('summary').after(note);
+  preview.querySelector('summary').focus({preventScroll:true});preview.scrollIntoView({block:'nearest'});
 });
 const status=text=>{$('status').textContent=text;};
 const scroll=id=>$(id).scrollIntoView({block:'start'});
