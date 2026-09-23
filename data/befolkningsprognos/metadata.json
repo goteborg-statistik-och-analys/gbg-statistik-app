@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "fetchedAt": "2026-09-22T12:14:09.436Z",
+  "levels": {
+    "kommun": {
+      "file": "kommun-83ef8745d9d7.json",
+      "bytes": 30802,
+      "historyEnd": 2025,
+      "forecastStart": 2026,
+      "end": 2050,
+      "areas": 1,
+      "maxAge": 100
+    },
+    "stadsomraden": {
+      "file": "stadsomraden-d2edc8024e55.json",
+      "bytes": 71509,
+      "historyEnd": 2025,
+      "forecastStart": 2026,
+      "end": 2033,
+      "areas": 4,
+      "maxAge": 99
+    },
+    "mellanomraden": {
+      "file": "mellanomraden-e907764cb4d2.json",
+      "bytes": 479799,
+      "historyEnd": 2025,
+      "forecastStart": 2026,
+      "end": 2033,
+      "areas": 36,
+      "maxAge": 99
+    }
+  }
+}

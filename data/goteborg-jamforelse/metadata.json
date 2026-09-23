@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "builtAt": "2026-09-23T06:53:37.123Z",
+  "startYear": 2000,
+  "endYear": 2025,
+  "municipalityCount": 38,
+  "file": "population-e73c56302cce.json",
+  "auditFile": "sources-4917cff3c7cd.json",
+  "sha256": "5c61254f5e587a258a7568c596185e759a11a1a829882e91e90e6abc7f862edb",
+  "auditSha256": "88e52efdced82a18d751c4861dcbf53fc7e927f822d067e7714a2c67096bb608",
+  "bytes": 1269317,
+  "sources": {
+    "history": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101A/BefolkningNy",
+    "current": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101A/BefolkningCKM",
+    "meanAge": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101B/BefolkningMedelAlder",
+    "dependency": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101A/FkvotHVD"
+  },
+  "validation": {
+    "historicalChecks": 3800,
+    "missingValues": 0,
+    "maximumAbsoluteCkmDifference": 35
+  },
+  "notes": [
+    "Total folkmängd hämtas från SCB:s totalvärden. Åldersandelar använder dessa som nämnare för samma kommun, kön och år.",
+    "Egna åldersintervall summeras från ettårsåldrar. Från 2025 summeras då även CKM-osäkerhet. Andelar normaliseras inte till 100 procent.",
+    "100+ är en öppen ålderskategori. Medelålder hämtas från SCB:s separata tabell, inte från ettårsåldrarna.",
+    "Försörjningskvot totalt: personer 0–19 år och 65+ per 100 personer 20–64 år. Måttet avser ålder, inte faktisk sysselsättning.",
+    "Folkökning hämtas som eget mått. Historikens definition ändras 2010 beträffande regional indelning. Den kan därför avvika från differensen mellan publicerade årstotaler.",
+    "Uppsala: Knivsta bildades 2003-01-01. Uppgifterna följer källans regionala indelning, inte en konstant kommungeografi.",
+    "CKM infördes 2025. Tabellerna saknar överlappande år. Valideringen styrker kod- och definitionstäckning men är inte en jämförelse av samma års värden."
+  ]
+}

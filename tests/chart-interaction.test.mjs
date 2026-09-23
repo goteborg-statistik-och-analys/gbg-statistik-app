@@ -86,3 +86,23 @@ test('Exported chart includes a line-style legend even for a series with no valu
   assert.match(svg,/<circle[^>]*data-year="2024"[^>]*opacity="0" data-endpoint="false"/);
   assert.match(svg,/<circle[^>]*data-year="2025"[^>]*opacity="1" data-endpoint="true"/);
 });
+
+test('Shared tooltip fits compact charts and reads categorical rows with vertical keyboard navigation',()=>{
+  const previous=globalThis.document;
+  try{
+    globalThis.document={createElementNS:()=>new Element(),createElement:()=>new Element(),activeElement:null};
+    const svg=new Element(),container=new Element();container.querySelector=()=>svg;svg.querySelectorAll=()=>[];
+    svg.viewBox={baseVal:{width:320}};svg.dataset={left:'60',right:'300',top:'30',bottom:'260'};
+    attachSeriesInteraction(container,[{name:'Göteborg',rows:[{year:0,value:7.1},{year:1,value:15.2}]}],'procent',{vertical:true,labelForRow:row=>['0–5 år','6–19 år'][row.year],formatValue:value=>value.toFixed(2)});
+    svg.events.focus();svg.events.keydown({key:'Home',preventDefault(){}});
+    const overlay=svg.children[0],box=overlay.children[1];
+    assert.ok(overlay.children.some(node=>node.textContent==='0–5 år'));
+    assert.ok(overlay.children.some(node=>node.textContent==='Göteborg: 7.10 procent'));
+    assert.equal(overlay.children[0].attributes.y1,'30');
+    assert.ok(Number(box.attributes.x)+Number(box.attributes.width)<=312);
+    svg.events.keydown({key:'ArrowDown',preventDefault(){}});
+    assert.ok(overlay.children.some(node=>node.textContent==='6–19 år'));
+    assert.equal(overlay.children[0].attributes.y1,'260');
+    svg.events.keydown({key:'Escape'});assert.equal(overlay.style.display,'none');
+  }finally{globalThis.document=previous;}
+});

@@ -18,9 +18,9 @@ function wrap(text,length=105){
   for(const word of text.split(/\s+/)){if((lines.at(-1)+' '+word).length>length&&lines.at(-1))lines.push('');lines[lines.length-1]+=(lines.at(-1)?' ':'')+word;}
   return lines;
 }
-export function seriesChart({series,area,table,measure,date,groups,unit='Antal personer',includeHeading=true,includeDescriptions=true,layoutHeight}){
+export function seriesChart({series,area,table,measure,date,groups,forecastStart,unit='Antal personer',includeHeading=true,includeDescriptions=true,layoutHeight}){
   if(series.length>7)throw new Error('Diagrammet kan visa högst sju linjer.');
-  const caption=resultHeading({table,measure,groups});
+  const caption=resultHeading({table,measure,groups,forecastStart});
   const geography=includeHeading?[table.level,resultAreaLabel({table,groups,area})].filter(Boolean).join(' · '):table.level;
   const titleLines=includeHeading?wrap(caption.title,62):[],selectionLines=includeHeading&&caption.selection?wrap(caption.selection,105):[];
   const headerShift=includeHeading?(titleLines.length-1)*27+selectionLines.length*20:0;
@@ -38,6 +38,10 @@ export function seriesChart({series,area,table,measure,date,groups,unit='Antal p
   let svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" data-plot-top="${top}" data-plot-bottom="${bottom}" role="img" aria-label="${esc([caption.title,caption.selection,area].filter(Boolean).join(' · '))}" aria-describedby="chart-desc"><desc id="chart-desc">${series.length} grupper, ${periodOf(rows[0])}–${periodOf(rows.at(-1))}. ${esc(unit)}. Linjeavbrott betyder saknad uppgift. Exakta värden och urval finns i tabellen.</desc><rect width="${width}" height="${height}" fill="#ffffff"/><g font-family="Open Sans, Arial, sans-serif" fill="#1f1f1f">${header}<text x="${left}" y="${includeHeading?56+headerShift:24}" font-size="13">${esc(geography)} · ${periodOf(rows[0])}–${periodOf(rows.at(-1))}</text><text x="${left}" y="${includeHeading?88+headerShift:46}" font-size="12">${esc(unit)}</text>`;
   for(let i=0;i<=4;i++){const value=lower+(limit-lower)*i/4;svg+=`<line x1="${left}" y1="${y(value)}" x2="${width-right}" y2="${y(value)}" stroke="#d1d9dc"/><text x="${left-12}" y="${y(value)+5}" text-anchor="end" font-size="12">${esc(fmt(value))}</text>`;}
   const indices=[...new Set([0,Math.round((rows.length-1)/4),Math.round((rows.length-1)/2),Math.round(3*(rows.length-1)/4),rows.length-1])];
+  if(forecastStart!==undefined&&forecastStart>=start&&forecastStart<=end){
+    const boundary=x(forecastStart);
+    svg+=`<g data-forecast-start="${forecastStart}"><line x1="${boundary}" x2="${boundary}" y1="${top}" y2="${bottom}" stroke="#3f5564" stroke-width="2" stroke-dasharray="6 4"/><text x="${boundary+6}" y="${top-10}" font-size="12" fill="#1f1f1f">Prognos från ${forecastStart}</text></g>`;
+  }
   for(const i of indices)svg+=`<text x="${x(rows[i].year)}" y="${bottom+28}" text-anchor="middle" font-size="12">${periodOf(rows[i])}</text>`;
   // Keep end labels apart while retaining the connection to each line.
   const endings=series.map((s,i)=>({i,last:s.rows.findLast(r=>r.value!==null)})).filter(s=>s.last).sort((a,b)=>y(a.last.value)-y(b.last.value));
@@ -106,19 +110,19 @@ export function fitSeriesChart(container,options){
   return ()=>{finishEntrance();observer.disconnect();cancelAnimationFrame(frame);};
 }
 
-export function attachSeriesInteraction(container,series,unit='Antal personer'){
+export function attachSeriesInteraction(container,series,unit='Antal personer',{palette=colors,lineDashes=dashes,formatValue=fmt,labelForRow=periodOf,vertical=false,hoverRadius=4}={}){
   const svg=container.querySelector('svg');if(!svg)return;
-  const rows=series[0].rows,left=88,right=750,top=Number(svg.dataset.plotTop||115),bottom=Number(svg.dataset.plotBottom||415);
+  const rows=series[0].rows,left=Number(svg.dataset.left||88),right=Number(svg.dataset.right||750),top=Number(svg.dataset.plotTop||svg.dataset.top||115),bottom=Number(svg.dataset.plotBottom||svg.dataset.bottom||415);
   const ns='http://www.w3.org/2000/svg';
   const make=(tag,attributes)=>{const node=document.createElementNS(ns,tag);for(const [key,value] of Object.entries(attributes))node.setAttribute(key,value);return node;};
   const overlay=make('g',{'aria-hidden':'true','pointer-events':'none'});
-  const guide=make('line',{y1:top,y2:bottom,stroke:'#3f5564','stroke-dasharray':'3 4'});
+  const guide=make('line',{...(vertical?{x1:left,x2:right}:{y1:top,y2:bottom}),stroke:'#3f5564','stroke-dasharray':'3 4'});
   const box=make('rect',{rx:8,fill:'#ffffff',stroke:'#d1d9dc','stroke-width':1});
   box.style.filter='drop-shadow(0 3px 5px rgb(31 31 31 / 16%))';
   const typography={fill:'#1f1f1f','font-family':'Open Sans, Arial, sans-serif'};
   const yearLabel=make('text',{...typography,'font-size':12,'font-weight':700});
   const labels=series.map(()=>make('text',{...typography,'font-size':11}));
-  const swatches=series.map((_,i)=>make('line',{stroke:colors[i],'stroke-width':3,'stroke-dasharray':dashes[i]}));
+  const swatches=series.map((_,i)=>make('line',{stroke:palette[i],'stroke-width':3,'stroke-dasharray':lineDashes[i]||''}));
   overlay.append(guide,box,yearLabel,...swatches,...labels);overlay.style.display='none';svg.append(overlay);
   const announcement=document.createElement('span');announcement.className='sr-only';announcement.setAttribute('role','status');container.append(announcement);
   const points=[...svg.querySelectorAll('circle[data-series]')],lines=[...svg.querySelectorAll('path[data-series]')];
@@ -133,24 +137,31 @@ export function attachSeriesInteraction(container,series,unit='Antal personer'){
   function show(index){
     active=index;const year=rows[index].year;
     const x=left+(year-rows[0].year)/(rows.at(-1).year-rows[0].year||1)*(right-left);
-    yearLabel.textContent=periodOf(rows[index]);
-    labels.forEach((label,i)=>{const value=series[i].rows.find(row=>row.year===year)?.value;label.textContent=(series.length===1&&series[i].isDefaultName?'':series[i].name+': ')+(value==null?'Uppgift saknas':fmt(value)+' '+unit.toLowerCase().replace(/^antal /,''));});
+    yearLabel.textContent=[labelForRow(rows[index]),rows[index].type].filter(Boolean).join(' · ');
+    labels.forEach((label,i)=>{const value=series[i].rows.find(row=>row.year===year)?.value;label.textContent=(series.length===1&&series[i].isDefaultName?'':series[i].name+': ')+(value==null?'Uppgift saknas':formatValue(value)+' '+unit.toLowerCase().replace(/^antal /,''));});
     overlay.style.display='';
-    const width=Math.max(100,...labels.map(label=>label.getComputedTextLength()+60)),height=36+series.length*20;
-    const bx=Math.max(8,Math.min(992-width,x+width+16<992?x+16:x-width-16)),by=top+8;
+    labels.forEach(label=>label.setAttribute('font-size',11));
+    const viewportWidth=svg.viewBox?.baseVal?.width||1000;
+    const maxWidth=viewportWidth-16;
+    let width=Math.max(100,yearLabel.getComputedTextLength()+24,...labels.map(label=>label.getComputedTextLength()+60));
+    const fontSize=Math.min(11,11*(maxWidth-60)/Math.max(1,width-60));
+    labels.forEach(label=>label.setAttribute('font-size',fontSize));
+    width=Math.min(maxWidth,width);const height=36+series.length*20;
+    const bx=Math.max(8,Math.min(viewportWidth-8-width,x+width+16<viewportWidth-8?x+16:x-width-16)),by=top+8;
     box.setAttribute('x',bx);box.setAttribute('y',by);box.setAttribute('width',width);box.setAttribute('height',height);
     yearLabel.setAttribute('x',bx+12);yearLabel.setAttribute('y',by+20);
     labels.forEach((label,i)=>{const cy=by+39+i*20;label.setAttribute('x',bx+43);label.setAttribute('y',cy);swatches[i].setAttribute('x1',bx+12);swatches[i].setAttribute('x2',bx+34);swatches[i].setAttribute('y1',cy-4);swatches[i].setAttribute('y2',cy-4);});
-    guide.setAttribute('x1',x);guide.setAttribute('x2',x);
-    points.forEach(point=>{const selected=Number(point.dataset.year)===year;point.setAttribute('r',selected?4:3);point.setAttribute('stroke',selected?'#ffffff':'none');point.setAttribute('stroke-width',selected?1.5:0);point.style.opacity=selected?'1':point.dataset.endpoint==='true'?'1':'0';});
+    const guidePosition=vertical?top+(year-rows[0].year)/(rows.at(-1).year-rows[0].year||1)*(bottom-top):x;
+    guide.setAttribute(vertical?'y1':'x1',guidePosition);guide.setAttribute(vertical?'y2':'x2',guidePosition);
+    points.forEach(point=>{const selected=Number(point.dataset.year)===year;point.setAttribute('r',selected?hoverRadius:3);point.setAttribute('stroke',selected?'#ffffff':'none');point.setAttribute('stroke-width',selected?1.5:0);point.style.opacity=selected?'1':point.dataset.endpoint==='true'?'1':'0';});
     lines.forEach(line=>{line.style.opacity='.85';});
-    if(document.activeElement===svg)announcement.textContent=periodOf(rows[index])+': '+labels.map(label=>label.textContent).join(' · ');
+    if(document.activeElement===svg)announcement.textContent=labelForRow(rows[index])+': '+labels.map(label=>label.textContent).join(' · ');
   }
   function inspect(event){
     const matrix=svg.getScreenCTM();if(!matrix)return;
     const point=new DOMPoint(event.clientX,event.clientY).matrixTransform(matrix.inverse());
     if(point.x<left||point.x>right||point.y<top||point.y>bottom){clear();return;}
-    const year=rows[0].year+(point.x-left)/(right-left)*(rows.at(-1).year-rows[0].year);
+    const year=rows[0].year+(vertical?(point.y-top)/(bottom-top):(point.x-left)/(right-left))*(rows.at(-1).year-rows[0].year);
     let index=0;for(let i=1;i<rows.length;i++)if(Math.abs(rows[i].year-year)<Math.abs(rows[index].year-year))index=i;
     show(index);
   }
@@ -159,7 +170,7 @@ export function attachSeriesInteraction(container,series,unit='Antal personer'){
   svg.addEventListener('focus',()=>show(rows.length-1));svg.addEventListener('blur',clear);
   svg.addEventListener('keydown',event=>{
     if(event.key==='Escape'){clear();return;}
-    if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
-    event.preventDefault();show(event.key==='Home'?0:event.key==='End'?rows.length-1:Math.max(0,Math.min(rows.length-1,(active<0?0:active)+(event.key==='ArrowRight'?1:-1))));
+    if(!['ArrowLeft','ArrowRight','Home','End',...(vertical?['ArrowUp','ArrowDown']:[])].includes(event.key))return;
+    event.preventDefault();show(event.key==='Home'?0:event.key==='End'?rows.length-1:Math.max(0,Math.min(rows.length-1,(active<0?0:active)+(['ArrowRight','ArrowDown'].includes(event.key)?1:-1))));
   });
 }

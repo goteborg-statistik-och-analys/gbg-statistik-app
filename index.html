@@ -4,6 +4,7 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Hitta statistik · Göteborg</title>
   <link rel="stylesheet" href="styles/styles.css">
+  <link rel="stylesheet" href="styles/site-footer.css">
   <link rel="stylesheet" href="styles/search-ui.css">
   <link rel="stylesheet" href="styles/area-map.css">
   <link rel="stylesheet" href="styles/controls.css">
@@ -16,19 +17,18 @@
     <div class="header-sender"><p>Stadsledningskontoret <span aria-hidden="true">·</span> Statistik och analys</p><div class="header-actions"><span class="pilot">Testversion</span><button type="button" class="help-trigger" data-help-topic="" aria-haspopup="dialog" aria-controls="app-help"><svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="10" r="8"/><path d="M10 9v5"/><circle cx="10" cy="6" r=".7" fill="currentColor" stroke="none"/></svg><span>Så här fungerar appen</span></button></div></div>
   </header>
   <div class="app-layout">
-    <aside class="hub-sidebar" aria-label="Kommande funktioner">
-      <details id="hub-menu" open><summary class="hub-menu-toggle">Statistikhubben · Kommande</summary>
-      <section class="hub-preview" aria-labelledby="hub-preview-title">
-        <div class="hub-preview-heading"><h2 id="hub-preview-title">På väg mot en statistikhub</h2><span>Kommande</span></div>
-        <p>Idéer för nästa steg. Öppna en rubrik för att läsa mer – funktionerna finns inte i appen ännu.</p>
+    <aside class="hub-sidebar" aria-label="Faktablad och kommande funktioner">
+      <details id="hub-menu" open><summary class="hub-menu-toggle">Faktablad och fler funktioner</summary>
+      <nav class="hub-preview" aria-label="Faktablad och fler funktioner">
+        <a href="prognos.html" class="hub-forecast-link"><span class="hub-forecast-title">Faktablad: Befolkningsprognos <span aria-hidden="true">→</span></span><span class="hub-coming hub-ready">Klar</span></a>
         <div class="hub-preview-options">
-          <details id="hub-facts-age"><summary>Faktablad om befolkningsgrupper</summary><p>Välj en befolkningsgrupp, exempelvis en åldersgrupp, inrikesfödda eller personer som bor i studentbostäder, och få ett samlat faktablad med utvalda nyckeltal och diagram. Innehållet anpassas efter gruppen och tillgänglig statistik.</p></details>
-          <details><summary>Faktablad om ett område</summary><p>Välj ett område och få en överblick av exempelvis befolkning, boende, utbildning och inkomster, med utvalda diagram och jämförelser med Göteborg.</p></details>
-          <details id="hub-facts-topic"><summary>Faktablad om ett ämne</summary><p>Välj ett ämnesområde, exempelvis jämlikhet, segregation eller arbetsmarknad, och få ett faktablad med utvalda nyckeltal och diagram som belyser ämnet.</p></details>
-          <details><summary>Göteborg i jämförelse</summary><p>Ett faktablad med utvalda nyckeltal och diagram som jämför Göteborg med riket, Stockholm och Malmö. Gemensamma definitioner och jämförbara perioder ska ligga till grund för jämförelserna.</p></details>
-          <details><summary>Fler datakällor</summary><p>Ambitionen är att samla statistik från Göteborgs statistikdatabas, SCB:s öppna data, Kolada och Eurostat i samma app. Källa, tidsperiod och definitioner ska framgå för varje uppgift.</p></details>
+          <details id="hub-facts-age"><summary>Faktablad om befolkningsgrupper <span class="hub-coming">Kommande</span></summary><p>Välj en befolkningsgrupp, exempelvis en åldersgrupp, inrikesfödda eller personer som bor i studentbostäder, och få ett samlat faktablad med utvalda nyckeltal och diagram. Innehållet anpassas efter gruppen och tillgänglig statistik.</p></details>
+          <details><summary>Faktablad om ett område <span class="hub-coming">Kommande</span></summary><p>Välj ett område och få en överblick av exempelvis befolkning, boende, utbildning och inkomster, med utvalda diagram och jämförelser med Göteborg.</p></details>
+          <details id="hub-facts-topic"><summary>Faktablad om ett ämne <span class="hub-coming">Kommande</span></summary><p>Välj ett ämnesområde, exempelvis jämlikhet, segregation eller arbetsmarknad, och få ett faktablad med utvalda nyckeltal och diagram som belyser ämnet.</p></details>
+          <a href="jamforelse.html" class="hub-forecast-link"><span class="hub-forecast-title">Göteborg i jämförelse <span aria-hidden="true">→</span></span><span class="hub-coming hub-ready">Klar</span></a>
+          <details><summary>Fler datakällor <span class="hub-coming">Kommande</span></summary><p>Ambitionen är att samla statistik från Göteborgs statistikdatabas, SCB:s öppna data, Kolada och Eurostat i samma app. Källa, tidsperiod och definitioner ska framgå för varje uppgift.</p></details>
         </div>
-      </section>
+      </nav>
       </details>
     </aside>
   <main>

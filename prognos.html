@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Befolkningsprognos · Göteborg</title>
+  <link rel="stylesheet" href="styles/styles.css">
+  <link rel="stylesheet" href="styles/site-footer.css">
+  <link rel="stylesheet" href="styles/area-map.css">
+  <link rel="stylesheet" href="styles/forecast-sheet.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
+</head>
+<body class="forecast-page">
+  <header class="forecast-header"><a href="./" aria-label="Hitta statistik, startsida"><img src="assets/goteborgs-stad.svg" width="180" height="66" alt="Göteborgs Stad"></a><span>Statistik och analys <span class="pilot">Testversion</span></span></header>
+  <main>
+    <nav aria-label="Brödsmulor"><a href="./">← Hitta statistik</a><span aria-hidden="true"> / </span><span>Faktablad</span></nav>
+    <section class="forecast-intro" aria-labelledby="heading"><p class="eyebrow">Befolkning · Faktablad</p><h1 id="heading">Befolkningsprognos</h1><p>Följ befolkningen från år 2000 och framåt. Välj ålder och jämför hela Göteborg, stadsområden eller mellanområden.</p><p id="forecast-edition" class="forecast-meta"></p></section>
+    <div id="forecast-status" role="status" aria-live="polite">Laddar befolkningsprognosen …</div><button id="forecast-retry" class="secondary" hidden>Försök igen</button>
+    <fieldset id="forecast-controls" class="forecast-controls" disabled>
+      <legend class="sr-only">Anpassa faktabladet</legend>
+      <div class="forecast-main-filters">
+        <div><label for="forecast-level">Geografisk nivå</label><select id="forecast-level"><option value="kommun">Hela Göteborg</option><option value="stadsomraden">Stadsområden</option><option value="mellanomraden">Mellanområden</option></select></div>
+        <div id="forecast-parent-field" hidden><label for="forecast-parent">Mellanområden inom</label><select id="forecast-parent"><option value="01">Nordost</option><option value="02">Centrum</option><option value="03">Sydväst</option><option value="04">Hisingen</option><option value="">Alla stadsområden</option></select></div>
+      </div>
+      <fieldset class="forecast-measure-field"><legend>Mått</legend>
+      <div id="forecast-measure" class="view-toggle forecast-measure" role="group" aria-label="Välj mått"><button type="button" data-measure="population" aria-pressed="true">Folkmängd</button><button type="button" data-measure="change" aria-pressed="false">Folkökning, antal</button><button type="button" data-measure="percent" aria-pressed="false">Folkökning, %</button></div>
+      </fieldset>
+      <fieldset><legend>Åldersgrupper</legend><div id="forecast-age" class="forecast-ages">
+        <label><input type="checkbox" value="all" checked>Alla åldrar</label>
+        <label><input type="checkbox" value="1:5" >1–5 år</label>
+        <label><input type="checkbox" value="6:15" >6–15 år</label>
+        <label><input type="checkbox" value="16:18" >16–18 år</label>
+        <label><input type="checkbox" value="19:24" >19–24 år</label>
+        <label><input type="checkbox" value="25:64" >25–64 år</label>
+        <label><input type="checkbox" value="65:79" >65–79 år</label>
+        <label><input type="checkbox" value="80:top" >80 år och äldre</label>
+        <label><input type="checkbox" value="85:top" >85 år och äldre</label>
+        <label><input type="checkbox" value="custom" >Eget intervall</label>
+      </div><p class="forecast-hint">Varje kombination av område och åldersgrupp blir en linje. Högst sju linjer totalt.</p></fieldset>
+      <div id="forecast-custom-age" class="forecast-custom-age" hidden><div><label for="forecast-from">Från ålder</label><select id="forecast-from"></select></div><div><label for="forecast-to">Till ålder</label><select id="forecast-to"></select></div></div>
+      <fieldset id="forecast-area-field" hidden><legend>Områden att jämföra</legend><div class="forecast-area-toolbar"><span id="forecast-area-count"></span><button id="forecast-all" type="button">Välj alla i listan</button><button id="forecast-clear" type="button">Rensa</button></div><div id="forecast-areas" class="forecast-areas"></div><p class="forecast-hint">Varje område får en egen linje. Välj högst sju områden åt gången.</p></fieldset>
+    </fieldset>
+    <section id="forecast-result" aria-labelledby="forecast-title" hidden>
+      <div id="forecast-visual" class="forecast-visual"><div class="forecast-result-heading"><div><h2 id="forecast-title"></h2><p id="forecast-age-heading" class="forecast-age-heading" hidden></p><p id="forecast-subtitle"></p></div><div class="downloads forecast-actions"><div class="forecast-export"><button id="forecast-export-toggle" type="button" class="secondary" aria-expanded="false" aria-controls="forecast-export-options"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v10m-3-3 3 3 3-3M4 12v4h12v-4"/></svg><span>Ladda ner</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 8 4 4 4-4"/></svg></button><div id="forecast-export-options" class="forecast-export-options" hidden><button id="forecast-csv" type="button" class="secondary"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v10m-3-3 3 3 3-3M4 12v4h12v-4"/></svg><span>CSV</span></button><button id="forecast-xlsx" type="button" class="secondary"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v10m-3-3 3 3 3-3M4 12v4h12v-4"/></svg><span>Excel</span></button><button id="forecast-png" type="button" class="secondary"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v10m-3-3 3 3 3-3M4 12v4h12v-4"/></svg><span>PNG</span></button><button id="forecast-svg" type="button" class="secondary"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v10m-3-3 3 3 3-3M4 12v4h12v-4"/></svg><span>SVG</span></button><button id="forecast-print" type="button" class="secondary"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 6V2h10v4M5 14H2V7h16v7h-3M5 11h10v7H5Z"/></svg><span>Skriv ut</span></button></div></div><button id="forecast-expand" type="button" class="secondary visual-expand" aria-haspopup="dialog" aria-controls="forecast-dialog"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3H3v4m10-4h4v4M3 13v4h4m10-4v4h-4M3 3l5 5m9-5-5 5M3 17l5-5m9 5-5-5"/></svg><span>Förstora</span></button></div></div>
+      <div class="forecast-key"><span><i class="forecast-line"></i>Utfall</span><span><i class="forecast-line forecast-line-dashed"></i>Prognos</span></div>
+      <div id="forecast-chart" class="forecast-chart"></div>
+      <p class="forecast-hint">Peka eller tryck i diagrammet för att se värden. Med tangentbord: fokusera diagrammet och använd vänster/höger pil.</p>
+      <p id="forecast-measure-note" class="forecast-meta" hidden></p>
+      <p id="forecast-source" class="forecast-meta"></p>
+      </div>
+      <p id="forecast-comparability" class="forecast-meta"></p>
+      <details class="forecast-table"><summary>Visa värden i tabell</summary><div class="table-scroll"><table><caption id="forecast-table-caption"></caption><thead id="forecast-table-head"></thead><tbody id="forecast-table-body"></tbody></table></div></details>
+      <details class="forecast-method"><summary>Om prognosen och underlaget</summary><div id="forecast-notes"></div><p><a href="https://goteborg.se/wps/portal?uri=gbglnk%3A2025123111542528" target="_blank" rel="noopener">Så gör Göteborgs Stad befolkningsprognosen ↗</a></p><p><a href="https://goteborg.se/wps/portal?uri=gbglnk%3A2025112783636917" target="_blank" rel="noopener">Om Göteborgs områdesindelning ↗</a></p></details>
+    </section>
+  </main>
+  <dialog id="forecast-dialog" class="help-dialog visual-dialog" aria-labelledby="forecast-dialog-title"><div class="help-dialog-heading"><h2 id="forecast-dialog-title">Förstorad vy</h2><button id="forecast-close" type="button" class="visual-close" aria-label="Stäng förstorad vy" autofocus><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg></button></div><div id="forecast-dialog-content" class="visual-dialog-content"></div></dialog>
+  <footer class="site-footer">
+    <div class="footer-links">
+      <section aria-labelledby="footer-contact"><h2 id="footer-contact">Kontakta oss</h2><a href="mailto:statistik.analys@stadshuset.goteborg.se">statistik.analys@stadshuset.goteborg.se</a></section>
+      <section aria-labelledby="footer-information"><h2 id="footer-information">Ytterligare information</h2><a href="https://goteborg.se/statistik">goteborg.se/statistik</a><a href="https://statistikdatabas.goteborg.se/">statistikdatabas.goteborg.se</a></section>
+    </div>
+    <div class="footer-about"><p>Den här webbapplikationen är i första hand ett arbetsmaterial som tagits fram för internt bruk inom stadsledningskontoret, Göteborgs Stad. All statistik hämtas från SCB:s register. Applikationen är publicerad via GitHub Pages och ingår inte i Göteborgs Stads officiella webbplats goteborg.se.</p></div>
+  </footer>
+  <script type="module" src="src/forecast-sheet.js"></script>
+</body>
+</html>

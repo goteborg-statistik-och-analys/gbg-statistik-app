@@ -3,7 +3,7 @@ import {resultGrid} from './detailed-results.js';
 
 export const sourceName='Göteborgs Stads statistikdatabas';
 export function resultCSV(result){
-  if(result.series?.some(s=>Object.keys(s.dimensions||{}).length)){
+  if(result.forecastStart!==undefined||result.series?.some(s=>Object.keys(s.dimensions||{}).length)){
     const grid=resultGrid(result),quote=value=>'"'+String(value??'').replace(/"/g,'""')+'"';
     return '\uFEFF'+[[...grid.headers,'Källa','Hämtad','Anmärkningar'],...grid.rows.map(row=>[...row,sourceName,result.date,result.notes])].map(row=>row.map(quote).join(';')).join('\r\n');
   }
@@ -17,7 +17,7 @@ export function resultCSV(result){
 
 export async function resultExcel(result){
   const XLSX=await import('../vendor/xlsx.mjs');
-  if(result.series?.some(s=>Object.keys(s.dimensions||{}).length)){
+  if(result.forecastStart!==undefined||result.series?.some(s=>Object.keys(s.dimensions||{}).length)){
     const grid=resultGrid(result);
     const sheet=XLSX.utils.aoa_to_sheet([['Statistik',result.measure],['Källa',sourceName],['Tabell',result.table.title],['Urval',result.detail],['Hämtad',new Date(`${result.date}T00:00:00Z`)],['Anmärkningar',result.notes||''],['Saknade värden','Tomma dataceller betyder att uppgift saknas.'],[],grid.headers,...grid.rows],{cellDates:true,dateNF:'yyyy-mm-dd'});
     const column=XLSX.utils.encode_col(grid.headers.length-1);

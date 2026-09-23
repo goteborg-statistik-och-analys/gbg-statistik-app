@@ -1,9 +1,10 @@
 import {findTables} from './search.js';
 import {groupTables,levelLabels} from './catalog-groups.js';
 import {normalize} from './core.js';
+import {matchingFactSheets} from './fact-sheets.js';
 
 export function suggestedFactSheets(text){
-  const query=normalize(text),suggestions=[];
+  const query=normalize(text),suggestions=[...matchingFactSheets(text)];
   const age=query.match(/\b(\d{1,3})\s*[-–−]\s*(\d{1,3})\s*-?\s*ar(?:ing(?:ar|arna)?|iga)?\b/);
   if(age&&Number(age[1])<=Number(age[2])&&Number(age[2])<=120){
     suggestions.push({title:`Faktablad: ${Number(age[1])}–${Number(age[2])}-åringar`,factSheet:'hub-facts-age'});
@@ -56,16 +57,16 @@ export function initTableSuggestions(input,getCatalog,onSelect,onSelectGroup,onS
     const groups=suggestedTables(input.value,getCatalog());
     const factSheets=suggestedFactSheets(input.value);
     matches=[...factSheets,...groups.flatMap(group=>[group,...group.tables])];active=-1;input.removeAttribute('aria-activedescendant');list.replaceChildren();
-    heading.textContent=matches.length?(factSheets.length?'Faktablad (kommande) och upp till 6 tabellförslag · Enter söker alla tabeller':input.value.trim()?'Upp till 6 tabellförslag · Tryck Enter för alla träffar':'Upp till 6 tabellförslag'):'Inga tabellförslag. Prova ett annat sökord eller tryck Enter för att söka.';
+    heading.textContent=matches.length?(factSheets.length?'Faktablad och upp till 6 tabellförslag · Enter söker alla tabeller':input.value.trim()?'Upp till 6 tabellförslag · Tryck Enter för alla träffar':'Upp till 6 tabellförslag'):'Inga tabellförslag. Prova ett annat sökord eller tryck Enter för att söka.';
     let index=0;
     factSheets.forEach(sheet=>{
       const optionIndex=index++;
       const section=document.createElement('div');section.className='table-suggestion-group';
       const option=document.createElement('div');option.id=`fact-option-${optionIndex}`;option.className='table-option table-option-title table-group-choice';option.tabIndex=-1;
       option.setAttribute('role','option');option.setAttribute('aria-selected','false');
-      option.setAttribute('aria-label',sheet.title+', kommande. Läs om funktionen');
+      option.setAttribute('aria-label',sheet.title+(sheet.href?', klar. Öppna faktabladet':', kommande. Läs om funktionen'));
       const title=document.createElement('span');title.textContent=sheet.title;
-      const badge=document.createElement('span');badge.className='fact-suggestion-badge';badge.textContent='Kommande';
+      const badge=document.createElement('span');badge.className='fact-suggestion-badge';badge.textContent=sheet.href?'Klar':'Kommande';
       option.append(title,badge);option.addEventListener('click',()=>select(optionIndex));section.append(option);list.append(section);
     });
     groups.forEach((group,groupIndex)=>{

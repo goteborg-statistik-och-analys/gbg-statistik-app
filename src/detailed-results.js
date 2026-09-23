@@ -38,6 +38,6 @@ export function detailedSeries(payload,query,group,table){
 }
 export function resultGrid(result){
   const codes=[...new Set(result.series.flatMap(s=>Object.keys(s.dimensions||{})))].filter(code=>code!==(result.table?.metadata?areaOf(result.table.metadata)?.code:'Område'));
-  return {headers:[result.series[0]?.rows[0]?.period?'Period':'År','Område',...codes,'Grupp','Urval',result.unit||'Antal personer'],
-    rows:result.series.flatMap(s=>s.rows.map(r=>[periodOf(r),s.area||result.area,...codes.map(code=>s.dimensions?.[code]||'Summerat urval'),s.name,s.detail,r.value]))};
+  return {headers:[result.series[0]?.rows[0]?.period?'Period':'År','Område',...codes,'Grupp','Urval',...(result.forecastStart!==undefined?['Typ']:[]),result.unit||'Antal personer'],
+    rows:result.series.flatMap(s=>s.rows.map(r=>[periodOf(r),s.area||result.area,...codes.map(code=>s.dimensions?.[code]||'Summerat urval'),s.name,s.detail,...(result.forecastStart!==undefined?[r.year<result.forecastStart?'Historik':'Prognos']:[]),r.value]))};
 }

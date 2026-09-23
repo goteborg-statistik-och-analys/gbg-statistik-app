@@ -37,7 +37,9 @@ export function findTables(text,catalog){
   for(const [pattern,replacement] of phrases)remaining=remaining.replace(pattern,replacement);
   let level='';
   let tokens=remaining.split(/[^a-z0-9]+/).filter(Boolean).map(token=>spelling[token]||token).filter(token=>!stop.has(token));
-  tokens=tokens.filter(token=>{const key=Object.keys(levels).find(k=>token.startsWith(k));if(key){level=levels[key];return false;}return true;});
+  if(tokens.some(token=>/^kommunprognos/.test(token)))level='Kommun';
+  if(tokens.some(token=>/^stadsomradesprognos/.test(token)))level='Stadsområde';
+  tokens=tokens.filter(token=>{const key=Object.keys(levels).find(k=>new RegExp('^'+k+'(?:n|t|en|et|r|na|rna)?$').test(token));if(key){level=levels[key];return false;}return true;});
   const conceptFor=token=>concepts.find(c=>c.id==='forecast'&&c.query.test(token))||concepts.find(c=>c.query.test(token));
   const terms=tokens.map(token=>({token,concept:conceptFor(token)}));
   if(!terms.length&&(sexes.length||age||/\b(unga|ungdomar|aldre)\b/.test(q)))terms.push({token:'folkmangd',concept:concepts.find(c=>c.id==='population')});

@@ -6,7 +6,9 @@ Statisk webbapp med 237 sökbara tabeller. 194 kan hämtas direkt i appen, inklu
 
 Kör `npm start` eller `node tools/serve.mjs` och öppna http://localhost:4173. Utvecklingsservern lyssnar bara lokalt. Kollegorna behöver endast en webbläsare när appen publicerats.
 
-Publicera index.html, hela mapparna src/, styles/, assets/ och vendor/, samt data/search-catalog.json och data/*-map.json. Behåll mappstrukturen. Servern behöver leverera .mjs som JavaScript. Inga npm-installationer, API-nycklar eller byggsteg behövs. Open Sans hämtas från Google Fonts med Arial som reserv. Publicering återstår.
+Publicera index.html, prognos.html, hela mapparna src/, styles/, assets/ och vendor/, samt data/search-catalog.json, data/*-map.json och hela data/befolkningsprognos/. Behåll mappstrukturen. Servern behöver leverera .mjs som JavaScript. Inga npm-installationer, API-nycklar eller byggsteg behövs. Open Sans hämtas från Google Fonts med Arial som reserv. Publicering återstår.
+
+Faktabladet **Befolkningsprognos** nås från sidomenyn och visar utfall från 2000 samt prognos för kommunen, stadsområden och mellanområden. Sparade underlag gör att ålder och områden kan ändras utan API-anrop. Se [underlag, uppdatering och publicering](docs/FORECAST-SHEET.md).
 
 Excel-exporten använder en lokal kopia av SheetJS CE 0.20.3, hämtad från https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs. Licensen finns i vendor/LICENSE-sheetjs.txt. Biblioteket laddas först vid Excel-export; data bearbetas i webbläsaren.
 
@@ -86,3 +88,7 @@ Primärområdeskartan använder Primärområde_shp.zip som tillhandahölls i sep
 Utbildning: alla 16 tabeller är aktiverade efter verifiering av metadata, källenheter och datauttag. Omfattar högsta utbildningsnivå, gymnasiebehörighet, högskolebehörighet och barn efter föräldrars utbildning. Måtten är antal personer respektive antal barn. Behörig och ej behörig kan väljas separat; Totalt omfattar båda. Källanmärkningar om sekretess och definitioner följer med resultatet samt CSV/Excel. Se [tabellstöd](docs/TABLE-SUPPORT.md) för underlag och uppdateringskommandon.
 
 Grupperingen har granskats för samtliga teman: 237 tabeller visas på 93 rader. Små skrivskillnader och verifierade kod-/etikettvarianter jämställs; skillnader i kategorier och tidsperioder hålls isär. Se [genomgång av tabellgruppering](docs/CATALOG-GROUPING.md).
+
+Göteborg i jämförelse: `jamforelse.html` visar fem diagram, Göteborgs nyckeltal och två tiolistor med valbar rangordning för senaste årets folkökning. Historik 2000–2025 omfattar 38 kommuner (SKR A1/B3 och GR); rikets totalfolkmängd används för andelen av Sverige. Samtliga 290 kommuner ingår bara i underlaget för 2024–2025 års tiolistor. Uppdatera huvudunderlaget med `node tools/build-comparison-snapshot.mjs` och kompletteringen med `node tools/build-comparison-context.mjs`. Åren är explicit satta till 2025 och behöver ändras vid nästa års uppdatering. Se [mått, CKM-hantering och validering](docs/COMPARISON-DATA.md).
+
+Riksreferens: markera ”Visa riket” i jämförelsebladets vänsterpanel. Bygg underlaget efter övriga jämförelseuttag med `node tools/build-comparison-national.mjs`; det hämtar bara rikets egna uppgifter.

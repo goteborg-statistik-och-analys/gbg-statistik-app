@@ -13,7 +13,9 @@ export function animateChartEntrance(svg){
   const id=`chart-entrance-${++entranceId}`;
   clip.setAttribute('id',id);
   clip.setAttribute('clipPathUnits','userSpaceOnUse');
-  rect.setAttribute('x','80');rect.setAttribute('y','0');
+  const left=svg.dataset?.left?Number(svg.dataset.left)-8:80;
+  const revealWidth=svg.dataset?.right?Number(svg.dataset.right)-left+10:680;
+  rect.setAttribute('x',String(left));rect.setAttribute('y','0');
   rect.setAttribute('width','0');rect.setAttribute('height',svg.viewBox.baseVal.height);
   clip.append(rect);svg.append(clip);
   for(const mark of marks)mark.setAttribute('clip-path',`url(#${id})`);
@@ -32,7 +34,7 @@ export function animateChartEntrance(svg){
   function draw(time){
     start??=time;
     const progress=Math.max(0,Math.min(1,(time-start-150)/900));
-    rect.setAttribute('width',String(680*progress));
+    rect.setAttribute('width',String(revealWidth*progress));
     if(progress===1)finish();
     else frame=requestAnimationFrame(draw);
   }

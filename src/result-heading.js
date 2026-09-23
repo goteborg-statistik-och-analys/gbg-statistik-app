@@ -3,7 +3,7 @@ import {tableSummary} from './catalog-groups.js';
 import {escapeXML as esc,areaOf,labelOf} from './core.js';
 
 export function resultHeading(result){
-  const title=result.table?.title?tableSummary(result.table).title:result.measure;
+  const title=result.forecastStart!==undefined?result.measure:result.table?.title?tableSummary(result.table).title:result.measure;
   const metadata=result.table?.metadata,groups=result.groups||[],selections=groups[0]?.selections;
   if(!metadata||!selections)return {title,selection:''};
   const dimensions=groupDimensions(metadata);

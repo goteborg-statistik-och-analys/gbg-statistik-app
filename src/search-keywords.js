@@ -17,7 +17,7 @@ export const concepts=[
   {id:'construction',label:'nybyggda bostäder',query:/^(nybygg|byggande|fardigstall)/,terms:['nybygg','fardigstall']},
   {id:'households',label:'hushåll',query:/^hushall/,terms:['hushall'],prefer:/^antal hushall/},
   {id:'crowding',label:'trångboddhet',query:/^trangbod/,terms:['trangbod']},
-  {id:'forecast',label:'befolkningsprognoser',query:/^(prognos|framtid|befolkningsprognos)/,terms:['prognos']},
+  {id:'forecast',label:'befolkningsprognoser',query:/^(prognos|framtid|befolkningsprognos|kommunprognos|stadsomradesprognos)/,terms:['prognos']},
   {id:'births',label:'födda',query:/^(nyfodd|fodelse|fodda)/,terms:['fodda efter moderns']},
   {id:'deaths',label:'avlidna',query:/^(avlid|dodsfall|doda)/,terms:['avlidna']},
   {id:'commute',label:'arbetspendling',query:/^(pendl|arbetspendl)/,terms:['arbetspendling']},

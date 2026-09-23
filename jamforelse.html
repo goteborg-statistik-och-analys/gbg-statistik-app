@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Göteborg i jämförelse – Hitta statistik</title>
+  <link rel="stylesheet" href="styles/styles.css"><link rel="stylesheet" href="styles/area-map.css"><link rel="stylesheet" href="styles/comparison-sheet.css">
+  <link rel="stylesheet" href="styles/site-footer.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <script type="module" src="src/comparison-sheet.js"></script>
+</head>
+<body class="comparison-page">
+  <a class="skip-link" href="#main">Hoppa till innehållet</a>
+  <header class="comparison-header"><a href="./" aria-label="Hitta statistik, startsida"><img src="assets/goteborgs-stad.svg" width="180" height="66" alt="Göteborgs Stad"></a><span>Statistik och analys <span class="pilot">Testversion</span></span></header>
+  <main id="main">
+    <nav class="comparison-breadcrumb" aria-label="Brödsmulor"><a href="./">← Hitta statistik</a><span>/ Faktablad</span></nav>
+    <div class="comparison-intro"><p class="eyebrow">Befolkning · 2000–2025</p><h1>Göteborg i jämförelse</h1><p>Hur utvecklas Göteborgs befolkning? Följ folkmängd, tillväxt och åldersstruktur över tid och jämför med andra kommuner.</p><a href="#method">Om statistiken och källorna</a></div>
+    <p id="load-status" role="status">Hämtar statistik …</p>
+    <div id="comparison-content" hidden>
+      <aside class="comparison-sidebar" aria-label="Filter för jämförelsen"><details class="comparison-controls" open>
+        <summary id="compare-title">Jämförelsekommuner <span id="filter-count">1 vald</span></summary><div class="comparison-filter-body">
+        <p>Göteborg är alltid med. Lägg till upp till tre kommuner.</p>
+        <div id="selected-areas" class="comparison-tags"></div>
+        <div class="comparison-national"><label><input type="checkbox" id="show-national" aria-describedby="national-hint"> Visa riket</label><p id="national-hint">Referens i tillväxt (procent), åldersstruktur och försörjningskvot. Tar ingen kommunplats.</p></div>
+        <div class="comparison-picker"><div><label for="area-group">Visa kommuner</label><select id="area-group"><option value="all">Alla jämförelsekommuner</option><option value="A1">Storstäder (SKR A1)</option><option value="B3">Större städer (SKR B3)</option><option value="GR">Göteborgsregionen</option></select></div><div><label for="area-search">Sök kommun att lägga till</label><input id="area-search" type="search" placeholder="Sök exempelvis Stockholm" autocomplete="off" aria-controls="area-options"></div></div>
+        <div id="area-options" class="comparison-options" role="group" aria-label="Lägg till jämförelsekommun"></div><p id="selection-status" class="comparison-note" role="status"></p>
+      </div></details></aside>
+      <div class="comparison-results">
+      <section aria-labelledby="overview-title"><h2 id="overview-title" class="compact-heading">Göteborg 2025</h2><div id="kpis" class="comparison-kpis"></div></section>
+      <nav class="comparison-sections" aria-label="På sidan"><a href="#population">Folkmängd</a><a href="#nationalShare">Andel av Sverige</a><a href="#growth">Tillväxt</a><a href="#ages">Åldersstruktur</a><a href="#dependencyRatio">Försörjningskvot</a><a href="#rankings">Tiolistor</a></nav>
+      <div id="charts"></div>
+      <section id="rankings" class="comparison-panel" aria-labelledby="rankings-title"><p class="eyebrow">Senaste året · 2024–2025</p><h2 id="rankings-title">Var ökar och minskar befolkningen mest?</h2><p>De tio kommunerna med högst respektive lägst folkökning. Göteborg markeras när kommunen ingår i urvalet. Listorna påverkas inte av kommunvalet i diagrammen.</p><div class="comparison-ranking-filters"><div><label for="rank-scope">Kommuner i tiolistorna</label><select id="rank-scope"><option value="all">Alla Sveriges 290 kommuner</option><option value="selected">Alla 38 jämförelsekommuner</option><option value="A1">Storstäder (SKR A1)</option><option value="B3">Större städer (SKR B3)</option><option value="GR">Göteborgsregionen</option></select></div><div><label for="rank-measure">Rangordna efter</label><select id="rank-measure"><option value="growth">Antal personer</option><option value="growthRate">Procent</option></select></div></div><div id="growth-summary" class="growth-summary" role="group" aria-label="Folkökning i riket och antal kommuner efter befolkningsutveckling"></div><p id="ranking-status" class="comparison-note" role="status"></p><div id="ranking-tables" class="comparison-rankings"></div></section>
+      </div>
+    </div>
+    <section id="method" class="comparison-method" aria-labelledby="method-title"><h2 id="method-title">Om statistiken</h2><p>Folkmängd avser den 31 december respektive år. Jämförelseurvalet omfattar SKR:s storstäder (A1) och större städer (B3) enligt indelningen 2023 samt Göteborgsregionens 13 kommuner, sammanlagt 38 unika kommuner.</p><details><summary>Definitioner, jämförbarhet och röjandekontroll</summary><ul><li>Folkmängden hämtas från SCB:s publicerade totaler. Andelen av Sveriges befolkning använder rikets publicerade total för samma år.</li><li>Folkökning är SCB:s publicerade mått. Procentuell folkökning är detta antal delat med folkmängden vid föregående års slut. Måttet kan avvika från differensen mellan publicerade årstotaler. Historikens definition ändras 2010 beträffande regional indelning.</li><li>Från 2025 använder SCB CKM för röjandekontroll. Åldersgrupper summeras från ettårsåldrar och delar därför inte alltid upp totalen exakt. Andelarna justeras inte till 100 procent.</li><li>Medelålder och demografisk försörjningskvot hämtas från SCB:s egna tabeller. Försörjningskvoten avser ålder, inte faktisk sysselsättning.</li><li>Uppgifterna följer källans kommunindelning. Knivsta bildades ur Uppsala den 1 januari 2003, vilket påverkar jämförelser över tid.</li><li>Tabellerna för 2000–2024 och 2025 saknar överlappande år. Koder och definitioner har kontrollerats; det går inte att validera samma års värden mellan tabellerna.</li><li>Tiolistorna sorteras på värden före avrundning. Lika värden får samma placering och ordnas alfabetiskt. Varje lista visar högst tio kommuner; ytterligare kommuner kan dela den sista placeringen.</li></ul></details><details><summary>Källor och dataunderlag</summary><ul><li><a href="https://www.statistikdatabasen.scb.se/pxweb/sv/ssd/START__BE__BE0101__BE0101A/BefolkningNy/">SCB: Folkmängd och folkökning till och med 2024</a></li><li><a href="https://www.statistikdatabasen.scb.se/pxweb/sv/ssd/START__BE__BE0101__BE0101A/BefolkningCKM/">SCB: Folkmängd och folkökning från 2025</a></li><li><a href="https://www.statistikdatabasen.scb.se/pxweb/sv/ssd/START__BE__BE0101__BE0101B/BefolkningMedelAlder/">SCB: Medelålder</a></li><li><a href="https://www.statistikdatabasen.scb.se/pxweb/sv/ssd/START__BE__BE0101__BE0101A/FkvotHVD/">SCB: Demografisk försörjningskvot</a></li><li><a href="https://skr.se/kommunerochregioner/kommungruppsindelning.8281.html">SKR: Kommungruppsindelning 2023</a> · <a href="https://goteborgsregionen.se/">Göteborgsregionen</a></li><li><a href="https://www.scb.se/FAQ-CKM">SCB: Röjandekontroll med CKM</a></li></ul><p id="data-edition"></p></details></section>
+  </main>
+  <footer class="site-footer">
+    <div class="footer-links">
+      <section aria-labelledby="footer-contact"><h2 id="footer-contact">Kontakta oss</h2><a href="mailto:statistik.analys@stadshuset.goteborg.se">statistik.analys@stadshuset.goteborg.se</a></section>
+      <section aria-labelledby="footer-information"><h2 id="footer-information">Ytterligare information</h2><a href="https://goteborg.se/statistik">goteborg.se/statistik</a><a href="https://statistikdatabas.goteborg.se/">statistikdatabas.goteborg.se</a></section>
+    </div>
+    <div class="footer-about"><p>Den här webbapplikationen är i första hand ett arbetsmaterial som tagits fram för internt bruk inom stadsledningskontoret, Göteborgs Stad. All statistik hämtas från SCB:s register. Applikationen är publicerad via GitHub Pages och ingår inte i Göteborgs Stads officiella webbplats goteborg.se.</p></div>
+  </footer>
+</body>
+</html>

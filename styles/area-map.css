@@ -73,6 +73,9 @@
 .visual-heading h3{font-size:18px;line-height:1.35;font-weight:800;margin:0 0 4px}
 .visual-heading p{font-size:12px;line-height:1.5;font-weight:700;margin:0}
 #chart>.visual-heading{padding-left:8.8%;padding-right:4%}
+#forecast-history-controls{flex:none;margin:12px 0 16px}
+#forecast-history-controls p{font-size:12px;margin:8px 0 0}
+#forecast-history-controls p:empty{display:none}
 .downloads{display:inline-flex;gap:0;border:1px solid var(--border);border-radius:7px;background:#fff;flex-wrap:nowrap;align-self:flex-start}
 .downloads .secondary{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:0;background:transparent;padding:7px 12px;min-height:34px;font-size:12px;font-weight:600;color:#1f1f1f}
 .downloads .secondary:first-child{border-radius:6px 0 0 6px}

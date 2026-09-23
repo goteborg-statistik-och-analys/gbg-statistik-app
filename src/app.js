@@ -13,16 +13,19 @@ import {planGroups} from './group-selection.js';
 import {initTableSuggestions} from './table-suggestions.js';
 import {groupTables,tableSummary,levelLabels} from './catalog-groups.js';
 import {browseTables,catalogThemes,filterTables} from './catalog-filters.js';
+import {publishedFactSheets,matchingFactSheets,filterFactSheets} from './fact-sheets.js';
 import {mapSeries,mountAreaMap} from './area-map.js';
 import {resultHeadingText,visualHeading,resultAreaLabel} from './result-heading.js';
 import {initHelpDialog} from './help-dialog.js';
 import {initVisualDialog} from './visual-dialog.js';
+import {historySource,historyQuery,combineHistory} from './forecast-history.js';
 const $=id=>document.getElementById(id), fmt=n=>n===null?'Uppgift saknas':new Intl.NumberFormat('sv-SE').format(n);
 const syncSearchSuggestion=initSearchSuggestions($('search'),$('search-suggestion'));
-const compactHubMenu=window.matchMedia('(max-width:1679px)');
+const compactHubMenu=window.matchMedia('(max-width: 760px)');
 const syncHubMenu=()=>{$('hub-menu').open=!compactHubMenu.matches;};
 syncHubMenu();compactHubMenu.addEventListener('change',syncHubMenu);
 let catalog=[], selected=null, result=null, selectionVersion=0, dataVersion=0;
+let factSheetResults=publishedFactSheets;
 let searchResults=[], requestedYears, shown=3, groupControls, searchContext=null;
 let disposeAreaMap=()=>{};
 let disposeChart=()=>{};
@@ -35,7 +38,7 @@ const tableSuggestions=initTableSuggestions($('search'),()=>catalog,table=>{
 },group=>{
   searchContext=findTables($('search').value,catalog);
   requestedYears=searchContext.years.length?searchContext.years:undefined;
-  resetCatalogFilters();searchResults=group.tables;shown=3;
+  resetCatalogFilters();factSheetResults=[];searchResults=group.tables;shown=3;
   ++selectionVersion;++dataVersion;selected=null;
   $('selection-section').hidden=true;$('result').hidden=true;status('');
   $('catalog-section').classList.add('is-active');
@@ -44,6 +47,7 @@ const tableSuggestions=initTableSuggestions($('search'),()=>catalog,table=>{
   cards();scroll('catalog-section');
   $('catalog').querySelector('.level-choice')?.focus({preventScroll:true});
 },sheet=>{
+  if(sheet.href){window.location.assign(sheet.href);return;}
   const preview=$(sheet.factSheet);
   $('hub-menu').open=true;preview.open=true;
   document.querySelector('.hub-search-preview')?.remove();
@@ -91,8 +95,16 @@ function cards(){
   const tables=filteredTables();
   const groups=groupTables(tables);
   $('catalog-count').textContent=`${groups.length} tabellgrupper · ${tables.length} av ${catalog.length} tabeller`;
+  const sheets=filterFactSheets(factSheetResults,{theme:$('theme-filter').value,level:$('level-filter').value});
+  $('catalog-count').textContent += sheets.length ? ' · '+sheets.length+' faktablad' : '';
+  if($('theme-filter').value==='Faktablad')$('catalog-count').textContent=sheets.length+' faktablad';
   $('catalog').replaceChildren();
-  if(!tables.length)$('catalog').innerHTML='<p>Inga tabeller matchar sökningen och filtren. Prova ett bredare ämne eller välj en annan geografisk nivå.</p>';
+  for(const sheet of sheets){
+    const row=document.createElement('article');row.className='catalog-row';
+    row.innerHTML=`<div class="catalog-row-info"><span class="catalog-subject">Faktablad · Klar</span><h3>${esc(sheet.title)}</h3><p>${esc(sheet.description)}</p></div><a class="level-choice" href="${esc(sheet.href)}">Öppna faktablad <span aria-hidden="true">→</span></a>`;
+    $('catalog').append(row);
+  }
+  if(!tables.length&&!sheets.length)$('catalog').innerHTML='<p>Inga träffar matchar sökningen och filtren. Prova ett bredare ämne eller välj en annan geografisk nivå.</p>';
   for(const [index,group] of groups.entries()){
     const row=document.createElement('article');row.className='catalog-row';
     const summary=tableSummary(group),headingId=`catalog-row-${index}`;
@@ -152,7 +164,7 @@ function resetSearch(){
   $('catalog-title').textContent='Börja med en tabell';
   $('search-summary').textContent='';$('search-summary').hidden=true;
   $('catalog-section').classList.remove('is-active');
-  searchResults=browseTables(catalog);
+  factSheetResults=publishedFactSheets;searchResults=browseTables(catalog);
   if(catalog.length){status('');cards();}
   syncSearchSuggestion();
 }
@@ -164,7 +176,7 @@ function search(text){
   $('catalog-section').classList.add('is-active');
   ++selectionVersion;++dataVersion;selected=null;$('selection-section').hidden=true;$('result').hidden=true;
   const found=findTables(text,catalog);searchContext=found;status('');$('search-summary').hidden=false;
-  searchResults=found.tables;requestedYears=found.years.length?found.years:undefined;shown=3;
+  factSheetResults=matchingFactSheets(text);searchResults=found.tables;requestedYears=found.years.length?found.years:undefined;shown=3;
   $('level-filter').value=found.level;
   $('catalog-title').textContent=found.topic?`Tabeller om ${found.topic}`:text.trim()?`Sökträffar för ”${text.trim()}”`:'Alla tabeller';
   $('search-summary').textContent='Välj en tabell och kontrollera dess geografiska nivå. '+catalog.filter(t=>t.kind).length+' tabeller kan visas direkt i appen. Övriga öppnas i statistikdatabasen i en ny flik. Årtal och föreslagna urval kontrolleras vid tabellval. '+found.notes.join(' ');
@@ -179,6 +191,33 @@ function search(text){
 function render(){
   disposeAreaMap();disposeChart();
   const snapshot=result;
+  $('forecast-history-controls')?.remove();
+  let historyControls;
+  const historicalTable=historySource(result.table,catalog);
+  if(historicalTable){
+    const controls=document.createElement('div');controls.id='forecast-history-controls';
+    const button=document.createElement('button');button.type='button';button.className='secondary';
+    button.textContent=result.withoutHistory?'Ta bort historik':'Lägg till 10 års historik';
+    button.setAttribute('aria-pressed',String(Boolean(result.withoutHistory)));
+    const message=document.createElement('p');message.setAttribute('role','status');
+    message.textContent=result.withoutHistory?'Historik och prognos visas för samma urval. Prognos från '+result.forecastStart+'.':'';
+    button.addEventListener('click',async()=>{
+      if(snapshot.withoutHistory){result=snapshot.withoutHistory;render();return;}
+      const version=dataVersion;button.disabled=true;button.textContent='Hämtar historik …';
+      try{
+        const source={...historicalTable,metadata:await request(historicalTable.url)};
+        if(version!==dataVersion||result!==snapshot)return;
+        const jobs=snapshot.series.map(series=>({query:historyQuery(snapshot.table,source,series)}));
+        const cells=jobs.reduce((sum,{query})=>sum+query.query.reduce((n,v)=>n*v.selection.values.length,1),0);
+        if(cells>1000000)throw new Error('Historikens urval är för stort. Välj färre grupper eller kategorier.');
+        const history=await runExtraction(jobs,async({query})=>aggregate(await request(source.url,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify(query)}),query),{isCurrent:()=>version===dataVersion&&result===snapshot,onRateLimit:()=>{message.textContent='Väntar på statistikdatabasen …';}});
+        if(!history||version!==dataVersion||result!==snapshot)return;
+        result=combineHistory(snapshot,history,source);render();
+      }catch(error){if(version===dataVersion&&result===snapshot)message.textContent=networkMessage(error);}
+      finally{button.disabled=false;button.textContent='Lägg till 10 års historik';}
+    });
+    controls.append(button,message);historyControls=controls;
+  }
   const {series,rows,area,table,date,measure,unit,notes}=result;
   const start=rows[0],end=rows.at(-1),single=rows.length===1;
   $('result-title').textContent=measure+' i '+resultAreaLabel(result);
@@ -214,6 +253,7 @@ function render(){
     checks.forEach((check,i)=>{check.disabled=!selection.has(i)&&selection.size>=7;});
     result.svg=visible.some(s=>s.rows.length)&&!single?seriesChart({...result,series:visible}):'';
     $('chart').innerHTML=result.svg?visualHeading(result)+'<div class="chart-viewport">'+seriesChart({...result,series:visible,includeHeading:false,includeDescriptions:false})+'</div>'+chartDescriptions(visible):(visible.length?'<p>Det saknas data för de valda serierna.</p>':'<p>Välj upp till sju serier för diagrammet. Alla serier finns i tabellen och exporterna.</p>');
+    if(historyControls)$('chart').prepend(historyControls);
     for(const id of ['svg','png'])$(id).disabled=!result.svg;
     if(result.svg)disposeChart=fitSeriesChart($('chart'),{...result,series:visible});
   };
@@ -262,7 +302,7 @@ $('selection-form').addEventListener('submit',async e=>{
     const parts=await runExtraction(jobs,async({group,query})=>{
       const payload=await request(table.url,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify(query)});
       if(version!==dataVersion)return;
-      return {series:detailedSeries(payload,query,group,table),notes:(payload.columns||[]).filter(column=>column.comment).map(column=>column.text+': '+column.comment)};
+      return {series:detailedSeries(payload,query,group,table).map(s=>({...s,group})),notes:(payload.columns||[]).filter(column=>column.comment).map(column=>column.text+': '+column.comment)};
     },{isCurrent:()=>version===dataVersion,onRateLimit:()=>status('Väntar på statistikdatabasen. Hämtningen fortsätter automatiskt …')});
     if(!parts||version!==dataVersion)return;
     for(const part of parts){
@@ -296,12 +336,12 @@ $('png').addEventListener('click',async()=>{
   try{const image=new Image();image.src=url;await image.decode();const canvas=document.createElement('canvas');canvas.width=2000;canvas.height=Math.round(2000*image.height/image.width);canvas.getContext('2d').drawImage(image,0,0,canvas.width,canvas.height);const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob)throw new Error('PNG kunde inte skapas. Prova att ladda ner SVG.');download(blob,'image/png',name);}catch(error){status(error.message);}finally{URL.revokeObjectURL(url);button.disabled=false;}
 });
 $('level-filter').addEventListener('change',()=>{$('catalog-section').classList.add('is-active');shown=3;cards();});
-$('theme-filter').addEventListener('change',()=>{$('catalog-section').classList.add('is-active');shown=3;cards();});
+$('theme-filter').addEventListener('change',()=>{$('catalog-section').classList.add('is-active');if($('theme-filter').value==='Faktablad'){factSheetResults=publishedFactSheets;$('catalog-title').textContent='Utforska statistiken';$('search-summary').hidden=true;}shown=3;cards();});
 $('ready-filter').addEventListener('change',()=>{$('catalog-section').classList.add('is-active');shown=3;cards();});
 $('show-more').addEventListener('click',()=>{const next=$('catalog').querySelector('.catalog-row[inert] .level-choice');shown+=3;updateCatalogPreview();next?.focus({preventScroll:true});});
 try{
   catalog=await request('./data/search-catalog.json');searchResults=browseTables(catalog);
-  for(const theme of catalogThemes(catalog))$('theme-filter').add(new Option(theme,theme));
+  for(const theme of [...catalogThemes(catalog),'Faktablad'].sort((a,b)=>a.localeCompare(b,'sv')))$('theme-filter').add(new Option(theme,theme));
   cards();tableSuggestions.refresh();
 }catch(error){status('Tabellkatalogen kunde inte laddas. Starta appen via den lokala webbadressen och försök igen.');$('search-button').disabled=true;}
 

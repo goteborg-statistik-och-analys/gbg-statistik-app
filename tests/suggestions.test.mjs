@@ -26,7 +26,8 @@ test('Fact sheet topics match word prefixes from three letters without matching 
     }
   }
   assert.equal(suggestedFactSheets('JÄM')[0].title,'Faktablad: jämlikhet');
-  for(const query of ['jä','jämförelse','ojämliknande','segrare'])assert.deepEqual(suggestedFactSheets(query),[]);
+  for(const query of ['jä','ojämliknande','segrare'])assert.deepEqual(suggestedFactSheets(query),[]);
+  assert.equal(suggestedFactSheets('jämförelse')[0].factSheet,'municipality-comparison');
   assert.equal(suggestedFactSheets('jäm jämlik jämlikhet').length,1);
 });
 test('Empty input suggests six different subjects, preferring supported tables',()=>{
