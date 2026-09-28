@@ -64,10 +64,11 @@ export function initTableSuggestions(input,getCatalog,onSelect,onSelectGroup,onS
       const section=document.createElement('div');section.className='table-suggestion-group';
       const option=document.createElement('div');option.id=`fact-option-${optionIndex}`;option.className='table-option table-option-title table-group-choice';option.tabIndex=-1;
       option.setAttribute('role','option');option.setAttribute('aria-selected','false');
-      option.setAttribute('aria-label',sheet.title+(sheet.href?', klar. Öppna faktabladet':', kommande. Läs om funktionen'));
+      option.setAttribute('aria-label',sheet.title+(sheet.href?'. Öppna faktabladet':', kommande. Läs om funktionen'));
       const title=document.createElement('span');title.textContent=sheet.title;
-      const badge=document.createElement('span');badge.className='fact-suggestion-badge';badge.textContent=sheet.href?'Klar':'Kommande';
-      option.append(title,badge);option.addEventListener('click',()=>select(optionIndex));section.append(option);list.append(section);
+      option.append(title);
+      if(!sheet.href){const badge=document.createElement('span');badge.className='fact-suggestion-badge';badge.textContent='Kommande';option.append(badge);}
+      option.addEventListener('click',()=>select(optionIndex));section.append(option);list.append(section);
     });
     groups.forEach((group,groupIndex)=>{
       const section=document.createElement('div');section.className='table-suggestion-group';section.setAttribute('role','group');

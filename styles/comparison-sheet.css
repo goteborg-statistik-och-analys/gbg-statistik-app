@@ -53,7 +53,14 @@
 @media print{.fact-actions,.fact-action-status{display:none!important}}
 #comparison-dialog .visual-dialog-content{flex:1;min-height:0}#comparison-dialog .comparison-panel>details,#comparison-dialog .comparison-panel>.eyebrow,#comparison-dialog .comparison-panel details{display:none}#comparison-dialog .comparison-panel-heading{flex-wrap:nowrap}@media(max-width:600px){#comparison-dialog .comparison-panel-heading{display:block}}
 
-#charts>.comparison-panel{border:0;border-radius:8px;box-shadow:0 2px 10px rgb(31 31 31 / 8%)}
+#charts>.comparison-panel{border:0;border-radius:8px;padding:20px;margin-bottom:20px;box-shadow:0 2px 10px rgb(31 31 31 / 8%)}
+#charts .comparison-panel-heading h2{font-size:22px}
+#charts .comparison-panel>p{font-size:12px;margin-bottom:12px}
+#charts .comparison-legend{font-size:12px;gap:8px 18px;margin:10px 0}
+#charts .comparison-chart-toolbar{margin-bottom:10px}
+#charts .comparison-panel details{padding-top:0;margin-top:8px}
+#charts .comparison-panel summary{font-size:12px;line-height:1.5;padding:10px 0}
+@media(max-width:540px){#charts>.comparison-panel{padding:16px 14px}}
 @media print{#charts>.comparison-panel{box-shadow:none}}
 /* Consistent cards and unmistakable section navigation. */
 .comparison-kpi{border:0;border-radius:8px;box-shadow:0 2px 10px rgb(31 31 31 / 8%)}
@@ -80,3 +87,61 @@
 @media(max-width:1100px){.growth-summary{flex-wrap:wrap}.growth-summary>.growth-summary-divider{flex:0 0 100%;height:1px}}
 @media(max-width:540px){.growth-summary{gap:14px}.growth-summary-cards{gap:8px}.growth-summary-card{padding:12px}.growth-summary-card strong{font-size:22px}}
 @media print{#rankings{box-shadow:none}}
+/* National geography and vertically stacked rankings. */
+.comparison-geography{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:24px;margin-top:20px;align-items:start}
+.comparison-map-figure{margin:0;min-width:0}
+.comparison-map-figure h3{font-size:18px;margin:0 0 12px}
+.comparison-geography .comparison-rankings{grid-template-columns:minmax(0,1fr);gap:24px;margin:0}
+.comparison-geography .comparison-rankings h3{font-size:16px}
+.comparison-geography .comparison-rankings th,.comparison-geography .comparison-rankings td{font-size:12px;padding:8px 6px}
+.comparison-map-figure label{font-size:12px;margin-top:14px}
+.comparison-map-figure select{width:100%;font-size:12px;min-height:34px;padding:6px 10px}
+.growth-map-legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:11px;line-height:1.5}
+.growth-map-legend span{display:inline-flex;align-items:center;gap:6px}
+.growth-map-legend i{width:14px;height:14px;flex:none;border:1px solid #1f1f1f}
+.growth-map-readout{font-size:12px;line-height:1.5;min-height:44px;background:#f4f6f7;padding:8px 10px;margin:10px 0}
+#growth-map svg{display:block;width:100%;height:auto;max-height:600px}
+#growth-map [data-municipality]{cursor:pointer}
+#growth-map .is-selected,#growth-map path:focus-visible{stroke:#1f1f1f;stroke-width:2.5;outline:none}
+.comparison-map-figure figcaption{font-size:11px;line-height:1.6;margin-top:12px}
+#rankings .growth-map-table summary{font-size:12px;padding:8px 0}
+#comparison-dialog #rankings .comparison-geography{display:block}
+#comparison-dialog #rankings .comparison-rankings,#comparison-dialog #rankings .growth-summary,#comparison-dialog #rankings #ranking-status{display:none}
+#comparison-dialog #growth-map svg{height:max(700px,75dvh);max-height:none}
+#comparison-dialog .comparison-map-figure{max-width:850px;margin:auto}
+@media(max-width:1050px){.comparison-geography{grid-template-columns:minmax(0,1fr)}#growth-map svg{max-height:600px}}
+@media print{.comparison-geography{grid-template-columns:1fr 1fr}.comparison-map-figure select,.comparison-map-figure label,.growth-map-readout{display:none}#growth-map .is-selected{stroke-width:.45}}
+#growth-map{position:relative;overflow:hidden}
+.growth-map-tooltip{max-width:calc(100% - 8px);white-space:normal;font-family:'Open Sans',Arial,sans-serif;font-size:11px;z-index:2}
+.growth-map-tooltip .map-tooltip-title{font-size:12px;font-weight:700}
+.growth-map-tooltip>div{display:flex;align-items:center;gap:8px}
+.growth-map-tooltip i{display:inline-block;width:22px;height:3px;flex:none}
+#rankings .map-picker{margin:12px 0 8px;padding:0;border:1px solid #d1d9dc;border-radius:5px}
+#rankings .map-picker>summary{font-size:12px;padding:8px 10px}
+#comparison-dialog #rankings .map-picker{display:block}
+.map-picker>div{padding:0 10px 10px}
+.map-picker input{width:100%;font-size:12px;min-height:34px;padding:6px 8px}
+.map-picker select{margin-top:8px;min-height:140px}
+.map-picker option{padding:5px 8px}
+#map-search-status{font-size:11px;margin:6px 0 0}
+#map-reset{font-size:12px;padding:6px 10px;min-height:32px}
+.comparison-page .map-picker :is(input,select,summary):focus-visible{outline:2px solid #0077bc;outline-offset:2px}
+.comparison-page.comparison-pointer .map-picker :is(input,select,summary):focus{outline:none}
+#growth-map path:focus{outline:none}
+#growth-map svg,#growth-map path{animation:none;transition:none}
+@media print{.growth-map-tooltip,#rankings .map-picker,#map-reset{display:none!important}}
+
+/* Period summaries share the fact sheets' borderless cards. */
+.growth-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.growth-summary>.growth-summary-counts{grid-column:1/-1}
+.growth-summary-card{position:relative;overflow:hidden;background:#fff;border-radius:8px;box-shadow:0 2px 10px rgb(31 31 31 / 8%);flex:1;flex-wrap:wrap;gap:4px 9px;min-width:0;white-space:normal}
+.growth-summary-card::before{content:'';position:absolute;inset:0 0 auto;height:3px;background:#3f5564}
+.growth-summary-card strong{white-space:nowrap;font-size:22px}
+.growth-summary-counts .growth-summary-card{flex:0 1 auto;padding:10px 14px}
+.growth-summary-counts .growth-summary-card strong{font-size:18px}
+@media(max-width:600px){.growth-summary{grid-template-columns:minmax(0,1fr)}.growth-summary-card{padding:12px}.growth-summary-card strong{font-size:22px}}
+@media print{.growth-summary-card{box-shadow:none}.comparison-ranking-filters{display:none}}
+
+.comparison-axis-toggle{font-size:11px;font-weight:400;min-height:30px;padding:4px 8px;border-color:#d1d9dc;background:transparent}
+.comparison-axis-toggle:hover{background:#f4f6f7}
+@media print{.comparison-axis-toggle{display:none}}

@@ -66,7 +66,7 @@ export function fitForecastChart(container,series,options){
       if(height===lastHeight)return;
       lastHeight=height;finish();
       const focused=document.activeElement===container.querySelector('svg');
-      container.innerHTML=forecastChart(series,{...options,includeHeading:false,layoutHeight:height});
+      container.innerHTML=forecastChart(series,{...options,includeHeading:false,layoutHeight:height??options.layoutHeight});
       attachForecastInteraction(container,series,options.unit);
       // Match the app's enlarged chart typography rather than scaling up labels.
       const scale=height===undefined?1:Math.min(1,1000/bounds.width);

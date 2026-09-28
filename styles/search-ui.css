@@ -72,15 +72,15 @@
 .chart-inspection { min-height: 44px; margin: 12px 0 0; font-size: 13px; }
 #chart circle:focus { outline: 2px solid #1f1f1f; outline-offset: 3px; }
 .hero { padding-bottom: 90px; }
-.app-layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 40px; max-width: 1500px; margin: 0 auto; padding: 0 32px; }
+.app-layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 120px; max-width: 1500px; margin: 0 auto; padding: 0 32px; }
 .app-layout > main { min-width: 0; width: 100%; max-width: 1160px; margin: 0; padding: 0; }
 .hub-sidebar { min-width: 0; padding-top: 65px; }
+.hub-heading { font-size: 18px; line-height: 1.4; margin: 0 0 16px; letter-spacing: 0; }
 .hub-menu-toggle { display: none; }
 .hub-preview { padding-right: 24px; border-right: 1px solid var(--border); }
 .hub-forecast-link { display: block; padding: 12px 0; border-bottom: 1px solid var(--border); text-decoration: none; }
 .hub-forecast-title { display: block; font-size: 13px; font-weight: 600; line-height: 1.7; }
 .hub-forecast-link:hover { background: #eef7fb; }
-.hub-coming.hub-ready { background: #eef7fb; }
 .hub-forecast-link:hover .hub-forecast-title { text-decoration: underline; text-underline-offset: 3px; }
 .hub-preview-options { display: grid; align-items: start; }
 .hub-preview-options details { padding: 12px 0; border-bottom: 1px solid var(--border); }
@@ -89,13 +89,14 @@
 .hub-coming { display: block; width: fit-content; margin-top: 6px; padding: 1px 7px; border-radius: 4px; background: #f4f6f7; font-size: 11px; font-weight: 400; }
 .hub-preview-options p { margin: 10px 0 0; font-size: 12px; }
 @media (max-width: 1100px) {
-  .app-layout { grid-template-columns: 230px minmax(0, 1fr); gap: 28px; padding: 0 24px; }
+  .app-layout { grid-template-columns: 230px minmax(0, 1fr); gap: 80px; padding: 0 24px; }
   .hub-preview { padding-right: 18px; }
   .app-layout .hero h1 { font-size: 44px; }
 }
 @media (max-width: 760px) {
   .app-layout { grid-template-columns: minmax(0, 1fr); gap: 0; padding: 0 20px; }
   .hub-sidebar { padding-top: 20px; }
+  .hub-heading { display: none; }
   #hub-menu { padding: 0 12px; border: 1px solid var(--border); border-radius: 6px; }
   .hub-menu-toggle { display: list-item; padding: 12px 0; font-size: 13px; font-weight: 600; }
   .hub-preview { padding: 12px 0; border-right: 0; border-top: 1px solid var(--border); }

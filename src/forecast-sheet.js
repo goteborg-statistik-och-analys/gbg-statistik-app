@@ -62,7 +62,7 @@ function render(){
   $('title').textContent=title;$('age-heading').textContent='Ålder: '+age;$('age-heading').hidden=false;$('subtitle').textContent=subtitle;
   const exportSource=source+(data.level==='kommun'?'':' · Historisk gränsjämförbarhet är inte fullt verifierad.');
   svg=forecastChart(series,{title,subtitle,age,unit:measure.unit,forecastStart:data.forecastStart,source:exportSource});
-  const chartOptions={title,subtitle,age,unit:measure.unit,forecastStart:data.forecastStart,source,includeHeading:false};
+  const chartOptions={title,subtitle,age,unit:measure.unit,forecastStart:data.forecastStart,source,includeHeading:false,layoutHeight:440};
   $('chart').innerHTML=forecastChart(series,chartOptions);disposeChart=fitForecastChart($('chart'),series,chartOptions);
   $('source').textContent=source;
   $('comparability').textContent=data.level==='kommun'?'': 'Historiken visas enligt källtabellens områdesindelning. Jämförbarheten i områdesgränser över hela perioden är inte fullt verifierad.';

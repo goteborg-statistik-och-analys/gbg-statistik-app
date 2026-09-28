@@ -14,16 +14,21 @@ export function indicator(snapshot,context,region,year,measure){
   return comparisonValue(snapshot,{region,year,measure}).value;
 }
 // Competition ranks: equal unrounded values receive the same rank. Names only order ties.
-export function rankMunicipalities(context,areas,{scope='all',measure='growth',direction='desc'}={}){
+export function periodGrowth(population,baseline,publishedGrowth,period=1){
+  if(![1,3,5,10].includes(period))throw Error('Ogiltig tillväxtperiod.');
+  const growth=period===1?publishedGrowth:Number.isFinite(population)&&Number.isFinite(baseline)?population-baseline:null;
+  return {growth,growthRate:percentage(growth,baseline)};
+}
+export function rankMunicipalities(context,areas,{scope='all',measure='growth',direction='desc',period=1}={}){
   if(!['growth','growthRate'].includes(measure)||!['asc','desc'].includes(direction))throw Error('Ogiltig rangordning.');
   const eligible=new Set(areas.filter(area=>scope==='selected'||area.groups.includes(scope)).map(area=>area.code));
-  const rows=context.ranking.filter(row=>scope==='all'||eligible.has(row.code)).map(row=>({...row,growthRate:percentage(row.growth,row.populationPrevious)})).filter(row=>Number.isFinite(row[measure]));
+  const rows=context.ranking.filter(row=>scope==='all'||eligible.has(row.code)).map(row=>({...row,...periodGrowth(row.population,period===1?row.populationPrevious:context.periodBaselines?.[row.code]?.[context.year-period],row.growth,period),startYear:context.year-period,endYear:context.year})).filter(row=>Number.isFinite(row[measure]));
   rows.sort((a,b)=>(direction==='desc'?b[measure]-a[measure]:a[measure]-b[measure])||a.name.localeCompare(b.name,'sv'));
   let rank=0;
   return rows.map((row,index)=>{if(!index||row[measure]!==rows[index-1][measure])rank=index+1;return {...row,rank};});
 }
 
-export function growthSummary(context,areas,scope='all'){
-  const rows=rankMunicipalities(context,areas,{scope});
+export function growthSummary(context,areas,scope='all',period=1){
+  const rows=rankMunicipalities(context,areas,{scope,period});
   return {total:rows.length,increased:rows.filter(r=>r.growth>0).length,decreased:rows.filter(r=>r.growth<0).length,unchanged:rows.filter(r=>r.growth===0).length};
 }

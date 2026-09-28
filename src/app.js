@@ -101,7 +101,7 @@ function cards(){
   $('catalog').replaceChildren();
   for(const sheet of sheets){
     const row=document.createElement('article');row.className='catalog-row';
-    row.innerHTML=`<div class="catalog-row-info"><span class="catalog-subject">Faktablad · Klar</span><h3>${esc(sheet.title)}</h3><p>${esc(sheet.description)}</p></div><a class="level-choice" href="${esc(sheet.href)}">Öppna faktablad <span aria-hidden="true">→</span></a>`;
+    row.innerHTML=`<div class="catalog-row-info"><span class="catalog-subject">Faktablad</span><h3>${esc(sheet.title)}</h3><p>${esc(sheet.description)}</p></div><a class="level-choice" href="${esc(sheet.href)}">Öppna faktablad <span aria-hidden="true">→</span></a>`;
     $('catalog').append(row);
   }
   if(!tables.length&&!sheets.length)$('catalog').innerHTML='<p>Inga träffar matchar sökningen och filtren. Prova ett bredare ämne eller välj en annan geografisk nivå.</p>';
