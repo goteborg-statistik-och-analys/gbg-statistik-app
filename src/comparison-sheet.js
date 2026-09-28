@@ -1,3 +1,4 @@
+import {metropolitanGrowth,metropolitanRegions,metropolitanSource} from './comparison-regions.js';
 import {escapeXML as esc,normalize} from './core.js';
 import {comparisonValue} from './comparison-data.js';
 import {ageGroups,indicator,rankMunicipalities,growthSummary,periodGrowth,withNationalReference} from './comparison-indicators.js';
@@ -87,7 +88,7 @@ function renderPanel(definition){
 }
 function renderCharts(){definitions.forEach(renderPanel);}
 function renderRankings(){
-  const scope=$('rank-scope').value,measure=$('rank-measure').value,label=measure==='growth'?'antal':'procent',configs=[[`Högst folkökning · ${label}`,measure,'desc'],[`Lägst folkökning · ${label}`,measure,'asc']];
+  const scope=$('rank-scope').value,measure=$('rank-measure').value,label=measure==='growth'?'antal':'procent',configs=[[`Högst folkökning · ${label}`,measure,'desc']];
   const period=Number($('rank-period').value),endYear=context.year,startYear=endYear-period,periodLabel=`${startYear}–${endYear}`;
   const method=period===1?`SCB:s publicerade folkökning, ${periodLabel}. Procent beräknas mot folkmängden ${startYear}.`:`Förändring mellan publicerade folkmängdstotaler ${periodLabel}, i procent av folkmängden ${startYear}. Total förändring under perioden, inte årlig genomsnittlig tillväxt.`;
   $('ranking-period-label').textContent=`Befolkningstillväxt · ${periodLabel}`;
@@ -123,15 +124,19 @@ function renderRankings(){
   };
   $('map-picker').ontoggle=()=>{if($('map-picker').open){$('map-search').value='';filterMapOptions();$('map-search').focus();}};
   $('map-reset').onclick=()=>{mapZoom=false;choose.reset();};
+  const metroRows=metropolitanGrowth(context,period);
+  const regionNote='Regionerna följer SCB:s storstadsområden från 2005: Stor-Göteborg (13 kommuner), Stor-Stockholm (26 kommuner, Stockholms län) och Stor-Malmö (12 kommuner). Respektive storstad är exkluderad ur regionraden. Regionvärden summeras från publicerade kommuntotaler. Procent beräknas från summerad folkökning och summerad startfolkmängd, inte som ett medelvärde av kommunernas procenttal.';
   const allRows=[...mapRows].sort((a,b)=>a.name.localeCompare(b.name,'sv'));
   $('growth-map-table').innerHTML=`<table><caption>${esc(scopeLabel)} · Befolkningsförändring ${periodLabel} · Källa: SCB</caption><thead><tr><th scope="col">Kommun</th><th scope="col">Antal</th><th scope="col">Procent</th></tr></thead><tbody>${allRows.map(row=>`<tr><th scope="row">${esc(row.name)}</th><td>${signed(row.growth)}</td><td>${signed(row.growthRate,2)} %</td></tr>`).join('')}</tbody></table>`;
-  exportModels.set('rankings',{kind:'map',geometry:mapGeometry,mapRows,measure,startYear,endYear,title:`Befolkningsförändring ${periodLabel}`,subtitle:scopeLabel,unit:measure==='growth'?'Personer':'Procent',age:false,labels:allRows.map(row=>`${row.code} ${row.name}`),series:[{name:'Folkökning, antal personer',values:allRows.map(row=>row.growth)},{name:'Folkökning, procent',values:allRows.map(row=>row.growthRate)}],notes:[method,'CKM används för röjandekontroll från 2025.','Kommungränser: SCB, förenklad tematisk karta (CC0), arkiv 260225.',mapGeometry.url]});
+  exportModels.set('rankings',{metroRows,kind:'map',geometry:mapGeometry,mapRows,measure,startYear,endYear,title:`Befolkningsförändring ${periodLabel}`,subtitle:scopeLabel,unit:measure==='growth'?'Personer':'Procent',age:false,labels:allRows.map(row=>`${row.code} ${row.name}`),series:[{name:'Folkökning, antal personer',values:allRows.map(row=>row.growth)},{name:'Folkökning, procent',values:allRows.map(row=>row.growthRate)}],notes:[method,regionNote,'Storstadsjämförelsen följer periodvalet och har ett fast geografiskt urval, oberoende av kartans kommunfilter.',metropolitanSource,'CKM används för röjandekontroll från 2025.','Kommungränser: SCB, förenklad tematisk karta (CC0), arkiv 260225.',mapGeometry.url]});
   $('ranking-status').textContent=`${count} kommuner i urvalet. ${count<10?'Alla kommuner visas. ':''}Förändring ${periodLabel}. Negativa värden betyder folkminskning. ${method}`;
   $('ranking-tables').innerHTML=configs.map(([title,measure,direction])=>{
     const ranked=rankMunicipalities(context,areas,{scope,measure,direction,period}),top=ranked.slice(0,10),gothenburg=ranked.find(row=>row.code==='1480'),extra=gothenburg&&!top.some(row=>row.code==='1480');
     const rows=extra?[...top,gothenburg]:top;
     return `<div><h3>${title}</h3><div class="comparison-table-scroll"><table><caption>Folkökning ${periodLabel}${extra?' · Göteborg visas även efter tiolistan.':''}</caption><thead><tr><th scope="col">Plats</th><th scope="col">Kommun</th><th scope="col">Antal</th><th scope="col">Procent</th></tr></thead><tbody>${rows.map((row,i)=>`<tr class="${row.code==='1480'?'is-gothenburg ':''}${extra&&i===10?'outside-top':''}"><td>${row.rank}</td><th scope="row">${esc(row.name)}</th><td>${signed(row.growth)}</td><td>${signed(row.growthRate,2)} %</td></tr>`).join('')}</tbody></table></div>${!gothenburg?'<p class="comparison-note">Göteborg ingår inte i detta urval.</p>':''}</div>`;
   }).join('');
+  const regionMembers=metropolitanRegions.map(region=>`<p><strong>${esc(region.name)} exkl. ${esc(region.city)}:</strong> ${region.codes.filter(code=>code!==region.center).map(code=>esc(context.ranking.find(row=>row.code===code)?.name??code)).join(', ')}.</p>`).join('');
+  $('ranking-tables').insertAdjacentHTML('afterbegin',`<section class="metropolitan-comparison" aria-labelledby="metropolitan-title"><p class="eyebrow">Fast jämförelse</p><h3 id="metropolitan-title">Storstäder och omgivande regioner</h3><p class="metropolitan-intro">Befolkningstillväxt under vald period. Regionerna visas utan respektive storstad.</p><div class="comparison-table-scroll"><table class="metropolitan-table"><caption>${periodLabel} · Antal personer och procent · Källa: SCB</caption><thead><tr><th scope="col">Geografi</th><th scope="col">Antal</th><th scope="col">Procent</th></tr></thead><tbody>${metroRows.map((row,i)=>`<tr class="${i===3?'metropolitan-region-start':''}"><th scope="row">${esc(row.name)}<small>${row.kind==='city'?'Kommun':row.codes.length+' kommuner'}</small></th><td>${signed(row.growth)}</td><td>${signed(row.growthRate,2)} %</td></tr>`).join('')}</tbody></table></div><p class="metropolitan-hint">Fast urval – påverkas av periodvalet, inte av kommunfiltret.</p><details><summary>Regionindelning och beräkning</summary><p>${regionNote}</p>${regionMembers}<p>${method} CKM används från 2025; summering kan ge avvikelser från separat publicerade regiontotaler.</p><a href="${metropolitanSource}">SCB:s förteckning över storstadsområden</a></details></section>`);
 }
 try{
   const [manifest,contextManifest,nationalManifest]=await Promise.all([json(root+'metadata.json'),json(root+'context-metadata.json'),json(root+'national-metadata.json')]);
