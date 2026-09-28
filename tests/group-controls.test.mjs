@@ -33,6 +33,21 @@ test('All categories and separate reporting remain distinct from a summed total'
   assert.deepEqual(controls.read()[0].separate,[]);assert.deepEqual(controls.read()[0].selections.Kön,['Båda kön']);
 }));
 function clickCheck(node,checked=true){node.checked=checked;node.dispatchEvent({type:'change'});}
+test('Custom age controls support 100 and an explicit open upper limit without changing selection on invalid input',()=>setup(()=>{
+  const container=new Element('div'),m={variables:[{code:'Ålder',values:['80–84 år','85–89 år','90+ år']}]};
+  const controls=initGroupControls(container,m),nodes=walk(container);
+  const from=nodes.find(n=>n.id==='age-0-0-0'),to=nodes.find(n=>n.id==='age-0-0-1'),open=nodes.find(n=>n.id==='age-0-0-open');
+  const apply=nodes.find(n=>n.textContent==='Välj intervallet'),error=nodes.find(n=>n.className==='range-error');
+  from.value='85';to.value='100';apply.dispatchEvent({type:'click'});
+  assert.deepEqual(controls.read()[0].selections['Ålder'],['85–89 år','90+ år']);assert.equal(error.textContent,'');
+  to.value='';clickCheck(open);assert.equal(to.disabled,true);apply.dispatchEvent({type:'click'});
+  assert.deepEqual(controls.read()[0].selections['Ålder'],['85–89 år','90+ år']);
+  from.value='86';apply.dispatchEvent({type:'click'});assert.match(error.textContent,/indelning/);
+  assert.deepEqual(controls.read()[0].selections['Ålder'],['85–89 år','90+ år']);
+  clickCheck(nodes.find(n=>n.id==='group-0-dimension-0-total'));
+  assert.equal(open.checked,false);assert.equal(to.disabled,false);
+}));
+
 test('Restricted measures enforce separate reporting and months remain time points',()=>setup(()=>{
   const container=new Element('div');
   let controls=initGroupControls(container,metadata,()=>undefined,{}, {noSum:['Arbetssökandekategori'],additive:true});

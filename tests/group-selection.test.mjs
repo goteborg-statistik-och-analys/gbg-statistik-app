@@ -10,6 +10,24 @@ const table=catalog.find(t=>t.kind==='population'&&t.level==='Primärområde');
 const payload=JSON.parse(await readFile(new URL('../data/verified-majorna.json',import.meta.url),'utf8'));
 const age=table.metadata.variables.find(v=>v.code==='Ålder');
 const defaults=()=>Object.fromEntries(groupDimensions(table.metadata).map(v=>[v.code,totalValues(v)]));
+test('85–100 includes the published open final age band and labels it as 85 years and older',()=>{
+  const values=ageRangeValues(age,85,100);
+  assert.deepEqual(values,ageRangeValues(age,85,Infinity));
+  assert.equal(values.length,16);
+  const [plan]=planGroups(table,'103 Majorna',2010,2025,[{name:'',selections:{...defaults(),'Ålder':values}}]);
+  assert.match(plan.detail,/85 år och äldre/);
+});
+test('Open intervals respect coarse bands, exact codes, missing coverage and finite-only tables',()=>{
+  const grouped={code:'Ålder',values:['a','b','c'],valueTexts:['80–84 år','85–89 år','90 år och äldre']};
+  assert.deepEqual(ageRangeValues(grouped,85,100),['b','c']);
+  assert.deepEqual(ageRangeValues(grouped,90,Infinity),['c']);
+  assert.throws(()=>ageRangeValues(grouped,86,100),/indelning/);
+  assert.throws(()=>ageRangeValues(grouped,85,95),/indelning/);
+  const finite={code:'Ålder',values:['99 år','100 år']};
+  assert.deepEqual(ageRangeValues(finite,99,100),finite.values);
+  assert.throws(()=>ageRangeValues(finite,99,Infinity),/indelning/);
+  assert.throws(()=>ageRangeValues(grouped,-1,100),/giltigt/);
+});
 function extract(query){
   const dimensions=payload.columns.filter(c=>c.type!=='c');
   return {...payload,data:payload.data.filter(row=>dimensions.every((v,i)=>query.query.find(q=>q.code===v.code).selection.values.includes(row.key[i])))};

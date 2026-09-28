@@ -8,6 +8,8 @@ export function categoryValues(v){
 }
 const isTotal=label=>/^(totalt?\b|samtliga\b|alla\b|bada\b)/.test(normalize(label));
 export function ageBounds(label){
+  const open=label.trim().match(/^(\d+)\s*år\s+och\s+(?:äldre|över)$/i);
+  if(open)return [Number(open[1]),Infinity];
   const match=label.trim().match(/^(\d+)\s*(?:([-–])\s*(\d*)|(\+))?\s*år$/);
   return match?[Number(match[1]),match[2]||match[4]?(match[3]?Number(match[3]):Infinity):Number(match[1])]:null;
 }
@@ -35,8 +37,11 @@ export function totalValues(v){
   return validateValues(v,[...v.values]);
 }
 export function ageRangeValues(v,start,end){
-  if(!Number.isInteger(start)||!Number.isInteger(end)||start>end)throw new Error('Ange ett giltigt åldersintervall.');
+  if(!Number.isInteger(start)||start<0||(!Number.isInteger(end)&&end!==Infinity)||start>end)throw new Error('Ange ett giltigt åldersintervall.');
   const entries=v.values.map(value=>({value,range:ageBounds(valueLabel(v,value))}));
+  // 100 is the conventional upper selection for tables ending in an open age band.
+  // Keep finite-only tables finite, and never split a published age group.
+  if(end===100&&entries.some(({range})=>range&&range[1]===Infinity&&range[0]<=100))end=Infinity;
   const chosen=entries.filter(({range})=>range&&range[0]>=start&&range[1]<=end).sort((a,b)=>a.range[0]-b.range[0]);
   let next=start;
   for(const {range} of chosen){if(range[0]!==next)throw new Error('Intervallet måste följa tabellens åldersindelning.');next=range[1]+1;}

@@ -65,17 +65,25 @@ export function initGroupControls(container,metadata,getArea,initial={},measure=
           const input=document.createElement('input');input.type='number';input.min=0;input.max=150;input.id=`age-${id}-${vi}-${index}`;label.htmlFor=input.id;label.append(input);range.append(label);return input;
         });
         const apply=document.createElement('button');apply.type='button';apply.className='filter-action';apply.textContent='Välj intervallet';
+        const openEnded=v.values.some(value=>ageBounds(valueLabel(v,value))?.[1]===Infinity),openControls=[];
+        const noLimit=document.createElement('input');noLimit.type='checkbox';noLimit.id=`age-${id}-${vi}-open`;
+        if(openEnded){
+          const label=document.createElement('label');label.className='check-label';label.htmlFor=noLimit.id;
+          label.append(noLimit,document.createTextNode('Ingen övre åldersgräns'));
+          noLimit.addEventListener('change',()=>{inputs[1].disabled=noLimit.checked;});
+          openControls.push(label);
+        }
         const error=document.createElement('p');error.className='range-error';error.setAttribute('role','status');
         apply.addEventListener('click',()=>{
           try{
-            const values=ageRangeValues(v,...inputs.map(input=>input.value===''?NaN:Number(input.value)));
+            const values=ageRangeValues(v,inputs[0].value===''?NaN:Number(inputs[0].value),noLimit.checked?Infinity:inputs[1].value===''?NaN:Number(inputs[1].value));
             total.checked=values.length===all.length&&all.every(value=>values.includes(value));
             if(total.checked)report.value='sum';
             checks.forEach(check=>{check.checked=!total.checked&&values.includes(check.value);});error.textContent='';updateSummary();changed();
           }catch(e){error.textContent=e.message;}
         });
-        total.addEventListener('change',()=>{if(total.checked){inputs.forEach(input=>{input.value='';});error.textContent='';}});
-        range.append(apply);picker.append(range,error);
+        total.addEventListener('change',()=>{if(total.checked){inputs.forEach(input=>{input.value='';});noLimit.checked=false;inputs[1].disabled=false;error.textContent='';}});
+        range.append(apply);picker.append(range,...openControls,error);
       }
       const clear=document.createElement('button');clear.type='button';clear.className='filter-action';clear.textContent='Rensa';
       const chooseAll=document.createElement('button');chooseAll.type='button';chooseAll.className='filter-action';chooseAll.textContent='Välj alla';chooseAll.hidden=checks.length===0;
